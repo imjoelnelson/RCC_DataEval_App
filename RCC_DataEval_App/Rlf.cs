@@ -29,10 +29,6 @@ namespace RCC_DataEval_App
         /// Collection of ProbeItems in the codeset, searchable by TargetName
         /// </summary>
         public Dictionary<string, ProbeItem> Probes { get; private set; }
-        /// <summary>
-        /// For when DSP RLF is used; provides link from barcodes to targets via a DSP_ID to TargetName dictionary
-        /// </summary>
-        public PkcReader Reader { get; private set; }
         
 
         /// <summary>
@@ -73,6 +69,17 @@ namespace RCC_DataEval_App
         {
             Name = name;
             ThisType = GetRlfType(Name);
+        }
+
+        public Rlf(IEnumerable<PkcReader> readers)
+        {
+            PkcColllector collector = new PkcColllector(readers);
+            if(collector != null)
+            {
+                Name = "DSP_v1.0";
+                ThisType = RlfType.DSP;
+                Probes = collector.MergedTranslator;
+            }
         }
 
         
@@ -211,11 +218,6 @@ namespace RCC_DataEval_App
         public void AddProbesFromRcc(Dictionary<string, ProbeItem> input)
         {
             Probes = input;
-        }
-
-        public void AddPkcReader(string pkcPath)
-        {
-            Reader = new PkcReader(pkcPath);
         }
     }
 }

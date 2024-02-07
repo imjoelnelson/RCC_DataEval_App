@@ -466,7 +466,7 @@ namespace RCC_DataEval_App
             // Get codesummary
             if(ThisRLF.Probes.Any(x => x.Value.ProbeID != null)) // When RLF loaded first
             {
-                ProbeCounts = GetProbeCounts(lines.Skip(indices[6] + 1).Take(indices[7] - (indices[6] + 1)).ToList());
+                ProbeCounts = GetProbeCounts(lines.Skip(indices[6] + 1).Take(indices[7] - (indices[6] + 1)).ToList(), ThisRLF.ThisType);
             }
             else // When no relevant RLF loaded
             {
@@ -588,17 +588,25 @@ namespace RCC_DataEval_App
             string rlfString = Util.GetValue(lines.Where(x => x.StartsWith("G")).FirstOrDefault());
             if(rlfString != string.Empty)
             {
-                Rlf thisRlf;
-                bool found = rlfs.TryGetValue(rlfString, out thisRlf);
-                if(found)
+                if(rlfString.StartsWith("DSP_"))
                 {
-                    ThisRLF = thisRlf;
+                    // GetPKCReaders()
+
                 }
                 else
                 {
-                    thisRlf = new Rlf(rlfString, found); // Add probe collection via public method in Rlf class after codesummary section deliniated below
+                    Rlf thisRlf;
+                    bool found = rlfs.TryGetValue(rlfString, out thisRlf);
+                    if (found)
+                    {
+                        ThisRLF = thisRlf;
+                    }
+                    else
+                    {
+                        thisRlf = new Rlf(rlfString, found); // Add probe collection via public method in Rlf class after codesummary section deliniated below
+                    }
+                    ThisRLF = thisRlf;
                 }
-                ThisRLF = thisRlf;
             }
         }
 
@@ -647,7 +655,7 @@ namespace RCC_DataEval_App
                     {
                         // Add only if probe was present in selected PKC(s)
                         ProbeItem item;
-                        bool found = ThisRLF.Reader.DspTranslator.TryGetValue(bits[1], out item);
+                        bool found = ThisRLF.Probes.TryGetValue(bits[1], out item);
                         if (found)
                         {
                             returnVal.Add(item.TargetName, Util.SafeParseInt(bits[3]));
@@ -716,7 +724,7 @@ namespace RCC_DataEval_App
         }
 
         /// <summary>
-        /// Transfers probe collection from PKC to RLF and creates count dictionary for 
+        /// Transfers probe collection from PKC to RLF and creates count dictionary for RCC
         /// </summary>
         /// <param name="lines"></param>
         /// <param name="translator"></param>
