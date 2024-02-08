@@ -482,14 +482,14 @@ namespace RCC_DataEval_App
             }
 
             // Get QC flags
-            PctFovCounted = FovCount > 1 && FovCounted > 1 ? 100 * FovCounted / FovCount : -1;
-            PctFovPass = PctFovCounted > 0.75;
-            BindingDensityPass = IsSprint ? BindingDensity <= 1.8 : BindingDensity <= 2.25;
+            PctFovCounted = FovCount > 0 ? FovCounted / FovCount : -1;
+            PctFovPass = PctFovCounted > Form1.ImagingPassThresh;
+            BindingDensityPass = IsSprint ? BindingDensity <= Form1.DensityPassThreshS : BindingDensity <= Form1.DensityPassThreshDA;
             if(ThisRLF.ThisType != RlfType.Generic || ThisRLF.ThisType != RlfType.DSP || ThisRLF.ThisType != RlfType.PlexSet) // Controls processed differently for these assays
             {
                 PosLinearity = GetPosLinearity(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Positive")).OrderBy(x => x.TargetName)
                 .Select(y => y.TargetName), ProbeCounts);
-                PosLinearityPass = PosLinearity >= 0.95;
+                PosLinearityPass = PosLinearity >= Form1.PosLinearityPassThresh;
                 Lod = GetLod(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Negative"))
                     .Select(x => x.TargetName), ProbeCounts);
                 LodPass = ProbeCounts["POS_E(0.5)"] > Lod;
@@ -774,7 +774,7 @@ namespace RCC_DataEval_App
         private double GetLod(IEnumerable<string> negNames, Dictionary<string, int> counts)
         {
             IEnumerable<double> logs = negNames.Select(x => Convert.ToDouble(counts[x]));
-            return logs.Average() + (2 * MathNet.Numerics.Statistics.Statistics.StandardDeviation(logs));
+            return logs.Average() + (Form1.LODSDCoeff * MathNet.Numerics.Statistics.Statistics.StandardDeviation(logs));
         }
 
         public void GetHkGeoMean(List<string> hkNames, Dictionary<string, int> counts)
