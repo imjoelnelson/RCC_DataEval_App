@@ -41,22 +41,27 @@ namespace RCC_DataEval_App
 
         // ********  GeoMx or PlexSet-specific  *********
         /// <summary>
-        /// Indicator of the well on 96 well plate where hybridization took place; in format [A-G][1-12]
+        /// Indicator of the well on 96 well plate where hybridization took place; in format [1-8]
         /// </summary>
         public string PlexRow { get; set; }
 
-
         /// <summary>
-        /// Contructor for when RCC loaded first; NOT DSP/GeoMx
+        /// Contructor for creating ProbeItems from RCCs (i.e. when RCCs loaded before or without RLF)
         /// </summary>
         /// <param name="dataLine">Probe line from RCC</param>
         public ProbeItem(string codeClass, string name, string accession, RlfType type)
         {
             ThisType = type;
-            CodeClass = codeClass;
             
-            if (type == RlfType.miRNA || type == RlfType.miRGE)
+            if(type == RlfType.Gx || type == RlfType.CNV)
             {
+                CodeClass = codeClass;
+                TargetName = name;
+                Accession = accession;
+            }
+            else if (type == RlfType.miRNA || type == RlfType.miRGE)
+            {
+                CodeClass = codeClass;
                 Accession = accession;
                 string[] bits = name.Split('|');
                 if(bits.Length == 2)
@@ -67,20 +72,39 @@ namespace RCC_DataEval_App
             }
             else if(type == RlfType.DSP)
             {
+                CodeClass = codeClass;
                 TargetName = name;
                 PlexRow = accession; // Shoehorned in to use same constructor
                 Accession = string.Empty;
             }
+            else if(type == RlfType.PlexSet)
+            {
+                if(codeClass.StartsWith("P") || codeClass.StartsWith("N")) // For POS and NEG probes with row specified in Name field
+                {
+                    CodeClass = codeClass;
+                    Accession = accession;
+                    string[] bits = name.Split('_'); // Concatenated probe name and row specifier (e.g. POS_1)
+                    TargetName = bits[0];
+                    PlexRow = Rlf.PsRowTranslate[bits[1]];
+                }
+                else // For Endogenous and HK probes with row designator concatenated with codeclass
+                {
+                    CodeClass = codeClass.Substring(0, CodeClass.Length - 2);
+                    PlexRow = Rlf.PsRowTranslate[codeClass.Substring(CodeClass.Length - 2, 1)];
+                    Accession = accession;
+                    TargetName = name;
+                }
+                
+            }
             else
             {
                 TargetName = name;
-                Accession = accession;
             }
         }
 
 
         /// <summary>
-        /// Constructor for when RLF loaded first
+        /// Constructor for creating ProbeItems from an RLF (i.e. when RLF loaded before RCCs)
         /// </summary>
         /// <param name="dataLine">Probe line from RLF</param>
         /// <param name="codeClassTranslator">Dictionary for translating from classID to codeclass</param>

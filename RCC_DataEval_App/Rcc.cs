@@ -466,11 +466,13 @@ namespace RCC_DataEval_App
             // Get codesummary
             if(ThisRLF.Probes.Any(x => x.Value.ProbeID != null)) // When RLF loaded first
             {
-                ProbeCounts = GetProbeCounts(lines.Skip(indices[6] + 1).Take(indices[7] - (indices[6] + 1)).ToList(), ThisRLF.ThisType);
+                ProbeCounts = GetProbeCounts(lines.Skip(indices[6] + 1).Take(indices[7] - (indices[6] + 1)).ToList(), 
+                    ThisRLF.ThisType);
             }
             else // When no relevant RLF loaded
             {
-                var result = ProcessCodeSum(lines.Skip(indices[6] + 2).Take(indices[7] - (indices[6] + 1)).ToList());
+                var result = ProcessCodeSum(lines.Skip(indices[6] + 2).Take(indices[7] - (indices[6] + 1)).ToList(), 
+                    ThisRLF.ThisType);
                 ProbeCounts = result.Item2;
                 ThisRLF.AddProbesFromRcc(result.Item1);
             }
@@ -484,10 +486,13 @@ namespace RCC_DataEval_App
             // Get QC flags
             PctFovCounted = FovCount > 0 ? FovCounted / FovCount : -1;
             PctFovPass = PctFovCounted > Form1.ImagingPassThresh;
-            BindingDensityPass = IsSprint ? BindingDensity <= Form1.DensityPassThreshS : BindingDensity <= Form1.DensityPassThreshDA;
-            if(ThisRLF.ThisType != RlfType.Generic || ThisRLF.ThisType != RlfType.DSP || ThisRLF.ThisType != RlfType.PlexSet) // Controls processed differently for these assays
+            BindingDensityPass = IsSprint ? BindingDensity <= Form1.DensityPassThreshS : 
+                BindingDensity <= Form1.DensityPassThreshDA;
+            if(ThisRLF.ThisType != RlfType.Generic || ThisRLF.ThisType != RlfType.DSP 
+                || ThisRLF.ThisType != RlfType.PlexSet) // Controls processed differently for these assays
             {
-                PosLinearity = GetPosLinearity(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Positive")).OrderBy(x => x.TargetName)
+                PosLinearity = GetPosLinearity(ThisRLF.Probes.Values
+                    .Where(x => x.CodeClass.Equals("Positive")).OrderBy(x => x.TargetName)
                 .Select(y => y.TargetName), ProbeCounts);
                 PosLinearityPass = PosLinearity >= Form1.PosLinearityPassThresh;
                 Lod = GetLod(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Negative"))
@@ -590,8 +595,8 @@ namespace RCC_DataEval_App
             {
                 if(rlfString.StartsWith("DSP_"))
                 {
-                    // GetPKCReaders()
-
+                    // Get Readers via UI
+                    //ThisRLF = new Rlf(readers)
                 }
                 else
                 {
@@ -634,19 +639,41 @@ namespace RCC_DataEval_App
         /// <returns>Dicionary of probe name/count pairs</string></returns>
         private Dictionary<string, int> GetProbeCounts(List<String> lines, RlfType type)
         {
-            var returnVal = new Dictionary<string, int>(lines.Count);
-            if (type != RlfType.DSP)
+            var probeCounts = new Dictionary<string, int>(lines.Count);
+            if (type == RlfType.Gx || type == RlfType.CNV || type == RlfType.Generic)
             {
                 for (int i = 0; i < lines.Count; i++)
                 {
                     string[] bits = lines[i].Split(',');
                     if (bits.Length > 3)
                     {
-                        returnVal.Add(bits[1], Util.SafeParseInt(bits[3]));
+                        probeCounts.Add(bits[1], Util.SafeParseInt(bits[3]));
                     }
                 }
             }
-            else
+            else if (type == RlfType.miRNA || type == RlfType.miRGE)
+            {
+                int posAVal = GetPosAVal(lines);
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    string[] bits = lines[i].Split(',');
+                    if (bits.Length > 3)
+                    {
+                        if (bits[0].EndsWith("ous1"))
+                        {
+                            string name = bits[1].Split('|')[0];
+                            int val = Convert.ToInt32(Util.SafeParseInt(bits[3]) - (ThisRLF.Probes[name].CorrectionCoefficient * posAVal));
+
+                            probeCounts.Add(name, val);
+                        }
+                        else
+                        {
+                            probeCounts.Add(bits[1], Util.SafeParseInt(bits[3]));
+                        }
+                    }
+                }
+            }
+            else if (type == RlfType.DSP)
             {
                 for (int i = 0; i < lines.Count; i++)
                 {
@@ -658,40 +685,35 @@ namespace RCC_DataEval_App
                         bool found = ThisRLF.Probes.TryGetValue(bits[1], out item);
                         if (found)
                         {
-                            returnVal.Add(item.TargetName, Util.SafeParseInt(bits[3]));
+                            probeCounts.Add(item.TargetName, Util.SafeParseInt(bits[3]));
                         }
                     }
                 }
             }
-
-            return returnVal;
-        }
-
-        private Dictionary<string, int> GetProbeCountsMiRNA(List<string> lines, RlfType type)
-        {
-            // Get POS_A counts for ligation-background correction
-            int posAVal = GetPosAVal(lines);
-            var counts = new Dictionary<string, int>(lines.Count);
-            for (int i = 0; i < lines.Count; i++)
+            else // For PlexSet
             {
-                string[] bits = lines[i].Split(',');
-                if (bits.Length > 3)
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    if(bits[0].EndsWith("ous1"))
+                    string[] bits = lines[i].Split(',');
+                    if (bits.Length > 3)
                     {
-                        string name = bits[1].Split('|')[0];
-                        int val = Convert.ToInt32(Util.SafeParseInt(bits[3]) - (ThisRLF.Probes[name].CorrectionCoefficient * posAVal));
-
-                        counts.Add(name, val);
-                    }
-                    else
-                    {
-                        counts.Add(bits[1], Util.SafeParseInt(bits[3]));
+                        // Ensure target name is concatenated with row ID to provide unique key
+                        string name;
+                        if (bits[0].StartsWith("E") || bits[0].StartsWith("H"))
+                        {
+                            string row = bits[0].Substring(bits[0].Length - 2, 1);
+                            name = $"{bits[1]}_{row}";
+                        }
+                        else
+                        {
+                            name = bits[1];
+                        }
+                        probeCounts.Add(name, Util.SafeParseInt(bits[3]));
                     }
                 }
             }
 
-            return counts;
+            return probeCounts;
         }
 
         private int GetPosAVal(List<string> lines)
@@ -706,30 +728,7 @@ namespace RCC_DataEval_App
         /// </summary>
         /// <param name="lines">Lines from the CodeSummary section</param>
         /// <returns>Tuple containing Probe dictionary and count dictionary</returns>
-        private Tuple<Dictionary<string, ProbeItem>, Dictionary<string, int>> ProcessCodeSum(List<string> lines)
-        {
-            var item1 = new Dictionary<string, ProbeItem>(lines.Count);
-            var item2 = new Dictionary<string, int>(lines.Count);
-            for(int i = 0; i < lines.Count; i++)
-            {
-                string[] bits = lines[i].Split(',');
-                if(bits.Length > 3)
-                {
-                    item1.Add(bits[1], new ProbeItem(bits[0], bits[1], bits[2], ThisRLF.ThisType));
-                    item2.Add(bits[1], Util.SafeParseInt(bits[3]));
-                }
-            }
-
-            return Tuple.Create(item1, item2);
-        }
-
-        /// <summary>
-        /// Transfers probe collection from PKC to RLF and creates count dictionary for RCC
-        /// </summary>
-        /// <param name="lines"></param>
-        /// <param name="translator"></param>
-        /// <returns></returns>
-        private Tuple<Dictionary<string, ProbeItem>, Dictionary<string, int>> ProcessCodeSum(List<string> lines, Dictionary<string, ProbeItem> translator)
+        private Tuple<Dictionary<string, ProbeItem>, Dictionary<string, int>> ProcessCodeSum(List<string> lines, RlfType type)
         {
             var item1 = new Dictionary<string, ProbeItem>(lines.Count);
             var item2 = new Dictionary<string, int>(lines.Count);
@@ -738,12 +737,17 @@ namespace RCC_DataEval_App
                 string[] bits = lines[i].Split(',');
                 if (bits.Length > 3)
                 {
-                    ProbeItem probe;
-                    bool found = translator.TryGetValue(bits[1], out probe);
-                    if(found)
+                    ProbeItem item = new ProbeItem(bits[0], bits[1], bits[2], ThisRLF.ThisType);
+                    if(type != RlfType.PlexSet)
                     {
-                        item1.Add(bits[1], probe);
-                        item2.Add(bits[1], Util.SafeParseInt(bits[3]));
+                        item1.Add(item.TargetName, item);
+                        item2.Add(item.TargetName, Util.SafeParseInt(bits[3]));
+                    }
+                    else
+                    {
+                        string row = Rlf.PsTranslateRow[item.PlexRow];
+                        item1.Add($"{item.TargetName}_{row}", item);
+                        item2.Add($"{item.TargetName}_{row}", Util.SafeParseInt(bits[3]));
                     }
                 }
             }

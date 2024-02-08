@@ -29,7 +29,15 @@ namespace RCC_DataEval_App
         /// Collection of ProbeItems in the codeset, searchable by TargetName
         /// </summary>
         public Dictionary<string, ProbeItem> Probes { get; private set; }
-        
+
+        public static Dictionary<string, string> PsRowTranslate = new Dictionary<string, string>()
+        {
+            { "1", "A" }, { "2", "B" }, { "3", "C" }, { "4", "D" }, { "5", "E" }, { "6", "F" }, { "7", "G" }, { "8", "H" }
+        };
+        public static Dictionary<string, string> PsTranslateRow = new Dictionary<string, string>()
+        {
+            { "A", "1" }, { "B", "2" }, { "C", "3" }, { "D", "4" }, { "E", "5" }, { "F", "6" }, { "G", "7" }, { "H", "8" }
+        };
 
         /// <summary>
         /// Constructor when generating from an RLF file
@@ -71,6 +79,10 @@ namespace RCC_DataEval_App
             ThisType = GetRlfType(Name);
         }
 
+        /// <summary>
+        /// Constructor for RLF when DSP RLF or RCC loaded
+        /// </summary>
+        /// <param name="readers"></param>
         public Rlf(IEnumerable<PkcReader> readers)
         {
             PkcColllector collector = new PkcColllector(readers);
@@ -195,7 +207,15 @@ namespace RCC_DataEval_App
                 if(lines[i].StartsWith("Re"))
                 {
                     ProbeItem item = new ProbeItem(lines[i], translator, ThisType);
-                    dict.Add(item.TargetName, item);
+                    if (ThisType == RlfType.PlexSet && (item.CodeClass.StartsWith("E") || item.CodeClass.StartsWith("H")))
+                    {
+                        // Concatenate row indicator with target name
+                        dict.Add($"{item.TargetName}_{PsTranslateRow[item.PlexRow]}", item);
+                    }
+                    else
+                    {
+                        dict.Add(item.TargetName, item);
+                    }
                 }
             }
 
