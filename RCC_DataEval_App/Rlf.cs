@@ -29,6 +29,10 @@ namespace RCC_DataEval_App
         /// Collection of ProbeItems in the codeset, searchable by TargetName
         /// </summary>
         public Dictionary<string, ProbeItem> Probes { get; private set; }
+        /// <summary>
+        /// Bool indicating if RLF was initiated from rlf file (vs. from RCC)
+        /// </summary>
+        public bool FromRlfFile { get; private set; }
 
         public static Dictionary<string, string> PsRowTranslate = new Dictionary<string, string>()
         {
@@ -43,7 +47,7 @@ namespace RCC_DataEval_App
         /// Constructor when generating from an RLF file
         /// </summary>
         /// <param name="filePath">Path of RLF file</param>
-        public Rlf(string filePath) 
+        public Rlf(string filePath)
         {
             // Get RLF name from file path and RlfType from Name
             Name = Path.GetFileNameWithoutExtension(filePath);
@@ -56,7 +60,7 @@ namespace RCC_DataEval_App
                 string[] tempLines = File.ReadAllLines(filePath);
                 lines.AddRange(tempLines);
             }
-            catch(Exception er)
+            catch (Exception er)
             {
                 MessageBox.Show($"{er.Message}\r\n{er.StackTrace}", "RLF Read Error", MessageBoxButtons.OK);
             }
@@ -66,6 +70,9 @@ namespace RCC_DataEval_App
 
             // Get probe collection
             Probes = GetProbes(lines, codeClassTranslator);
+            
+            // Set from RLF file to true
+            FromRlfFile = true;
         }
 
         /// <summary>
@@ -77,24 +84,26 @@ namespace RCC_DataEval_App
         {
             Name = name;
             ThisType = GetRlfType(Name);
+            FromRlfFile = false;
         }
 
         /// <summary>
         /// Constructor for RLF when DSP RLF or RCC loaded
         /// </summary>
         /// <param name="readers"></param>
-        public Rlf(IEnumerable<PkcReader> readers)
+        public Rlf(IEnumerable<IPkcReader> readers)
         {
             PkcColllector collector = new PkcColllector(readers);
-            if(collector != null)
+            if (collector != null)
             {
                 Name = "DSP_v1.0";
                 ThisType = RlfType.DSP;
-                Probes = collector.MergedTranslator;
+                Probes = collector.DspTranslator;
             }
+            FromRlfFile = true; 
         }
 
-        
+
         /// <summary>
         /// Gets the assay type to determine how to process the data
         /// </summary>
@@ -131,7 +140,7 @@ namespace RCC_DataEval_App
             {
                 temp[0] = RlfType.Gx;
             }
-                            
+
             return temp[0];
         }
 
@@ -160,7 +169,7 @@ namespace RCC_DataEval_App
                             string[] codeKeyBits = lines[i].Split('=');
                             if (codeKeyBits.Length > 1)
                             {
-                                if(codeKeyBits[0].Length > 9)
+                                if (codeKeyBits[0].Length > 9)
                                 {
                                     dict.Add(codeKeyBits[0].Substring(9), codeKeyBits[1]);  //Add class key and class name to dictionary
                                 }
@@ -185,26 +194,26 @@ namespace RCC_DataEval_App
             Dictionary<string, ProbeItem> dict = new Dictionary<string, ProbeItem>(800);
             int i = 0;
             int recordCount = 0;
-            while(i < lines.Count)  //Advance to record count line
+            while (i < lines.Count)  //Advance to record count line
             {
-                if(lines[i].StartsWith("Re"))
+                if (lines[i].StartsWith("Re"))
                 {
                     string[] bits = lines[i].Split('=');
-                    if(bits.Length > 1)
+                    if (bits.Length > 1)
                     {
                         Util.SafeParseInt(bits[1]);    // Get record count
                     }
                 }
-                if(lines[i].StartsWith("Co")) // Advance to start of records
+                if (lines[i].StartsWith("Co")) // Advance to start of records
                 {
                     i++;
                     break;
                 }
                 i++;
             }
-            while(i < lines.Count)
+            while (i < lines.Count)
             {
-                if(lines[i].StartsWith("Re"))
+                if (lines[i].StartsWith("Re"))
                 {
                     ProbeItem item = new ProbeItem(lines[i], translator, ThisType);
                     if (ThisType == RlfType.PlexSet && (item.CodeClass.StartsWith("E") || item.CodeClass.StartsWith("H")))
@@ -219,9 +228,9 @@ namespace RCC_DataEval_App
                 }
             }
 
-            if(recordCount > 0)
+            if (recordCount > 0)
             {
-                if(recordCount == dict.Count)
+                if (recordCount == dict.Count)
                 {
                     return dict;
                 }

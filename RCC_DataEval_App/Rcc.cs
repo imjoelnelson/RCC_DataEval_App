@@ -464,7 +464,7 @@ namespace RCC_DataEval_App
             GetLaneAttributes(lines.Skip(indices[4] + 1).Take(indices[5] - (indices[4] + 1)).ToList());
 
             // Get codesummary
-            if(ThisRLF.Probes.Any(x => x.Value.ProbeID != null)) // When RLF loaded first
+            if(ThisRLF.FromRlfFile) // When RLF loaded first
             {
                 ProbeCounts = GetProbeCounts(lines.Skip(indices[6] + 1).Take(indices[7] - (indices[6] + 1)).ToList(), 
                     ThisRLF.ThisType);

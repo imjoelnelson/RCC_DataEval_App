@@ -10,11 +10,12 @@ namespace RCC_DataEval_App
     /// <summary>
     /// Checks to make sure all included PKCs don't include duplicate DSP_IDs (i.e. are compatible) and then merges the DSP_ID to ProbeItem dictionaries
     /// </summary>
-    internal class PkcColllector
+    internal class PkcColllector : IPkcReader
     {
-        public Dictionary<string, ProbeItem> MergedTranslator { get; private set; }
+        public string Name { get; set; } // May not need to initialize Name
+        public Dictionary<string, ProbeItem> DspTranslator { get; private set; }
         
-        internal PkcColllector(IEnumerable<PkcReader> readers)
+        internal PkcColllector(IEnumerable<IPkcReader> readers)
         {
             if(readers.Count() > 1)
             {
@@ -36,14 +37,18 @@ namespace RCC_DataEval_App
                         }
                     }
                 }
-                MergedTranslator = merged;
+                DspTranslator = merged;
+                Name = string.Join(",", readers.Select(x => x.Name));
+            }
+            else if (readers.Count() > 0)
+            {
+                DspTranslator = readers.ElementAt(0).DspTranslator;
+                Name = readers.ElementAt(0).Name;
             }
             else
             {
-                if(readers.Count() > 0)
-                {
-                    MergedTranslator = readers.ElementAt(0).DspTranslator;
-                }
+                DspTranslator = new Dictionary<string, ProbeItem>();
+                Name = string.Empty;
             }
         }
     }

@@ -29,13 +29,78 @@ namespace RCC_DataEval_App
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importRCCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importRLFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importPKCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(2255, 42);
+            this.menuStrip1.TabIndex = 0;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importRCCsToolStripMenuItem,
+            this.importRLFToolStripMenuItem,
+            this.importPKCToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 38);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // importRCCsToolStripMenuItem
+            // 
+            this.importRCCsToolStripMenuItem.Name = "importRCCsToolStripMenuItem";
+            this.importRCCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importRCCsToolStripMenuItem.Text = "Import RCCs";
+            this.importRCCsToolStripMenuItem.Click += new System.EventHandler(this.importRCCsToolStripMenuItem_Click);
+            // 
+            // importRLFToolStripMenuItem
+            // 
+            this.importRLFToolStripMenuItem.Name = "importRLFToolStripMenuItem";
+            this.importRLFToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importRLFToolStripMenuItem.Text = "Import RLFs";
+            // 
+            // importPKCToolStripMenuItem
+            // 
+            this.importPKCToolStripMenuItem.Name = "importPKCToolStripMenuItem";
+            this.importPKCToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importPKCToolStripMenuItem.Text = "Import PKCs";
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(2255, 1258);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
+            this.Name = "Form1";
             this.Text = "Form1";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
+
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importRCCsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importRLFToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importPKCToolStripMenuItem;
     }
 }
 

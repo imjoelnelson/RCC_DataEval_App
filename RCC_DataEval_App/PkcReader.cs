@@ -9,13 +9,16 @@ using System.Windows.Forms;
 
 namespace RCC_DataEval_App
 {
-    public class PkcReader
+    public class PkcReader : IPkcReader
     {
+        public string Name { get; private set; }
         public Dictionary<string, ProbeItem> DspTranslator { get; private set; }
 
 
         public PkcReader(string filePath)
         {
+            Name = Path.GetFileNameWithoutExtension(filePath);
+
             string fullRead;
             try
             {
@@ -31,10 +34,10 @@ namespace RCC_DataEval_App
             JArray targetArray = (JArray)json["Targets"];
             Dictionary<string, ProbeItem> translator = new Dictionary<string, ProbeItem>(targetArray.Count * 8);
             string[] lets = new string[] { "A", "B", "C", "D", "E", "F", "G" };
-            for(int i = 0; i < targetArray.Count; i++)
+            for (int i = 0; i < targetArray.Count; i++)
             {
                 List<string> ids = targetArray[i]["DSP_ID"].Select(x => ((string)x).Split(new string[] { ": " }, StringSplitOptions.None)[1]).ToList();
-                for(int j = 0; j < ids.Count; j++)
+                for (int j = 0; j < ids.Count; j++)
                 {
                     translator.Add(ids[j], new ProbeItem((string)targetArray[i]["CodeClass"],
                                                          (string)targetArray[i]["DisplayName"],
