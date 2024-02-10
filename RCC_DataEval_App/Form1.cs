@@ -12,12 +12,7 @@ namespace RCC_DataEval_App
 {
     public partial class Form1 : Form
     {
-        // Bound collection for main form DGV
-        BindingList<Rcc> Rccs { get; set; }
-        BindingSource RccSource { get; set; }
-        DBDataGridView Gv { get; set; }
-
-        // QC flagging thresholds (Used for determining QC flags in Rcc class)
+        // QC flagging thresholds (Used for determining QC flags in Rcc class) PUT THIS ELSEWHERE
         public static double ImagingPassThresh { get; set; }
         public static double DensityPassThreshDA { get; set; }
         public static double DensityPassThreshS { get; set; }
@@ -68,18 +63,7 @@ namespace RCC_DataEval_App
             this.Height = maxHeight;
         }
 
-        private void importRCCsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Select RCCs or ZIPs containing RCCs";
-            ofd.Filter = "RCC; ZIP|*.RCC;*.ZIP";
-            ofd.RestoreDirectory = true;
-            ofd.Multiselect = true;
-            if(ofd.ShowDialog() == DialogResult.OK)
-            {
 
-            }
-        }
         #endregion
 
         //private void LoadFiles(string[] strings)

@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataHolder.cs" />
     <Compile Include="DBDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -65,11 +66,19 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="IPkcReader.cs" />
+    <Compile Include="IRawDataView.cs" />
     <Compile Include="PkcColllector.cs" />
     <Compile Include="PkcReader.cs" />
     <Compile Include="ProbeItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawDataPresenter.cs" />
+    <Compile Include="RawDataView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RawDataView.Designer.cs">
+      <DependentUpon>RawDataView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Rcc.cs" />
     <Compile Include="Rlf.cs" />
     <Compile Include="TestClass.cs" />
@@ -86,6 +95,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RawDataView.resx">
+      <DependentUpon>RawDataView.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

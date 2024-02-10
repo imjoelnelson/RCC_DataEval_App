@@ -1,7 +1,7 @@
 ﻿
 namespace RCC_DataEval_App
 {
-    partial class Form1
+    partial class RawDataView
     {
         /// <summary>
         /// Required designer variable.
@@ -31,9 +31,9 @@ namespace RCC_DataEval_App
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importRCCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importRLFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importPKCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadRCCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadRLFsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadPKCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -45,47 +45,48 @@ namespace RCC_DataEval_App
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2255, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(2304, 42);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.importRCCsToolStripMenuItem,
-            this.importRLFToolStripMenuItem,
-            this.importPKCToolStripMenuItem});
+            this.loadRCCsToolStripMenuItem,
+            this.loadRLFsToolStripMenuItem,
+            this.loadPKCsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 38);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // importRCCsToolStripMenuItem
+            // loadRCCsToolStripMenuItem
             // 
-            this.importRCCsToolStripMenuItem.Name = "importRCCsToolStripMenuItem";
-            this.importRCCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
-            this.importRCCsToolStripMenuItem.Text = "Import RCCs";
+            this.loadRCCsToolStripMenuItem.Name = "loadRCCsToolStripMenuItem";
+            this.loadRCCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.loadRCCsToolStripMenuItem.Text = "Load RCCs";
+            this.loadRCCsToolStripMenuItem.Click += new System.EventHandler(this.loadRCCsToolStripMenuItem_Click);
             // 
-            // importRLFToolStripMenuItem
+            // loadRLFsToolStripMenuItem
             // 
-            this.importRLFToolStripMenuItem.Name = "importRLFToolStripMenuItem";
-            this.importRLFToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
-            this.importRLFToolStripMenuItem.Text = "Import RLFs";
+            this.loadRLFsToolStripMenuItem.Name = "loadRLFsToolStripMenuItem";
+            this.loadRLFsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.loadRLFsToolStripMenuItem.Text = "Load RLFs";
             // 
-            // importPKCToolStripMenuItem
+            // loadPKCsToolStripMenuItem
             // 
-            this.importPKCToolStripMenuItem.Name = "importPKCToolStripMenuItem";
-            this.importPKCToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
-            this.importPKCToolStripMenuItem.Text = "Import PKCs";
+            this.loadPKCsToolStripMenuItem.Name = "loadPKCsToolStripMenuItem";
+            this.loadPKCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.loadPKCsToolStripMenuItem.Text = "Load PKCs";
             // 
-            // Form1
+            // RawDataView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2255, 1258);
+            this.ClientSize = new System.Drawing.Size(2304, 1279);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "RawDataView";
+            this.Text = "RawDataView";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -97,9 +98,8 @@ namespace RCC_DataEval_App
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importRCCsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importRLFToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importPKCToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadRCCsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadRLFsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadPKCsToolStripMenuItem;
     }
 }
-
