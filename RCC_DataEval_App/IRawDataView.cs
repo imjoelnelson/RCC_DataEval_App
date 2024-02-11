@@ -11,6 +11,7 @@ namespace RCC_DataEval_App
     public interface IRawDataView
     {
         List<string> FileNames { get; set; }
+        int FileTypeIndex { get; set; }
 
         // Events
         event EventHandler FilesLoaded;

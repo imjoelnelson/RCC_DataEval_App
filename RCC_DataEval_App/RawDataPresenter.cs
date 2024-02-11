@@ -22,7 +22,7 @@ namespace RCC_DataEval_App
 
         private void Files_Loaded(object sender, EventArgs e)
         {
-            Holder.CreateObjectsFromFiles(RawDataView.FileNames);
+            Holder.CreateObjectsFromFiles(RawDataView.FileNames, RawDataView.FileTypeIndex);
         }
     }
 }

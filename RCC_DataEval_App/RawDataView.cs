@@ -14,17 +14,21 @@ namespace RCC_DataEval_App
     {
         // File loading
         public List<string> FileNames { get; set; }
+        public int FileTypeIndex { get; set; }
 
         DBDataGridView Gv { get; set; }
 
         // Implementing IRawDataView events
         public event EventHandler FilesLoaded;
-        private void loadRCCsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void loadFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int index = (int)((Control)sender).Tag;
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                ofd.Filter = "RCC;ZIP|*.RCC;*.ZIP";
-                ofd.Title = "Select RCCs and/or ZIPs to load";
+                ofd.Filter = "RCC;ZIP|*.RCC;*.ZIP|RLF;ZIP|*.RLF;*.ZIP|PKC;ZIP|*.PKC;*.ZIP";
+                ofd.FilterIndex = index;
+                string[] fileTypes = new string[] { "RCCs", "RLFs", "PKCs" };
+                ofd.Title = $"Select {fileTypes[index]} and/or ZIPs to load";
                 ofd.RestoreDirectory = true;
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() == DialogResult.OK)
@@ -45,6 +49,8 @@ namespace RCC_DataEval_App
                     return;
                 }
             }
+
+            FileTypeIndex = index;
         }
 
         public event EventHandler RccListCleared;
@@ -58,7 +64,5 @@ namespace RCC_DataEval_App
             InitializeComponent();
 
         }
-
-        
     }
 }
