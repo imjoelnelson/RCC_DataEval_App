@@ -10,16 +10,18 @@ namespace RCC_DataEval_App
 {
     public interface IRawDataView
     {
-        List<string> FileNames { get; set; }
         int FileTypeIndex { get; set; }
+        RawDataPresenter Presenter { get; set; }
 
         // Events
-        event EventHandler FilesLoaded;
+        event EventHandler FilesLoading;
         event EventHandler RccListCleared;
         event EventHandler SentToQueue;
         event EventHandler ExportToCsv;
         event EventHandler CreateQCPlot;
         event EventHandler ReorderRows;
         event EventHandler Filter;
+
+        void SetViewDataSource(BindingList<Rcc> list);
     }
 }

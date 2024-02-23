@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomEventArgs.cs" />
     <Compile Include="DataHolder.cs" />
     <Compile Include="DBDataGridView.cs">
       <SubType>Component</SubType>
@@ -70,6 +71,7 @@
     </Compile>
     <Compile Include="IPasswordEnter.cs" />
     <Compile Include="IPkcReader.cs" />
+    <Compile Include="IRawDataModel.cs" />
     <Compile Include="IRawDataView.cs" />
     <Compile Include="PasswordEnter.cs">
       <SubType>Form</SubType>
@@ -82,6 +84,7 @@
     <Compile Include="ProbeItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawDataFactory.cs" />
     <Compile Include="RawDataPresenter.cs" />
     <Compile Include="RawDataView.cs">
       <SubType>Form</SubType>

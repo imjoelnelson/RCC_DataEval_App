@@ -65,7 +65,7 @@ namespace RCC_DataEval_App
             this.loadRCCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.loadRCCsToolStripMenuItem.Text = "Load RCCs";
             this.loadRCCsToolStripMenuItem.Tag = 0;
-            this.loadRCCsToolStripMenuItem.Click += new System.EventHandler(this.loadFilesToolStripMenuItem_Click);
+            this.loadRCCsToolStripMenuItem.Click += new System.EventHandler(this.LoadRCCsToolStripMenuItem_Click);
             // 
             // loadRLFsToolStripMenuItem
             // 
@@ -73,7 +73,7 @@ namespace RCC_DataEval_App
             this.loadRLFsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.loadRLFsToolStripMenuItem.Text = "Load RLFs";
             this.loadRLFsToolStripMenuItem.Tag = 1;
-            this.loadRLFsToolStripMenuItem.Click += new System.EventHandler(this.loadFilesToolStripMenuItem_Click);
+            this.loadRLFsToolStripMenuItem.Click += new System.EventHandler(this.LoadRLFsToolStripMenuItem_Click);
             // 
             // loadPKCsToolStripMenuItem
             // 
@@ -81,7 +81,7 @@ namespace RCC_DataEval_App
             this.loadPKCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.loadPKCsToolStripMenuItem.Text = "Load PKCs";
             this.loadPKCsToolStripMenuItem.Tag = 2;
-            this.loadRLFsToolStripMenuItem.Click += new System.EventHandler(this.loadFilesToolStripMenuItem_Click);
+            this.loadRLFsToolStripMenuItem.Click += new System.EventHandler(this.LoadPKCsToolStripMenuItem_Click);
             // 
             // RawDataView
             // 

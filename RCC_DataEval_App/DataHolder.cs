@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RCC_DataEval_App
 {
-    public class DataHolder
+    public class DataHolder : IRawDataModel
     {
         public BindingList<Rcc> Rccs { get; set; }
         public Dictionary<string, Rlf> Rlfs { get; set; }
@@ -18,7 +18,7 @@ namespace RCC_DataEval_App
 
         public DataHolder() { }
 
-        public void CreateObjectsFromFiles(List<string> fileNames, int fileTypeIndex)
+        public void CreateObjectsFromFiles(string[] fileNames, int fileTypeIndex)
         {
             List<string> filesToLoad = new List<string>();
             List<string> zipsToLoad = new List<string>();

@@ -157,7 +157,7 @@ namespace RCC_DataEval_App
         /// <returns>User entered password</returns>
         private static string GetPassword(string fileName)
         {
-            using (IPasswordEnter pwEnter = new PasswordEnter(Path.GetFileName(fileName)))
+            using (PasswordEnter pwEnter = new PasswordEnter(Path.GetFileName(fileName)))
             {
                 if (pwEnter.ShowDialog() == DialogResult.OK)
                 {

@@ -8,21 +8,40 @@ using System.Windows.Forms;
 
 namespace RCC_DataEval_App
 {
-    internal class RawDataPresenter
+    public class RawDataPresenter
     {
         private IRawDataView RawDataView { get; set; }
-        private DataHolder Holder { get; set; }
+        private IRawDataModel Holder { get; set; }
        
-        
-        internal RawDataPresenter(IRawDataView rawDataView, DataHolder holder)
+        public RawDataPresenter(IRawDataView rawDataView, IRawDataModel holder)
         {
             RawDataView = rawDataView;
-            rawDataView.FilesLoaded += new EventHandler(Files_Loaded);
+            Holder = holder;
+            rawDataView.FilesLoading += new EventHandler(View_FilesLoading);
         }
 
-        private void Files_Loaded(object sender, EventArgs e)
+        public void View_FilesLoading(object sender, EventArgs e)
         {
-            Holder.CreateObjectsFromFiles(RawDataView.FileNames, RawDataView.FileTypeIndex);
+            var args = (FilesLoadingEventArgs)e;
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                
+                ofd.Filter = "RCC;ZIP|*.RCC;*.ZIP|RLF;ZIP|*.RLF;*.ZIP|PKC;ZIP|*.PKC;*.ZIP";
+                ofd.FilterIndex = args.Index;
+                string[] fileTypes = new string[] { "RCCs", "RLFs", "PKCs" };
+                ofd.Title = $"Select {fileTypes[args.Index]} and/or ZIPs to load";
+                ofd.RestoreDirectory = true;
+                ofd.Multiselect = true;
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    Holder.CreateObjectsFromFiles(ofd.FileNames, args.Index);
+                    RawDataView.SetViewDataSource(Holder.Rccs);
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
     }
 }

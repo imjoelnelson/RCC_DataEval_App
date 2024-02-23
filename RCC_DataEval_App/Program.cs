@@ -17,9 +17,7 @@ namespace RCC_DataEval_App
             //var test = new TestClass();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            DataHolder holder = new DataHolder();
-            RawDataView dataView = new RawDataView(holder);
-            RawDataPresenter presenter = new RawDataPresenter(dataView);
+            RawDataView dataView = MvpFactory.GetRawDataView();
             Application.Run(dataView);
         }
     }
