@@ -10,7 +10,7 @@ namespace RCC_DataEval_App
     {
         public static RawDataView GetRawDataView()
         {
-            IRawDataModel model = new DataHolder();
+            IRawDataModel model = new DataModel();
             RawDataView view = new RawDataView();
             RawDataPresenter presenter = new RawDataPresenter(view, model);
             view.Presenter = presenter;

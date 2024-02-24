@@ -59,7 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomEventArgs.cs" />
-    <Compile Include="DataHolder.cs" />
+    <Compile Include="DataModel.cs" />
     <Compile Include="DBDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -93,6 +93,7 @@
       <DependentUpon>RawDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Rcc.cs" />
+    <Compile Include="RccTreeNode.cs" />
     <Compile Include="RecursiveUnzip.cs" />
     <Compile Include="Rlf.cs" />
     <Compile Include="TestClass.cs" />

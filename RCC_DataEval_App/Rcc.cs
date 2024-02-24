@@ -10,7 +10,12 @@ namespace RCC_DataEval_App
 {
     public class Rcc : INotifyPropertyChanged
     {
+        #region Misc Properties
         public string RccReadErrorMessage { get; private set; }
+        /// <summary>
+        /// Indicates to data model class that ThisRlf should be added to RLF list
+        /// </summary>
+        public bool RlfImported { get; private set; }
         /// <summary>
         /// Filename without .RCC extension; If not altered should have format: yyyyMMdd_[CartridgeID]_[SampleID]_[LaneID]
         /// </summary>
@@ -27,16 +32,17 @@ namespace RCC_DataEval_App
             }
         }
         private string _FileName;
-        
+        #endregion
 
-        // Header attribues
+        #region Header Attribute Properties
+
         /// <summary>
         /// Indicates if instrument is a Sprint (Gen3) rather than Digital Analyzer (Gen2 or Gen2.5)
         /// </summary>
         public bool IsSprint { get; private set; }
+        #endregion
 
-
-        // SampleAttributes
+        #region Sample Attribute Properties
         /// <summary>
         /// User set value; not necessarily unique between samples (alphanumeric, spaces, and hyphens); 60 char limit (if memory serves)
         /// </summary>
@@ -121,9 +127,9 @@ namespace RCC_DataEval_App
             }
         }
         private Rlf _ThisRlf;
+        #endregion
 
-
-        // LaneAttributes
+        #region Lane Attribute Properties
         /// <summary>
         /// Lane number (1-12) the RCC is from
         /// </summary>
@@ -259,23 +265,23 @@ namespace RCC_DataEval_App
             }
         }
         private string _CartridgeBarcode;
+        #endregion
 
-
-        // CodeSummary (i.e. probe counts)
+        #region Code Summary Properties
         /// <summary>
         /// Dictionary of key=TargetName, Value=ProbeItem for all probes in the codeset
         /// </summary>
         public Dictionary<string, int> ProbeCounts { get; private set; }
+        #endregion
 
-
-        // Messages
+        #region Message Property
         /// <summary>
         /// Instrument set message starting with a ';' Usually empty
         /// </summary>
         public string Message { get; private set; }
+        #endregion
 
-
-        // Flags
+        #region QC Properties
         /// <summary>
         /// Equals FovCounted/FovCount
         /// </summary>
@@ -394,8 +400,9 @@ namespace RCC_DataEval_App
             }
         }
         private bool _LodPass;
+        #endregion
 
-
+        #region Normalization Properties
         // For Normalization and Norm flags
         /// <summary>
         /// Value potentially used for POS normalization flagging (i.e. indentifying samples with poor assay performance)
@@ -429,6 +436,7 @@ namespace RCC_DataEval_App
             }
         }
         private double _GeomeanOfHKs;
+        #endregion
 
         /// <summary>
         /// Constructor for all RCCs
@@ -600,15 +608,16 @@ namespace RCC_DataEval_App
                 }
                 else
                 {
-                    Rlf thisRlf;
-                    bool found = rlfs.TryGetValue(rlfString, out thisRlf);
+                    bool found = rlfs.TryGetValue(rlfString, out Rlf thisRlf);
                     if (found)
                     {
                         ThisRLF = thisRlf;
+                        RlfImported = false;
                     }
                     else
                     {
                         thisRlf = new Rlf(rlfString, found); // Add probe collection via public method in Rlf class after codesummary section deliniated below
+                        RlfImported = true;
                     }
                     ThisRLF = thisRlf;
                 }

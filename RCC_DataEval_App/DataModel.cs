@@ -1,5 +1,4 @@
-﻿
-using Ionic.Zip;
+﻿using Ionic.Zip;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,13 +9,19 @@ using System.Threading.Tasks;
 
 namespace RCC_DataEval_App
 {
-    public class DataHolder : IRawDataModel
+    public class DataModel : IRawDataModel
     {
         public BindingList<Rcc> Rccs { get; set; }
         public Dictionary<string, Rlf> Rlfs { get; set; }
         public Dictionary<string, PkcReader> Pkcs { get; set; }
+        public List<RccTreeNode> Tree { get; set; }
 
-        public DataHolder() { }
+        public DataModel()
+        {
+            Rccs = new BindingList<Rcc>();
+            Rlfs = new Dictionary<string, Rlf>();
+            Pkcs = new Dictionary<string, PkcReader>();
+        }
 
         public void CreateObjectsFromFiles(string[] fileNames, int fileTypeIndex)
         {
@@ -28,7 +33,7 @@ namespace RCC_DataEval_App
             filesToLoad.AddRange(fileNames.Where(x => x.EndsWith(fileTypes[fileTypeIndex], StringComparison.OrdinalIgnoreCase)));
             zipsToLoad.AddRange(fileNames.Where(x => x.EndsWith(".ZIP", StringComparison.OrdinalIgnoreCase)));
 
-            if(zipsToLoad.Count > 0)
+            if (zipsToLoad.Count > 0)
             {
                 foreach (string s in zipsToLoad)
                 {
@@ -37,20 +42,31 @@ namespace RCC_DataEval_App
                 }
             }
 
-            if(fileTypeIndex == 0)
+            if (fileTypeIndex == 0)
             {
-                IEnumerable<string> rccsToAdd = filesToLoad.Where(x => x.EndsWith("RCC", StringComparison.OrdinalIgnoreCase));
+                for (int i = 0; i < filesToLoad.Count; i++)
+                {
+                    Rcc temp = new Rcc(filesToLoad[i], Rlfs);
+                    Rccs.Add(temp);
+                    if (temp.RlfImported)
+                    {
+                        Rlfs.Add(temp.ThisRLF.Name, temp.ThisRLF);
+                    }
+                }
             }
-            else if(fileTypeIndex == 1)
+            else if (fileTypeIndex == 1)
             {
-                // Make RLFs from files
+                for (int i = 0; i < filesToLoad.Count; i++)
+                {
+                    Rlf temp = new Rlf(filesToLoad[i]);
+                    // Validate temp and then:
+                    Rlfs.Add(temp.Name, temp);
+                }
             }
             else
             {
-                // Make PKCs from files
+                // Add PkcReader
             }
         }
-
-        
     }
 }
