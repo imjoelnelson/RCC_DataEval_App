@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DF74069A-3676-45EF-9A42-BD07E7AAF3DA}</ProjectGuid>
+    <ProjectGuid>{46C05753-EC08-4015-9ED8-70C43F88388F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>RCC_DataEval_App</RootNamespace>
-    <AssemblyName>RCC_DataEval_App</AssemblyName>
+    <RootNamespace>MainViewWinForms</RootNamespace>
+    <AssemblyName>MainViewWinForms</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,20 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetZip, Version=1.16.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.16.0\lib\net40\DotNetZip.dll</HintPath>
-    </Reference>
-    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.5.0.0\lib\net461\MathNet.Numerics.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,26 +45,25 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="TreeViewMS">
-      <HintPath>..\..\..\..\Downloads\treeviewms_demo\TreeViewMS.dll</HintPath>
+      <HintPath>..\Additional DLLs\TreeViewMS.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomEventArgs.cs" />
-    <Compile Include="DataModel.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="DBDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MainView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainView.Designer.cs">
+      <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
-    <Compile Include="IPasswordEnter.cs" />
+    <Compile Include="MVPFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RawDataPresenter.cs" />
-    <Compile Include="RecursiveUnzip.cs" />
-    <Compile Include="TestClass.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="RccTreeNode.cs" />
+    <EmbeddedResource Include="MainView.resx">
+      <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -86,9 +73,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -103,7 +88,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\PadLock.png" />
+    <ProjectReference Include="..\NCounterCore\NCounterCore.csproj">
+      <Project>{eba9b13b-8e41-4fbd-9654-034a3e1a02a4}</Project>
+      <Name>NCounterCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RccAppDataModels\RccAppDataModels.csproj">
+      <Project>{bb5627bf-7539-4052-adfc-c9603a38e13a}</Project>
+      <Name>RccAppDataModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RCCAppPresenters\RCCAppPresenters.csproj">
+      <Project>{52d421be-9ea8-487e-b3c8-d4710505aee5}</Project>
+      <Name>RCCAppPresenters</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

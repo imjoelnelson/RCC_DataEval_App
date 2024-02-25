@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RCC_DataEval_App
+namespace RCCAppPresenters
 {
-    public class RawDataPresenter
+    public class MainViewPresenter
     {
-        private IRawDataView RawDataView { get; set; }
-        private IRawDataModel Holder { get; set; }
-       
-        public RawDataPresenter(IRawDataView rawDataView, IRawDataModel holder)
+        private IMainView RawDataView { get; set; }
+        private IDataModel Holder { get; set; }
+
+        public MainViewPresenter(IMainView rawDataView, IDataModel holder)
         {
             RawDataView = rawDataView;
             Holder = holder;
@@ -26,7 +25,7 @@ namespace RCC_DataEval_App
             var args = (FilesLoadingEventArgs)e;
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
-                
+
                 ofd.Filter = "RCC;ZIP|*.RCC;*.ZIP|RLF;ZIP|*.RLF;*.ZIP|PKC;ZIP|*.PKC;*.ZIP";
                 ofd.FilterIndex = args.Index;
                 string[] fileTypes = new string[] { "RCCs", "RLFs", "PKCs" };
@@ -47,7 +46,7 @@ namespace RCC_DataEval_App
 
         private void Rccs_ListChanged(object sender, EventArgs e)
         {
-            RawDataView.
+            
         }
     }
 }

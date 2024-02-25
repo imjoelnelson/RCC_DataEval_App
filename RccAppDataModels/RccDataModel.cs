@@ -1,23 +1,21 @@
-﻿using Ionic.Zip;
+﻿using NCounterCore;
+using RCCAppPresenters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace RCC_DataEval_App
+namespace RccAppDataModels
 {
-    public class DataModel : IRawDataModel
+    public class RccDataModel : IDataModel
     {
         public BindingList<Rcc> Rccs { get; set; }
         public Dictionary<string, Rlf> Rlfs { get; set; }
         public Dictionary<string, PkcReader> Pkcs { get; set; }
-        public List<RccTreeNode> Tree { get; set; }
 
-        public DataModel()
+        public RccDataModel()
         {
             Rccs = new BindingList<Rcc>();
             Rlfs = new Dictionary<string, Rlf>();
