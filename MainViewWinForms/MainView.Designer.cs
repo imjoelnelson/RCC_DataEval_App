@@ -29,6 +29,7 @@ namespace MainViewWinForms
         /// </summary>
         private void InitializeComponent()
         {
+            Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo treeNodeAdvStyleInfo1 = new Syncfusion.Windows.Forms.Tools.TreeNodeAdvStyleInfo();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importRCCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,13 +40,16 @@ namespace MainViewWinForms
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.rawDataPage = new System.Windows.Forms.TabPage();
-            this.analysesPage = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.analysesPage = new System.Windows.Forms.TabPage();
+            this.treeViewAdv1 = new Syncfusion.Windows.Forms.Tools.TreeViewAdv();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.rawDataPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.treeViewAdv1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -59,7 +63,7 @@ namespace MainViewWinForms
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2363, 48);
+            this.menuStrip1.Size = new System.Drawing.Size(2363, 40);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -70,46 +74,46 @@ namespace MainViewWinForms
             this.importRLFsToolStripMenuItem,
             this.importPKCsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 44);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 36);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // importRCCsToolStripMenuItem
             // 
             this.importRCCsToolStripMenuItem.Name = "importRCCsToolStripMenuItem";
-            this.importRCCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importRCCsToolStripMenuItem.Size = new System.Drawing.Size(280, 44);
             this.importRCCsToolStripMenuItem.Text = "Import RCCs";
             this.importRCCsToolStripMenuItem.Click += new System.EventHandler(this.LoadRCCsToolStripMenuItem_Click);
             // 
             // importRLFsToolStripMenuItem
             // 
             this.importRLFsToolStripMenuItem.Name = "importRLFsToolStripMenuItem";
-            this.importRLFsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importRLFsToolStripMenuItem.Size = new System.Drawing.Size(280, 44);
             this.importRLFsToolStripMenuItem.Text = "Import RLFs";
             this.importRLFsToolStripMenuItem.Click += new System.EventHandler(this.LoadRLFsToolStripMenuItem_Click);
             // 
             // importPKCsToolStripMenuItem
             // 
             this.importPKCsToolStripMenuItem.Name = "importPKCsToolStripMenuItem";
-            this.importPKCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importPKCsToolStripMenuItem.Size = new System.Drawing.Size(280, 44);
             this.importPKCsToolStripMenuItem.Text = "Import PKCs";
             this.importPKCsToolStripMenuItem.Click += new System.EventHandler(this.LoadPKCsToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(75, 44);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(75, 36);
             this.editToolStripMenuItem.Text = "Edit";
             // 
             // preferrenceToolStripMenuItem
             // 
             this.preferrenceToolStripMenuItem.Name = "preferrenceToolStripMenuItem";
-            this.preferrenceToolStripMenuItem.Size = new System.Drawing.Size(159, 44);
+            this.preferrenceToolStripMenuItem.Size = new System.Drawing.Size(159, 36);
             this.preferrenceToolStripMenuItem.Text = "Preferences";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(85, 44);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(85, 36);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // tabControl1
@@ -137,24 +141,68 @@ namespace MainViewWinForms
             this.rawDataPage.Text = "Raw Data";
             this.rawDataPage.UseVisualStyleBackColor = true;
             // 
-            // analysesPage
-            // 
-            this.analysesPage.Location = new System.Drawing.Point(8, 47);
-            this.analysesPage.Name = "analysesPage";
-            this.analysesPage.Padding = new System.Windows.Forms.Padding(3);
-            this.analysesPage.Size = new System.Drawing.Size(2347, 1116);
-            this.analysesPage.TabIndex = 1;
-            this.analysesPage.Text = "Analyses";
-            this.analysesPage.UseVisualStyleBackColor = true;
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.treeViewAdv1);
             this.splitContainer1.Size = new System.Drawing.Size(2341, 1112);
             this.splitContainer1.SplitterDistance = 534;
             this.splitContainer1.TabIndex = 0;
+            // 
+            // analysesPage
+            // 
+            this.analysesPage.Location = new System.Drawing.Point(8, 45);
+            this.analysesPage.Name = "analysesPage";
+            this.analysesPage.Padding = new System.Windows.Forms.Padding(3);
+            this.analysesPage.Size = new System.Drawing.Size(2347, 1118);
+            this.analysesPage.TabIndex = 1;
+            this.analysesPage.Text = "Analyses";
+            this.analysesPage.UseVisualStyleBackColor = true;
+            // 
+            // treeViewAdv1
+            // 
+            treeNodeAdvStyleInfo1.CheckBoxTickThickness = 1;
+            treeNodeAdvStyleInfo1.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            treeNodeAdvStyleInfo1.EnsureDefaultOptionedChild = true;
+            treeNodeAdvStyleInfo1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            treeNodeAdvStyleInfo1.IntermediateCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            treeNodeAdvStyleInfo1.OptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
+            treeNodeAdvStyleInfo1.SelectedOptionButtonColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+            this.treeViewAdv1.BaseStylePairs.AddRange(new Syncfusion.Windows.Forms.Tools.StyleNamePair[] {
+            new Syncfusion.Windows.Forms.Tools.StyleNamePair("Standard", treeNodeAdvStyleInfo1)});
+            this.treeViewAdv1.BeforeTouchSize = new System.Drawing.Size(534, 1112);
+            this.treeViewAdv1.Dock = System.Windows.Forms.DockStyle.Fill;
+            // 
+            // 
+            // 
+            this.treeViewAdv1.HelpTextControl.BaseThemeName = null;
+            this.treeViewAdv1.HelpTextControl.Location = new System.Drawing.Point(0, 0);
+            this.treeViewAdv1.HelpTextControl.Name = "";
+            this.treeViewAdv1.HelpTextControl.Size = new System.Drawing.Size(392, 112);
+            this.treeViewAdv1.HelpTextControl.TabIndex = 0;
+            this.treeViewAdv1.HelpTextControl.Visible = true;
+            this.treeViewAdv1.InactiveSelectedNodeForeColor = System.Drawing.SystemColors.ControlText;
+            this.treeViewAdv1.Location = new System.Drawing.Point(0, 0);
+            this.treeViewAdv1.MetroColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(165)))), ((int)(((byte)(220)))));
+            this.treeViewAdv1.Name = "treeViewAdv1";
+            this.treeViewAdv1.SelectedNodeForeColor = System.Drawing.SystemColors.HighlightText;
+            this.treeViewAdv1.Size = new System.Drawing.Size(534, 1112);
+            this.treeViewAdv1.TabIndex = 0;
+            this.treeViewAdv1.Text = "treeViewAdv1";
+            // 
+            // 
+            // 
+            this.treeViewAdv1.ToolTipControl.BaseThemeName = null;
+            this.treeViewAdv1.ToolTipControl.Location = new System.Drawing.Point(0, 0);
+            this.treeViewAdv1.ToolTipControl.Name = "";
+            this.treeViewAdv1.ToolTipControl.Size = new System.Drawing.Size(392, 112);
+            this.treeViewAdv1.ToolTipControl.TabIndex = 0;
+            this.treeViewAdv1.ToolTipControl.Visible = true;
             // 
             // MainView
             // 
@@ -170,8 +218,10 @@ namespace MainViewWinForms
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.rawDataPage.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.treeViewAdv1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -191,5 +241,6 @@ namespace MainViewWinForms
         private System.Windows.Forms.TabPage rawDataPage;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabPage analysesPage;
+        private Syncfusion.Windows.Forms.Tools.TreeViewAdv treeViewAdv1;
     }
 }

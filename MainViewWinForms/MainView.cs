@@ -1,5 +1,6 @@
 ﻿using NCounterCore;
 using RCCAppPresenters;
+using Syncfusion.Windows.Forms.Tools;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TreeViewMS;
 
 namespace MainViewWinForms
 {
@@ -20,11 +20,12 @@ namespace MainViewWinForms
         // File loading
         public int FileTypeIndex { get; set; }
 
+        // TreeView Conrol
+        private TreeViewAdv RccTree { get; set; }
+
         // Data grid control
         private BindingSource Source { get; set; }
         private DBDataGridView Gv { get; set; }
-
-
 
         // Implementing IRawDataView events
         public event EventHandler FilesLoading;
@@ -44,6 +45,8 @@ namespace MainViewWinForms
                 DataSource = Source
             };
             Gv.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.ColumnHeader);
+
+            TreeViewAdvExt test = new TreeViewAdvExt();
         }
 
         // *****    Event Handling    *****
@@ -83,43 +86,23 @@ namespace MainViewWinForms
             this.Show();
         }
 
-        /// <summary>
-        /// Builds a tree view representing RCCs organized by common RLF; RLFs are parent nodes and RCCs are child nodes
-        /// </summary>
-        /// <param name="rcc">List of RCCs</param>
-        /// <returns>A Treeview representing RCCs organized by common RLF</returns>
-        private TreeViewMS.TreeViewMS GetRccTree(List<Rcc> rcc)
+        public TreeViewAdv PopulateTreeView(List<Rcc> rccs)
         {
-            if (rcc == null)
+            TreeViewAdv adv = new TreeViewAdv();
+            adv.Dock = DockStyle.Fill;
+            foreach(Rcc r in rccs)
             {
-                throw new ArgumentException("The 'rcc' argument for GetRccTree's  cannot be null");
+                TreeNodeAdv t = new TreeNodeAdv(r.FileName);
+                t.
             }
-            TreeViewMS.TreeViewMS returnObject = new TreeViewMS.TreeViewMS();
-            IEnumerable<string> rlfNames = rcc.Select(x => x.ThisRLF.Name).Distinct();
-            foreach (string s in rlfNames)
-            {
-                RccTreeNode node = new RccTreeNode(false, null, s);
-                IEnumerable<Rcc> theseRccs = rcc.Where(x => x.ThisRLF.Name.Equals(s));
-                foreach (Rcc r in theseRccs)
-                {
-                    node.Nodes.Add(new RccTreeNode(true, r, r.FileName));
-                }
-
-                returnObject.Nodes.Add(node);
-            }
-
-            return returnObject;
+            return adv;
         }
+        
 
         public void RccListChanged(List<Rcc> rccs)
         {
-            TreeViewMS.TreeViewMS rccTree = GetRccTree(rccs);
-            rccTree.Dock = DockStyle.Fill;
-            rccTree.ShowPlusMinus = true;
-            rccTree.ShowNodeToolTips = true;
-            rccTree.Scrollable = true;
-            splitContainer1.Panel1.Controls.Clear();
-            splitContainer1.Panel1.Controls.Add(rccTree);
+            
+            
         }
 
     }

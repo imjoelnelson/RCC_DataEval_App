@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace MainViewWinForms
 {
-    class DBDataGridView : DataGridView
+    public class DBDataGridView : DataGridView
     {
         public DBDataGridView(bool copypasta)
         {
