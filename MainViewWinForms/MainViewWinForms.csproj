@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7DD561F9-6B1F-4CB0-A517-F0D90BF354C7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MainView_WinForms</RootNamespace>
-    <AssemblyName>MainView_WinForms</AssemblyName>
+    <RootNamespace>MainViewWinForms</RootNamespace>
+    <AssemblyName>MainViewWinForms</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -71,11 +71,15 @@
     <Compile Include="MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
+    <Compile Include="McTreeViewFromProperties.cs" />
     <Compile Include="MVPFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TreeViewAdvExt.cs">
-      <SubType>Component</SubType>
+    <Compile Include="ThresholdSetFormcs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ThresholdSetFormcs.Designer.cs">
+      <DependentUpon>ThresholdSetFormcs.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
@@ -88,7 +92,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ThresholdSetFormcs.resx">
+      <DependentUpon>ThresholdSetFormcs.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -115,6 +123,9 @@
       <Project>{52d421be-9ea8-487e-b3c8-d4710505aee5}</Project>
       <Name>RCCAppPresenters</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\InfoIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

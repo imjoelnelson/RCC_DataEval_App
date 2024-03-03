@@ -8,21 +8,104 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-
-namespace MainViewWinForms.Properties
-{
+namespace MainViewWinForms.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("FileName,SampleName,LaneID,Date,Instrument,PctFovCounted,PctFovPass,BindingDensit" +
+            "y,BindingDensityPass,PosLinearity,PosLinearityPass,Lod,LodPass,PctAboveThresh,Ge" +
+            "oMeanOfPos,GeoMeanOfHks")]
+        public string SelectedProperties {
+            get {
+                return ((string)(this["SelectedProperties"]));
+            }
+            set {
+                this["SelectedProperties"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int ImagingThreshold {
+            get {
+                return ((int)(this["ImagingThreshold"]));
+            }
+            set {
+                this["ImagingThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.8")]
+        public double SprintDensityThreshold {
+            get {
+                return ((double)(this["SprintDensityThreshold"]));
+            }
+            set {
+                this["SprintDensityThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2.25")]
+        public double DaDensityThreshold {
+            get {
+                return ((double)(this["DaDensityThreshold"]));
+            }
+            set {
+                this["DaDensityThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.95")]
+        public double LinearityThreshold {
+            get {
+                return ((double)(this["LinearityThreshold"]));
+            }
+            set {
+                this["LinearityThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int LodSdCoefficient {
+            get {
+                return ((int)(this["LodSdCoefficient"]));
+            }
+            set {
+                this["LodSdCoefficient"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40")]
+        public int CountThreshold {
+            get {
+                return ((int)(this["CountThreshold"]));
+            }
+            set {
+                this["CountThreshold"] = value;
             }
         }
     }

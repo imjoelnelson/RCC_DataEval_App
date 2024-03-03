@@ -10,11 +10,13 @@ namespace RCCAppPresenters
 {
     public interface IMainView
     {
+        // Properties
         int FileTypeIndex { get; set; }
         MainViewPresenter Presenter { get; set; }
 
         // Events
         event EventHandler FilesLoading;
+        event EventHandler ThresholdsSet;
         event EventHandler RccListCleared;
         event EventHandler SentToQueue;
         event EventHandler ExportToCsv;
@@ -22,7 +24,8 @@ namespace RCCAppPresenters
         event EventHandler ReorderRows;
         event EventHandler Filter;
 
-        void SetViewDataSource(BindingList<Rcc> list);
-        void RccListChanged(List<Rcc> rccs);
+        // Methods
+        void RccListChanged(List<Rcc2> rccs);
+        QcThresholds CollectThresholds();
     }
 }

@@ -1,7 +1,27 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MainViewWinForms.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SelectedProperties" Type="System.String" Scope="User">
+      <Value Profile="(Default)">FileName,SampleName,LaneID,Date,Instrument,PctFovCounted,PctFovPass,BindingDensity,BindingDensityPass,PosLinearity,PosLinearityPass,Lod,LodPass,PctAboveThresh,GeoMeanOfPos,GeoMeanOfHks</Value>
+    </Setting>
+    <Setting Name="ImagingThreshold" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">75</Value>
+    </Setting>
+    <Setting Name="SprintDensityThreshold" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1.8</Value>
+    </Setting>
+    <Setting Name="DaDensityThreshold" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2.25</Value>
+    </Setting>
+    <Setting Name="LinearityThreshold" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.95</Value>
+    </Setting>
+    <Setting Name="LodSdCoefficient" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="CountThreshold" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">40</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

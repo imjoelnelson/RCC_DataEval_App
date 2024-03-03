@@ -13,9 +13,9 @@ namespace RCCAppPresenters
         BindingList<Rcc> Rccs { get; set; }
         Dictionary<string, Rlf> Rlfs { get; set; }
         Dictionary<string, PkcReader> Pkcs { get; set; }
+        QcThresholds Thresholds { get; set; }
 
-        event EventHandler RCC_ListChanged;
-
+        void SetThresholds(QcThresholds thresholds);
         void CreateObjectsFromFiles(string[] fileNames, int fileTypeIndex);
     }
 }

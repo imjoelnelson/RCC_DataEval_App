@@ -9,17 +9,22 @@ namespace RCCAppPresenters
 {
     public class MainViewPresenter
     {
-        private IMainView RawDataView { get; set; }
+        private IMainView MainView { get; set; }
         private IDataModel Holder { get; set; }
 
-        public MainViewPresenter(IMainView rawDataView, IDataModel holder)
+        public MainViewPresenter(IMainView mainView, IDataModel holder)
         {
-            RawDataView = rawDataView;
+            MainView = mainView;
             Holder = holder;
-            rawDataView.FilesLoading += new EventHandler(View_FilesLoading);
-            Holder.RCC_ListChanged += new EventHandler(Rccs_ListChanged);
+            mainView.FilesLoading += new EventHandler(View_FilesLoading);
+            mainView.ThresholdsSet += new EventHandler(View_ThresholdSet);
         }
 
+        /// <summary>
+        /// Event called from View when any of the three file import menu item dialogs are confirmed
+        /// </summary>
+        /// <param name="sender">View window</param>
+        /// <param name="e">Event args containing OpenFileDialog filter index value</param>
         private void View_FilesLoading(object sender, EventArgs e)
         {
             var args = (FilesLoadingEventArgs)e;
@@ -35,7 +40,7 @@ namespace RCCAppPresenters
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     Holder.CreateObjectsFromFiles(ofd.FileNames, args.Index);
-                    RawDataView.SetViewDataSource(Holder.Rccs);
+                    // Update binding for mainview Gv
                 }
                 else
                 {
@@ -44,9 +49,14 @@ namespace RCCAppPresenters
             }
         }
 
-        private void Rccs_ListChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Handler for event called from View when thresholds are set in the threshold set diaglog
+        /// </summary>
+        /// <param name="sender">view window</param>
+        /// <param name="e">empty</param>
+        private void View_ThresholdSet(object sender, EventArgs e)
         {
-            
+            Holder.SetThresholds(MainView.CollectThresholds());
         }
     }
 }

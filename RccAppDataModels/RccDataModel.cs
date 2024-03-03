@@ -12,24 +12,17 @@ namespace RccAppDataModels
     public class RccDataModel : IDataModel
     {
         public BindingList<Rcc> Rccs { get; set; }
+        public BindingList<Rcc> SelectedRccs { get; set; }
         public Dictionary<string, Rlf> Rlfs { get; set; }
         public Dictionary<string, PkcReader> Pkcs { get; set; }
+        public QcThresholds Thresholds { get; set; }
 
         public RccDataModel()
         {
             Rccs = new BindingList<Rcc>();
+            SelectedRccs = new BindingList<Rcc>();
             Rlfs = new Dictionary<string, Rlf>();
             Pkcs = new Dictionary<string, PkcReader>();
-            Rccs.ListChanged += new ListChangedEventHandler(Rccs_ListChanged);
-        }
-
-        /// <summary>
-        /// Implementing RCC list changed event from interface
-        /// </summary>
-        public event EventHandler RCC_ListChanged;
-        private void Rccs_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            RCC_ListChanged?.Invoke(sender, e);
         }
 
         public void CreateObjectsFromFiles(string[] fileNames, int fileTypeIndex)
@@ -55,7 +48,7 @@ namespace RccAppDataModels
             {
                 for (int i = 0; i < filesToLoad.Count; i++)
                 {
-                    Rcc temp = new Rcc(filesToLoad[i], Rlfs);
+                    Rcc temp = new Rcc(filesToLoad[i], Rlfs, Thresholds);
                     Rccs.Add(temp);
                     if (temp.RlfImported)
                     {
@@ -76,6 +69,11 @@ namespace RccAppDataModels
             {
                 // Add PkcReader
             }
+        }
+
+        public void SetThresholds(QcThresholds thresholds)
+        {
+            Thresholds = thresholds;
         }
     }
 }

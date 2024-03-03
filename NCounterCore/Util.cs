@@ -28,6 +28,10 @@ namespace NCounterCore
         /// Coefficient to use with NEG mean average when calculating background level
         /// </summary>
         public static int LODSDCoeff { get; set; }
+        /// <summary>
+        /// Estimate of background or user set threshold for genes to be included
+        /// </summary>
+        public static int? CountThreshold { get; set; }
 
         public Util()
         {
@@ -37,6 +41,7 @@ namespace NCounterCore
             DensityPassThreshDA = 2.25;
             PosLinearityPassThresh = 0.95;
             LODSDCoeff = 2;
+            CountThreshold = null;
         }
 
         /// <summary>

@@ -1,14 +1,8 @@
 ﻿using NCounterCore;
 using RCCAppPresenters;
-using Syncfusion.Windows.Forms.Tools;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MainViewWinForms
@@ -21,14 +15,11 @@ namespace MainViewWinForms
         public int FileTypeIndex { get; set; }
 
         // TreeView Conrol
-        private TreeViewAdv RccTree { get; set; }
-
-        // Data grid control
-        private BindingSource Source { get; set; }
-        private DBDataGridView Gv { get; set; }
+        private List<string> SelectedProperties { get; set; }
 
         // Implementing IRawDataView events
         public event EventHandler FilesLoading;
+        public event EventHandler ThresholdsSet;
         public event EventHandler RccListCleared;
         public event EventHandler SentToQueue;
         public event EventHandler ExportToCsv;
@@ -38,15 +29,7 @@ namespace MainViewWinForms
         public MainView()
         {
             InitializeComponent();
-
-            Source = new BindingSource();
-            Gv = new DBDataGridView(true)
-            {
-                DataSource = Source
-            };
-            Gv.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.ColumnHeader);
-
-            TreeViewAdvExt test = new TreeViewAdvExt();
+            SelectedProperties = Properties.Settings.Default.SelectedProperties.Split(',').ToList();
         }
 
         // *****    Event Handling    *****
@@ -70,41 +53,45 @@ namespace MainViewWinForms
             FilesLoading.Invoke(this, args);
         }
 
-        // *****    Methods    ******
-        /// <summary>
-        /// Public method for setting GridView binding source
-        /// </summary>
-        /// <param name="list">DataSource for the BindingSource</param>
-        public void SetViewDataSource(BindingList<Rcc> list)
-        {
-            Source.DataSource = list;
-            Source.ResetBindings(false);
-        }
-
         public void ShowThis()
         {
             this.Show();
         }
 
-        public TreeViewAdv PopulateTreeView(List<Rcc> rccs)
+        /// <summary>
+        /// Implementing method from IMainView; Method called by presenter when the RCC list changes
+        /// </summary>
+        /// <param name="rccs"></param>
+        public void RccListChanged(List<Rcc2> rccs)
         {
-            TreeViewAdv adv = new TreeViewAdv();
-            adv.Dock = DockStyle.Fill;
-            foreach(Rcc r in rccs)
+            panel1.Controls.Clear();
+            var treeView = McTreeViewFromProperties.GetTreeViewFromProperties(rccs, SelectedProperties);
+            panel1.Controls.Add(treeView);
+        }
+
+        public QcThresholds CollectThresholds() // Too much connection with Model here; need to make more generic
+        {
+            QcThresholds retVal = new QcThresholds();
+            retVal.ImagingThreshold = Properties.Settings.Default.ImagingThreshold;
+            retVal.SprintDensityThreshold = Properties.Settings.Default.SprintDensityThreshold;
+            retVal.DaDensityThreshold = Properties.Settings.Default.DaDensityThreshold;
+            retVal.LinearityThreshold = Properties.Settings.Default.LinearityThreshold;
+            retVal.LodSdCoefficient = Properties.Settings.Default.LodSdCoefficient;
+            retVal.CountThreshold = Properties.Settings.Default.CountThreshold;
+
+            return retVal;
+        }
+
+        private void setThresholdsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (ThresholdSetFormcs form = new ThresholdSetFormcs())
             {
-                TreeNodeAdv t = new TreeNodeAdv(r.FileName);
-                t.
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    ThresholdsSet.Invoke(this, EventArgs.Empty);
+                }
             }
-            return adv;
         }
-        
-
-        public void RccListChanged(List<Rcc> rccs)
-        {
-            
-            
-        }
-
     }
 }
 

@@ -399,6 +399,25 @@ namespace NCounterCore
             }
         }
         private bool _LodPass;
+
+        /// <summary>
+        /// Percent of genes with counts above the default or user-set background threshold
+        /// </summary>
+        public int PctAboveThresh
+        {
+            get { return _PctAboveThresh; }
+            set
+            {
+                if(_PctAboveThresh != value)
+                {
+                    _PctAboveThresh = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private int _PctAboveThresh;
+
+        private int? CountThreshold { get; set; }
         #endregion
 
         #region Normalization Properties
@@ -442,7 +461,7 @@ namespace NCounterCore
         /// </summary>
         /// <param name="filePath">Path to the RCC file</param>
         /// <param name="rlfs">List of already loaded RLFs in Form1</param>
-        public Rcc(string filePath, Dictionary<string, Rlf> rlfs)
+        public Rcc(string filePath, Dictionary<string, Rlf> rlfs, QcThresholds thresholds)
         {
             // Read in data
             FileName = Path.GetFileNameWithoutExtension(filePath);
@@ -503,9 +522,10 @@ namespace NCounterCore
                 .Select(y => y.TargetName), ProbeCounts);
                 PosLinearityPass = PosLinearity >= Util.PosLinearityPassThresh;
                 Lod = GetLod(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Negative"))
-                    .Select(x => x.TargetName), ProbeCounts);
+                    .Select(x => x.TargetName), ProbeCounts, Util.LODSDCoeff);
                 LodPass = ProbeCounts["POS_E(0.5)"] > Lod;
             }
+            PctAboveThresh = ProbeCounts.Where(x => x.Value >= CountThreshold).Count() / ProbeCounts.Count;
         }
 
         /// <summary>
@@ -783,10 +803,10 @@ namespace NCounterCore
         /// <param name="negNames">Target names of the ERCC NEG controls</param>
         /// <param name="counts">ProbeCount collection from RCC</param>
         /// <returns></returns>
-        private double GetLod(IEnumerable<string> negNames, Dictionary<string, int> counts)
+        private double GetLod(IEnumerable<string> negNames, Dictionary<string, int> counts, int lodSdCoeff)
         {
             IEnumerable<double> logs = negNames.Select(x => Convert.ToDouble(counts[x]));
-            return logs.Average() + (Util.LODSDCoeff * MathNet.Numerics.Statistics.Statistics.StandardDeviation(logs));
+            return logs.Average() + (lodSdCoeff * MathNet.Numerics.Statistics.Statistics.StandardDeviation(logs));
         }
 
         public void GetHkGeoMean(List<string> hkNames, Dictionary<string, int> counts)
