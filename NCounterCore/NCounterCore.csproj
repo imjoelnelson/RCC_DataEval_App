@@ -55,13 +55,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IPkcReader.cs" />
+    <Compile Include="OrderByExtension.cs" />
     <Compile Include="PkcCollector.cs" />
     <Compile Include="PkcReader.cs" />
     <Compile Include="ProbeItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QcThresholds.cs" />
+    <Compile Include="QueryableExtensions.cs" />
     <Compile Include="RCC.cs" />
-    <Compile Include="Rcc2.cs" />
     <Compile Include="Rlf.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>

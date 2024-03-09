@@ -43,6 +43,8 @@ namespace MainViewWinForms
             this.coeffUpDown = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.countUpDown = new System.Windows.Forms.NumericUpDown();
+            this.threshToLodRadioButton = new System.Windows.Forms.RadioButton();
+            this.setToValRadioButton = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.imagingUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sprintUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.daUpDown)).BeginInit();
@@ -54,8 +56,8 @@ namespace MainViewWinForms
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(128, 136);
-            this.okButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.okButton.Location = new System.Drawing.Point(160, 260);
+            this.okButton.Margin = new System.Windows.Forms.Padding(2);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(50, 22);
             this.okButton.TabIndex = 0;
@@ -67,8 +69,8 @@ namespace MainViewWinForms
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(182, 136);
-            this.cancelButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cancelButton.Location = new System.Drawing.Point(214, 260);
+            this.cancelButton.Margin = new System.Windows.Forms.Padding(2);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(50, 22);
             this.cancelButton.TabIndex = 1;
@@ -84,7 +86,7 @@ namespace MainViewWinForms
             0,
             131072});
             this.imagingUpDown.Location = new System.Drawing.Point(179, 6);
-            this.imagingUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.imagingUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.imagingUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -128,7 +130,7 @@ namespace MainViewWinForms
             0,
             65536});
             this.sprintUpDown.Location = new System.Drawing.Point(179, 25);
-            this.sprintUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.sprintUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.sprintUpDown.Maximum = new decimal(new int[] {
             10,
             0,
@@ -167,7 +169,7 @@ namespace MainViewWinForms
             0,
             65536});
             this.daUpDown.Location = new System.Drawing.Point(179, 45);
-            this.daUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.daUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.daUpDown.Maximum = new decimal(new int[] {
             10,
             0,
@@ -206,7 +208,7 @@ namespace MainViewWinForms
             0,
             131072});
             this.linearityUpDown.Location = new System.Drawing.Point(179, 64);
-            this.linearityUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.linearityUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.linearityUpDown.Maximum = new decimal(new int[] {
             1,
             0,
@@ -234,7 +236,7 @@ namespace MainViewWinForms
             // coeffUpDown
             // 
             this.coeffUpDown.Location = new System.Drawing.Point(179, 83);
-            this.coeffUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.coeffUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.coeffUpDown.Maximum = new decimal(new int[] {
             5,
             0,
@@ -252,7 +254,7 @@ namespace MainViewWinForms
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(90, 103);
+            this.label6.Location = new System.Drawing.Point(89, 110);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(85, 13);
@@ -266,8 +268,8 @@ namespace MainViewWinForms
             0,
             0,
             0});
-            this.countUpDown.Location = new System.Drawing.Point(179, 102);
-            this.countUpDown.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.countUpDown.Location = new System.Drawing.Point(213, 153);
+            this.countUpDown.Margin = new System.Windows.Forms.Padding(2);
             this.countUpDown.Maximum = new decimal(new int[] {
             500,
             0,
@@ -287,13 +289,37 @@ namespace MainViewWinForms
             0,
             0});
             // 
+            // threshToLodRadioButton
+            // 
+            this.threshToLodRadioButton.AutoSize = true;
+            this.threshToLodRadioButton.Location = new System.Drawing.Point(179, 108);
+            this.threshToLodRadioButton.Name = "threshToLodRadioButton";
+            this.threshToLodRadioButton.Size = new System.Drawing.Size(82, 17);
+            this.threshToLodRadioButton.TabIndex = 14;
+            this.threshToLodRadioButton.TabStop = true;
+            this.threshToLodRadioButton.Text = "Set To LOD";
+            this.threshToLodRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // setToValRadioButton
+            // 
+            this.setToValRadioButton.AutoSize = true;
+            this.setToValRadioButton.Location = new System.Drawing.Point(179, 131);
+            this.setToValRadioButton.Name = "setToValRadioButton";
+            this.setToValRadioButton.Size = new System.Drawing.Size(87, 17);
+            this.setToValRadioButton.TabIndex = 15;
+            this.setToValRadioButton.TabStop = true;
+            this.setToValRadioButton.Text = "Set To Value";
+            this.setToValRadioButton.UseVisualStyleBackColor = true;
+            // 
             // ThresholdSetFormcs
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(237, 169);
+            this.ClientSize = new System.Drawing.Size(273, 293);
+            this.Controls.Add(this.setToValRadioButton);
+            this.Controls.Add(this.threshToLodRadioButton);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.countUpDown);
             this.Controls.Add(this.label5);
@@ -309,7 +335,7 @@ namespace MainViewWinForms
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ThresholdSetFormcs";
@@ -341,5 +367,7 @@ namespace MainViewWinForms
         private System.Windows.Forms.NumericUpDown coeffUpDown;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.NumericUpDown countUpDown;
+        private System.Windows.Forms.RadioButton threshToLodRadioButton;
+        private System.Windows.Forms.RadioButton setToValRadioButton;
     }
 }

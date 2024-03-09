@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ExtensionMethods;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -9,6 +10,40 @@ namespace NCounterCore
 {
     public class Rcc : INotifyPropertyChanged
     {
+        #region Display property specification collection
+        /// <summary>
+        /// Dictionary of class display properties and boolean indicating whether value is bool or not
+        /// </summary>
+        public static Dictionary<string, Tuple<bool, string, int>> Properties = new Dictionary<string, Tuple<bool, string, int>>
+        {
+            { "FileName", Tuple.Create(false, "File Name", 250) },
+            { "SampleName", Tuple.Create(false, "Sample Name", 150) },
+            { "LaneID", Tuple.Create(false, "Lane ID", 47) },
+            { "Well", Tuple.Create(false, "Well", 35) },
+            { "CartridgeID", Tuple.Create(false, "Cartridge ID", 150) },
+            { "CartridgeBarcode", Tuple.Create(false, "Cartridge Barcode", 100) },
+            { "RlfName", Tuple.Create(false, "RLF", 180) },
+            { "Date", Tuple.Create(false, "Date", 60) },
+            { "Instrument", Tuple.Create(false, "Instrument", 70) },
+            { "StagePostion", Tuple.Create(false, "Stage Postion", 100) },
+            { "Owner", Tuple.Create(false, "Owner", 100) },
+            { "Comments", Tuple.Create(false, "Comments", 150) },
+            { "FovCount", Tuple.Create(false, "FovCount", 70) },
+            { "FovCounted", Tuple.Create(false, "FovCounted", 70) },
+            { "PctFovCounted", Tuple.Create(false, "Imaging QC", 90) },
+            { "PctFovPass", Tuple.Create(true, "Imaging Flag", 90) },
+            { "BindingDensity", Tuple.Create(false, "Binding Density", 110) },
+            { "BindingDensityPass", Tuple.Create(true, "Density Flag", 90) },
+            { "PosLinearity", Tuple.Create(false, "POS Linearity", 90) },
+            { "PosLinearityPass", Tuple.Create(true, "Linearity Flag", 90) },
+            { "Lod", Tuple.Create(false, "LOD", 60) },
+            { "LodPass", Tuple.Create(true, "LOD Flag", 70) },
+            { "PctAboveThresh", Tuple.Create(false, "% Above Threshold", 125) },
+            { "GeoMeanOfPos", Tuple.Create(false, "POS Geomean", 105) },
+            { "GeoMeanOfHks", Tuple.Create(false, "Housekeeping Geomean", 170) }
+        };
+        #endregion
+
         #region Misc Properties
         public string RccReadErrorMessage { get; private set; }
         /// <summary>
@@ -31,6 +66,22 @@ namespace NCounterCore
             }
         }
         private string _FileName;
+        /// <summary>
+        /// Provides well location in 96 well plate used for hybridization of PlexSet or GeoMx readout samples
+        /// </summary>
+        public string Well
+        {
+            get { return _Well; }
+            set
+            {
+                if(_Well != value)
+                {
+                    _Well = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private string _Well;
         #endregion
 
         #region Header Attribute Properties
@@ -113,19 +164,20 @@ namespace NCounterCore
         /// <summary>
         /// Rlf class for this RCC; holds assay type and probe information 
         /// </summary>
-        public Rlf ThisRLF
+        public Rlf ThisRLF { get; set; }
+        public string RlfName
         {
-            get { return _ThisRlf; }
+            get { return _RlfName; }
             set
             {
-                if (_ThisRlf != value)
+                if(_RlfName != value)
                 {
-                    _ThisRlf = value;
+                    _RlfName = value;
                     NotifyPropertyChanged();
                 }
             }
         }
-        private Rlf _ThisRlf;
+        private string _RlfName;
         #endregion
 
         #region Lane Attribute Properties
@@ -273,13 +325,6 @@ namespace NCounterCore
         public Dictionary<string, int> ProbeCounts { get; private set; }
         #endregion
 
-        #region Message Property
-        /// <summary>
-        /// Instrument set message starting with a ';' Usually empty
-        /// </summary>
-        public string Message { get; private set; }
-        #endregion
-
         #region QC Properties
         /// <summary>
         /// Equals FovCounted/FovCount
@@ -416,8 +461,6 @@ namespace NCounterCore
             }
         }
         private int _PctAboveThresh;
-
-        private int? CountThreshold { get; set; }
         #endregion
 
         #region Normalization Properties
@@ -457,10 +500,10 @@ namespace NCounterCore
         #endregion
 
         /// <summary>
-        /// Constructor for all RCCs
+        /// CONSTRUCTOR for all RCCs
         /// </summary>
         /// <param name="filePath">Path to the RCC file</param>
-        /// <param name="rlfs">List of already loaded RLFs in Form1</param>
+        /// <param name="rlfs">List of already loaded RLFs in the Model being loaded into</param>
         public Rcc(string filePath, Dictionary<string, Rlf> rlfs, QcThresholds thresholds)
         {
             // Read in data
@@ -509,23 +552,17 @@ namespace NCounterCore
                 throw new Exception("RLF vs. RCC count of probes do not match");
             }
 
-            // Get QC flags
-            PctFovCounted = FovCount > 0 ? FovCounted / FovCount : -1;
-            PctFovPass = PctFovCounted > Util.ImagingPassThresh;
-            BindingDensityPass = IsSprint ? BindingDensity <= Util.DensityPassThreshS :
-                BindingDensity <= Util.DensityPassThreshDA;
-            if (ThisRLF.ThisType != RlfType.Generic || ThisRLF.ThisType != RlfType.DSP
-                || ThisRLF.ThisType != RlfType.PlexSet) // Controls processed differently for these assays
-            {
-                PosLinearity = GetPosLinearity(ThisRLF.Probes.Values
-                    .Where(x => x.CodeClass.Equals("Positive")).OrderBy(x => x.TargetName)
-                .Select(y => y.TargetName), ProbeCounts);
-                PosLinearityPass = PosLinearity >= Util.PosLinearityPassThresh;
-                Lod = GetLod(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Negative"))
-                    .Select(x => x.TargetName), ProbeCounts, Util.LODSDCoeff);
-                LodPass = ProbeCounts["POS_E(0.5)"] > Lod;
-            }
-            PctAboveThresh = ProbeCounts.Where(x => x.Value >= CountThreshold).Count() / ProbeCounts.Count;
+            // *** Get QC flags ***
+            SetQcValuesAndFlags(thresholds);
+
+            SetPosGeoMean(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Positive"))
+                                               .OrderBy(x => x.TargetName)
+                                               .Select(y => y.TargetName)
+                                                          , ProbeCounts);
+            IEnumerable<string> hks = ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Housekeeping"))
+                                              .OrderBy(x => x.TargetName)
+                                              .Select(y => y.TargetName);
+            SetHkGeoMean(hks, ProbeCounts);
         }
 
         /// <summary>
@@ -631,11 +668,13 @@ namespace NCounterCore
                     if (found)
                     {
                         ThisRLF = thisRlf;
+                        RlfName = thisRlf.Name;
                         RlfImported = false;
                     }
                     else
                     {
                         thisRlf = new Rlf(rlfString, found); // Add probe collection via public method in Rlf class after codesummary section deliniated below
+                        RlfName = thisRlf.Name;
                         RlfImported = true;
                     }
                     ThisRLF = thisRlf;
@@ -783,6 +822,38 @@ namespace NCounterCore
             return Tuple.Create(item1, item2);
         }
 
+        public void SetQcValuesAndFlags(QcThresholds thresholds)
+        {
+            // Imaging QC
+            PctFovCounted = FovCount > 0 ? Math.Round(Convert.ToDouble(FovCounted) / FovCount, 2) : -1;
+            PctFovPass = PctFovCounted > thresholds.ImagingThreshold;
+            // Density QC
+            BindingDensityPass = IsSprint ? BindingDensity <= thresholds.SprintDensityThreshold :
+                BindingDensity <= thresholds.SprintDensityThreshold;
+            if (ThisRLF.ThisType != RlfType.Generic || ThisRLF.ThisType != RlfType.DSP
+                || ThisRLF.ThisType != RlfType.PlexSet) // Controls processed differently for these assays
+            {
+                // Linearity QC
+                PosLinearity = GetPosLinearity(ThisRLF.Probes.Values
+                    .Where(x => x.CodeClass.Equals("Positive")).OrderBy(x => x.TargetName)
+                    .Select(y => y.TargetName), ProbeCounts);
+                PosLinearityPass = PosLinearity >= thresholds.LinearityThreshold;
+                // LOD QC
+                Lod = GetLod(ThisRLF.Probes.Values.Where(x => x.CodeClass.Equals("Negative"))
+                    .Select(x => x.TargetName), ProbeCounts, thresholds.LodSdCoefficient);
+                LodPass = ProbeCounts["POS_E(0.5)"] > Lod;
+            }
+            // Percent above threshold
+            if (thresholds.CountThreshold > -1)
+            {
+                GetPctAboveThresh(thresholds.CountThreshold);
+            }
+            else
+            {
+                GetPctAboveThresh(Convert.ToInt32(Lod));
+            }
+        }
+
         /// <summary>
         /// Gets Pearson R^2 of log2 ERCC POS control counts vs. their ideal concentrations
         /// </summary>
@@ -794,7 +865,26 @@ namespace NCounterCore
             IEnumerable<int> vals0 = posNames.Select(x => counts[x]);
             double[] valsx = vals0.Select(x => x > 0 ? Math.Log(x, 2.0) : 0).ToArray();
             double[] valsy = new double[] { 7, 5, 3, 1, -1 };
-            return valsx.Length > 5 ? MathNet.Numerics.Statistics.Correlation.Pearson(valsx.Take(5), valsy) : -1.0;
+            double retVal = valsx.Length > 5 ? MathNet.Numerics.Statistics.Correlation.Pearson(valsx.Take(5), valsy) : -1.0;
+            return  Math.Round(retVal, 2);
+        }
+
+        /// <summary>
+        /// Calculates % of genes above the user set or calculated background threshold
+        /// </summary>
+        /// <param name="countThreshold">Threshold for determining background</param>
+        private void GetPctAboveThresh(int countThreshold)
+        {
+            int aboveThresh = ProbeCounts.Where(x => x.Value >= countThreshold).Count();
+            double fractionAboveThresh = Convert.ToDouble(aboveThresh) / ProbeCounts.Count;
+            PctAboveThresh = Convert.ToInt32(100 * fractionAboveThresh);
+        }
+        
+        private void SetPosGeoMean(IEnumerable<string> posNames, Dictionary<string, int> counts)
+        {
+            IEnumerable<int> posCounts = posNames.Select(x => counts[x]);
+            double retVal = Util.GetGeoMean(posCounts.ToArray());
+            GeoMeanOfPos = Math.Round(retVal, 1);
         }
 
         /// <summary>
@@ -806,13 +896,20 @@ namespace NCounterCore
         private double GetLod(IEnumerable<string> negNames, Dictionary<string, int> counts, int lodSdCoeff)
         {
             IEnumerable<double> logs = negNames.Select(x => Convert.ToDouble(counts[x]));
-            return logs.Average() + (lodSdCoeff * MathNet.Numerics.Statistics.Statistics.StandardDeviation(logs));
+            double retVal = logs.Average() + (lodSdCoeff * MathNet.Numerics.Statistics.Statistics.StandardDeviation(logs));
+            return Math.Round(retVal, 1);
         }
 
-        public void GetHkGeoMean(List<string> hkNames, Dictionary<string, int> counts)
+        public void SetHkGeoMean(IEnumerable<string> hkNames, Dictionary<string, int> counts)
         {
+            if(hkNames.Count() < 1)
+            {
+                GeoMeanOfHKs = 0;
+                return;
+            }
             IEnumerable<int> hkCounts = hkNames.Select(x => counts[x]);
-            GeoMeanOfHKs = Util.GetGeoMean(hkCounts.ToArray());
+            double retVal = Util.GetGeoMean(hkCounts.ToArray());
+            GeoMeanOfHKs = Math.Round(retVal, 1);
         }
 
         // NotifyPropertyChanged implementation

@@ -25,9 +25,9 @@ namespace MainViewWinForms.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FileName,SampleName,LaneID,Date,Instrument,PctFovCounted,PctFovPass,BindingDensit" +
-            "y,BindingDensityPass,PosLinearity,PosLinearityPass,Lod,LodPass,PctAboveThresh,Ge" +
-            "oMeanOfPos,GeoMeanOfHks")]
+        [global::System.Configuration.DefaultSettingValueAttribute("FileName,SampleName,RlfName,LaneID,Date,Instrument,CartridgeID,PctFovCounted,PctF" +
+            "ovPass,BindingDensity,BindingDensityPass,PosLinearity,PosLinearityPass,Lod,LodPa" +
+            "ss,PctAboveThresh,GeoMeanOfPos,GeoMeanOfHks")]
         public string SelectedProperties {
             get {
                 return ((string)(this["SelectedProperties"]));
@@ -39,10 +39,10 @@ namespace MainViewWinForms.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("75")]
-        public int ImagingThreshold {
+        [global::System.Configuration.DefaultSettingValueAttribute("0.75")]
+        public double ImagingThreshold {
             get {
-                return ((int)(this["ImagingThreshold"]));
+                return ((double)(this["ImagingThreshold"]));
             }
             set {
                 this["ImagingThreshold"] = value;

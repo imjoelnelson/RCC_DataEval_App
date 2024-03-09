@@ -1,49 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace NCounterCore
 {
-    public class Util
+    public static class Util
     {
-        /// <summary>
-        /// Threshold for imaging QC pass
-        /// </summary>
-        public static double ImagingPassThresh { get; set; }
-        /// <summary>
-        /// Threshold for BindingDensity QC pass for Sprint
-        /// </summary>
-        public static double DensityPassThreshS { get; set; }
-        /// <summary>
-        /// Threshold for BindingDensity QC pass for DA
-        /// </summary>
-        public static double DensityPassThreshDA { get; set; }
-        /// <summary>
-        /// Threshold for correlation of POS Control counts with POS control concentrations
-        /// </summary>
-        public static double PosLinearityPassThresh { get; set; }
-        /// <summary>
-        /// Coefficient to use with NEG mean average when calculating background level
-        /// </summary>
-        public static int LODSDCoeff { get; set; }
-        /// <summary>
-        /// Estimate of background or user set threshold for genes to be included
-        /// </summary>
-        public static int? CountThreshold { get; set; }
-
-        public Util()
-        {
-            // Setting QC defaults; can be adjusted by UI settings
-            ImagingPassThresh = 0.75;
-            DensityPassThreshS = 1.8;
-            DensityPassThreshDA = 2.25;
-            PosLinearityPassThresh = 0.95;
-            LODSDCoeff = 2;
-            CountThreshold = null;
-        }
-
         /// <summary>
         /// Method for getting values from key,value pairs in RCC SampleAttributes and LaneAttributes sections
         /// </summary>
@@ -98,6 +65,58 @@ namespace NCounterCore
         {
             IEnumerable<double> dubs = input.Select(x => x > 0 ? Math.Log(x, 2) : 0.0);
             return Math.Pow(2, dubs.Sum() / dubs.Count());
+        }
+
+        /// <summary>
+        /// Converts values from a dgv with textbox cells and checkbox cells to a list of strings, then saves as a csv
+        /// </summary>
+        /// <param name="dgv">The DataGridView to be saved</param>
+        public static string[] ConvertDgvToStrings(DataGridView dgv)
+        {
+            if(dgv == null)
+            {
+                return null;
+            }
+            if(dgv.RowCount < 1)
+            {
+                return null;
+            }
+
+            List<string> collector = new List<string>(dgv.Rows.Count + 1);
+            // Add column headers
+            List<string> headers = new List<string>(dgv.ColumnCount);
+            for (int i = 0; i < dgv.ColumnCount; i++)
+            {
+                headers.Add(dgv.Columns[i].HeaderText);
+            }
+            collector.Add(string.Join(",", headers));
+            // Add rows
+            for (int i = 0; i < dgv.RowCount; i++)
+            {
+                List<string> cells = new List<string>(dgv.ColumnCount);
+                for (int j = 0; j < dgv.ColumnCount; j++)
+                {
+                    DataGridViewCell cell = dgv.Rows[i].Cells[j];
+                    if (cell.GetType() == typeof(DataGridViewTextBoxCell))
+                    {
+                        cells.Add(cell.Value.ToString());
+                    }
+                    else if (cell.GetType() == typeof(DataGridViewCheckBoxCell))
+                    {
+                        bool val = (bool)cell.Value;
+                        if (!val)
+                        {
+                            cells.Add(string.Empty);
+                        }
+                        else
+                        {
+                            cells.Add("<<FLAG>>");
+                        }
+                    }
+                }
+                collector.Add(string.Join(",", cells));
+            }
+            return collector.ToArray();
         }
     }
 }

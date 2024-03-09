@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FilesLoadingEventArgs.cs" />
+    <Compile Include="HeaderClickEventArgs.cs" />
     <Compile Include="IDataModel.cs" />
     <Compile Include="IMainView.cs" />
     <Compile Include="MainViewPresenter.cs" />

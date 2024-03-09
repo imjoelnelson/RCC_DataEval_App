@@ -69,5 +69,15 @@ namespace MainViewWinForms.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap remove_icon_png_7116 {
+            get {
+                object obj = ResourceManager.GetObject("remove_icon_png_7116", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Syncfusion.Licensing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +16,6 @@ namespace MainViewWinForms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            SyncfusionLicenseProvider.RegisterLicense("\"Ngo9BigBOggjHTQxAR8/V1NAaF1cXmhIfEx1RHxQdld5ZFRHallYTnNWUj0eQnxTdEFjW31ZcHVRQGVeWER0Ww==\"");
             MainView view = MVPFactory.GetMainView();
             Application.Run(view);
         }

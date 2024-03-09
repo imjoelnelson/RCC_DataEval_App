@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NCounterCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,8 +17,14 @@ namespace RCCAppPresenters
         {
             MainView = mainView;
             Holder = holder;
-            mainView.FilesLoading += new EventHandler(View_FilesLoading);
-            mainView.ThresholdsSet += new EventHandler(View_ThresholdSet);
+            MainView.FilesLoading += new EventHandler(View_FilesLoading);
+            MainView.FormLoaded += new EventHandler(View_FormLoaded);
+            MainView.RccListCleared += new EventHandler(View_RccListCleared);
+            MainView.ThresholdsUpdated += new EventHandler(View_ThresholdsUpdated);
+            MainView.SelectingColumns += new EventHandler(View_SelectingColumns);
+            MainView.ColumnsSelected += new EventHandler(View_ColumnsSelected);
+            MainView.SortClick += new EventHandler(View_SortingColumns);
+            Holder.RccListChanged += new EventHandler(Model_RccListChanged);
         }
 
         /// <summary>
@@ -39,8 +46,7 @@ namespace RCCAppPresenters
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    Holder.CreateObjectsFromFiles(ofd.FileNames, args.Index);
-                    // Update binding for mainview Gv
+                    Holder.CreateObjectsFromFiles(ofd.FileNames, args.Index, MainView.CollectThresholds());
                 }
                 else
                 {
@@ -49,14 +55,54 @@ namespace RCCAppPresenters
             }
         }
 
-        /// <summary>
-        /// Handler for event called from View when thresholds are set in the threshold set diaglog
-        /// </summary>
-        /// <param name="sender">view window</param>
-        /// <param name="e">empty</param>
-        private void View_ThresholdSet(object sender, EventArgs e)
+        private void View_FormLoaded(object sender, EventArgs e)
         {
-            Holder.SetThresholds(MainView.CollectThresholds());
+            Dictionary<string, bool> proptypes = new Dictionary<string, bool>(MainView.SelectedProperties.Count);
+            Dictionary<string, string> propNames = new Dictionary<string, string>(MainView.SelectedProperties.Count);
+            for (int i = 0; i < MainView.SelectedProperties.Count; i++)
+            {
+                proptypes.Add(MainView.SelectedProperties[i], Rcc.Properties[MainView.SelectedProperties[i]].Item1);
+                propNames.Add(MainView.SelectedProperties[i], Rcc.Properties[MainView.SelectedProperties[i]].Item2);
+            }
+            MainView.SetDgv(Rcc.Properties, MainView.SelectedProperties, Holder.RccSource);
+        }
+
+        private void Model_RccListChanged(object sender, EventArgs e)
+        {
+            MainView.DgvSourceChanged(Holder.Rccs.Count);
+        }
+
+        private void View_RccListCleared(object sender, EventArgs e)
+        {
+            Holder.ClearRccs();
+        }
+
+        private void View_ThresholdsUpdated(object sender, EventArgs e)
+        {
+            Holder.UpdateThresholds(MainView.CollectThresholds());
+        }
+
+        private void View_SelectingColumns(object sender, EventArgs e)
+        {
+            // Call this from Presenter to avoid referencing Rcc.Properties directly from View
+            MainView.ShowSelectColumnsDialog(Rcc.Properties.Select(x => Tuple.Create(x.Key, x.Value.Item2)).ToList(), MainView.SelectedProperties);
+        }
+
+        private void View_ColumnsSelected(object sender, EventArgs e)
+        {
+            MainView.SetDgv(Rcc.Properties, MainView.SelectedProperties, Holder.RccSource);
+            Holder.ListChanged();
+        }
+
+        private void View_SortingColumns(object sender, EventArgs e)
+        {
+            foreach(KeyValuePair<string, bool> t in MainView.SortList)
+            {
+                Console.WriteLine($"{t.Key},{t.Value.ToString()}");
+            }
+            Console.Write("\r\n\r\n");
+            Holder.SortTable(MainView.SortList);
+            MainView.DgvSourceChanged(Holder.Rccs.Count);
         }
     }
 }
