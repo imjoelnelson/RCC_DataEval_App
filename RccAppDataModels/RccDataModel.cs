@@ -94,7 +94,11 @@ namespace RccAppDataModels
             // Add any PKCs to PkcReader collection
             else
             {
-                // Add PkcReader
+                for(int i = 0; i < filesToLoad.Count; i++)
+                {
+                    PkcReader reader = new PkcReader(filesToLoad[i]);
+                    Pkcs.Add(reader.Name, reader);
+                }
             }
         }
 

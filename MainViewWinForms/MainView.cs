@@ -135,6 +135,8 @@ namespace MainViewWinForms
             {
                 panel1.SetAutoScrollMargin(20, 20);
             }
+
+            DgvSortGlyphHandling(SortList);
         }
 
         /// <summary>
@@ -164,6 +166,20 @@ namespace MainViewWinForms
                 {
                     return;
                 }
+            }
+        }
+
+        public void DgvSortGlyphHandling(Dictionary<string, bool> sortList)
+        {
+            // Clear previous sort glyphs
+            foreach(DataGridViewColumn col in Dgv.Columns)
+            {
+                col.HeaderCell.SortGlyphDirection = SortOrder.None;
+            }
+            // Add sorty glyph for each column being sorted on
+            foreach(KeyValuePair<string, bool> p in sortList)
+            {
+                Dgv.Columns[p.Key].HeaderCell.SortGlyphDirection = p.Value ? SortOrder.Ascending : SortOrder.Descending;
             }
         }
 
@@ -264,7 +280,7 @@ namespace MainViewWinForms
                             // If not (i.e. sorted ascending), switch sorting to descending
                             else
                             {
-                                clicked = false;
+                                SortList[Dgv.Columns[col].Name] = false;
                             }
                         }
                     }

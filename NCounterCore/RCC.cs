@@ -19,28 +19,27 @@ namespace NCounterCore
             { "FileName", Tuple.Create(false, "File Name", 250) },
             { "SampleName", Tuple.Create(false, "Sample Name", 150) },
             { "LaneID", Tuple.Create(false, "Lane ID", 47) },
-            { "Well", Tuple.Create(false, "Well", 35) },
             { "CartridgeID", Tuple.Create(false, "Cartridge ID", 150) },
             { "CartridgeBarcode", Tuple.Create(false, "Cartridge Barcode", 100) },
             { "RlfName", Tuple.Create(false, "RLF", 180) },
             { "Date", Tuple.Create(false, "Date", 60) },
-            { "Instrument", Tuple.Create(false, "Instrument", 70) },
+            { "Instrument", Tuple.Create(false, "Instrument", 90) },
             { "StagePostion", Tuple.Create(false, "Stage Postion", 100) },
             { "Owner", Tuple.Create(false, "Owner", 100) },
             { "Comments", Tuple.Create(false, "Comments", 150) },
             { "FovCount", Tuple.Create(false, "FovCount", 70) },
             { "FovCounted", Tuple.Create(false, "FovCounted", 70) },
-            { "PctFovCounted", Tuple.Create(false, "Imaging QC", 90) },
-            { "PctFovPass", Tuple.Create(true, "Imaging Flag", 90) },
-            { "BindingDensity", Tuple.Create(false, "Binding Density", 110) },
-            { "BindingDensityPass", Tuple.Create(true, "Density Flag", 90) },
-            { "PosLinearity", Tuple.Create(false, "POS Linearity", 90) },
-            { "PosLinearityPass", Tuple.Create(true, "Linearity Flag", 90) },
+            { "PctFovCounted", Tuple.Create(false, "Imaging QC", 110) },
+            { "PctFovPass", Tuple.Create(true, "Imaging Flag", 110) },
+            { "BindingDensity", Tuple.Create(false, "Binding Density", 130) },
+            { "BindingDensityPass", Tuple.Create(true, "Density Flag", 120) },
+            { "PosLinearity", Tuple.Create(false, "POS Linearity", 110) },
+            { "PosLinearityPass", Tuple.Create(true, "Linearity Flag", 110) },
             { "Lod", Tuple.Create(false, "LOD", 60) },
-            { "LodPass", Tuple.Create(true, "LOD Flag", 70) },
-            { "PctAboveThresh", Tuple.Create(false, "% Above Threshold", 125) },
-            { "GeoMeanOfPos", Tuple.Create(false, "POS Geomean", 105) },
-            { "GeoMeanOfHks", Tuple.Create(false, "Housekeeping Geomean", 170) }
+            { "LodPass", Tuple.Create(true, "LOD Flag", 90) },
+            { "PctAboveThresh", Tuple.Create(false, "% Above Threshold", 145) },
+            { "GeoMeanOfPos", Tuple.Create(false, "POS Geomean", 125) },
+            { "GeoMeanOfHks", Tuple.Create(false, "Housekeeping Geomean", 175) }
         };
         #endregion
 
@@ -66,22 +65,6 @@ namespace NCounterCore
             }
         }
         private string _FileName;
-        /// <summary>
-        /// Provides well location in 96 well plate used for hybridization of PlexSet or GeoMx readout samples
-        /// </summary>
-        public string Well
-        {
-            get { return _Well; }
-            set
-            {
-                if(_Well != value)
-                {
-                    _Well = value;
-                    NotifyPropertyChanged();
-                }
-            }
-        }
-        private string _Well;
         #endregion
 
         #region Header Attribute Properties

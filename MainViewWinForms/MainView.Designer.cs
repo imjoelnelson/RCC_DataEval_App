@@ -46,6 +46,8 @@ namespace MainViewWinForms
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.clearButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.dataAssessmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -58,10 +60,10 @@ namespace MainViewWinForms
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.preferrenceToolStripMenuItem,
+            this.dataAssessmentToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(1624, 40);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
@@ -146,7 +148,7 @@ namespace MainViewWinForms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoScroll = true;
             this.panel1.Location = new System.Drawing.Point(0, 98);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1624, 960);
             this.panel1.TabIndex = 1;
@@ -160,7 +162,8 @@ namespace MainViewWinForms
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripButton,
             this.clearButton,
-            this.helpToolStripButton});
+            this.helpToolStripButton,
+            this.toolStripSeparator1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 40);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
@@ -201,6 +204,17 @@ namespace MainViewWinForms
             this.helpToolStripButton.Size = new System.Drawing.Size(46, 46);
             this.helpToolStripButton.Text = "He&lp";
             // 
+            // dataAssessmentToolStripMenuItem
+            // 
+            this.dataAssessmentToolStripMenuItem.Name = "dataAssessmentToolStripMenuItem";
+            this.dataAssessmentToolStripMenuItem.Size = new System.Drawing.Size(215, 36);
+            this.dataAssessmentToolStripMenuItem.Text = "Data Assessment";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 52);
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -210,7 +224,7 @@ namespace MainViewWinForms
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainView";
             this.Text = "Rcc Analysis Tool";
             this.menuStrip1.ResumeLayout(false);
@@ -240,5 +254,7 @@ namespace MainViewWinForms
         private System.Windows.Forms.ToolStripButton clearButton;
         private System.Windows.Forms.ToolStripButton helpToolStripButton;
         private System.Windows.Forms.ToolStripMenuItem cSVCellToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dataAssessmentToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
