@@ -11,12 +11,12 @@ namespace RCCAppPresenters
     public class MainViewPresenter
     {
         private IMainView MainView { get; set; }
-        private IDataModel Holder { get; set; }
+        private IDataModel MainModel { get; set; }
 
-        public MainViewPresenter(IMainView mainView, IDataModel holder)
+        public MainViewPresenter(IMainView mainView, IDataModel mainModel)
         {
             MainView = mainView;
-            Holder = holder;
+            MainModel = mainModel;
             MainView.FilesLoading += new EventHandler(View_FilesLoading);
             MainView.FormLoaded += new EventHandler(View_FormLoaded);
             MainView.RccListCleared += new EventHandler(View_RccListCleared);
@@ -24,7 +24,7 @@ namespace RCCAppPresenters
             MainView.SelectingColumns += new EventHandler(View_SelectingColumns);
             MainView.ColumnsSelected += new EventHandler(View_ColumnsSelected);
             MainView.SortClick += new EventHandler(View_SortingColumns);
-            Holder.RccListChanged += new EventHandler(Model_RccListChanged);
+            MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace RCCAppPresenters
                 ofd.Multiselect = true;
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    Holder.CreateObjectsFromFiles(ofd.FileNames, args.Index, MainView.CollectThresholds());
+                    MainModel.CreateObjectsFromFiles(ofd.FileNames, args.Index, MainView.CollectThresholds());
                 }
                 else
                 {
@@ -64,22 +64,22 @@ namespace RCCAppPresenters
                 proptypes.Add(MainView.SelectedProperties[i], Rcc.Properties[MainView.SelectedProperties[i]].Item1);
                 propNames.Add(MainView.SelectedProperties[i], Rcc.Properties[MainView.SelectedProperties[i]].Item2);
             }
-            MainView.SetDgv(Rcc.Properties, MainView.SelectedProperties, Holder.RccSource);
+            MainView.SetDgv(Rcc.Properties, MainView.SelectedProperties, MainModel.RccSource);
         }
 
         private void Model_RccListChanged(object sender, EventArgs e)
         {
-            MainView.DgvSourceChanged(Holder.Rccs.Count);
+            MainView.DgvSourceChanged(MainModel.Rccs.Count);
         }
 
         private void View_RccListCleared(object sender, EventArgs e)
         {
-            Holder.ClearRccs();
+            MainModel.ClearRccs();
         }
 
         private void View_ThresholdsUpdated(object sender, EventArgs e)
         {
-            Holder.UpdateThresholds(MainView.CollectThresholds());
+            MainModel.UpdateThresholds(MainView.CollectThresholds());
         }
 
         private void View_SelectingColumns(object sender, EventArgs e)
@@ -90,8 +90,8 @@ namespace RCCAppPresenters
 
         private void View_ColumnsSelected(object sender, EventArgs e)
         {
-            MainView.SetDgv(Rcc.Properties, MainView.SelectedProperties, Holder.RccSource);
-            Holder.ListChanged();
+            MainView.SetDgv(Rcc.Properties, MainView.SelectedProperties, MainModel.RccSource);
+            MainModel.ListChanged();
         }
 
         private void View_SortingColumns(object sender, EventArgs e)
@@ -101,8 +101,8 @@ namespace RCCAppPresenters
                 Console.WriteLine($"{t.Key},{t.Value.ToString()}");
             }
             Console.Write("\r\n\r\n");
-            Holder.SortTable(MainView.SortList);
-            MainView.DgvSourceChanged(Holder.Rccs.Count);
+            MainModel.SortTable(MainView.SortList);
+            MainView.DgvSourceChanged(MainModel.Rccs.Count);
         }
     }
 }

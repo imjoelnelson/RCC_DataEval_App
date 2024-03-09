@@ -8,5 +8,6 @@ namespace RccAppPresenters
 
         event EventHandler PasswordEntered;
         event EventHandler Skipped;
+        void CloseForm();
     }
 }

@@ -95,6 +95,9 @@
     <EmbeddedResource Include="MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PasswordEnterView.resx">
+      <DependentUpon>PasswordEnterView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -142,6 +145,7 @@
     <None Include="Resources\InfoIcon.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\password-lock-icon-free-vector.jpg" />
     <Content Include="Resources\remove-icon-png-7116.png" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>

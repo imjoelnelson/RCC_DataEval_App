@@ -54,6 +54,7 @@
     <Compile Include="IMainView.cs" />
     <Compile Include="IPasswordEnterView.cs" />
     <Compile Include="MainViewPresenter.cs" />
+    <Compile Include="PasswordEnterPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

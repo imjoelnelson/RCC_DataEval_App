@@ -12,6 +12,7 @@ namespace RccAppDataModels
 {
     class RecursiveUnzip
     {
+        public event EventHandler RequestPassword;
         /// <summary>
         /// Recursively extract a zip (and any zips contained), enumerating all files with matching extension
         /// </summary>
@@ -148,27 +149,6 @@ namespace RccAppDataModels
             }
 
             return Tuple.Create(out1, zips);
-        }
-
-        /// <summary>
-        /// Prompts user to enter password for the file with filename in the argument
-        /// </summary>
-        /// <param name="fileName">Name of the file the password is for</param>
-        /// <returns>User entered password</returns>
-        private static string GetPassword(string fileName)
-        {
-            using (PasswordEnter pwEnter = new PasswordEnter(Path.GetFileName(fileName)))
-            {
-                if (pwEnter.ShowDialog() == DialogResult.OK)
-                {
-                    if (pwEnter.Password != null)
-                    {
-                        return pwEnter.Password;
-                    }
-                }
-            }
-
-            return null;
         }
     }
 }
