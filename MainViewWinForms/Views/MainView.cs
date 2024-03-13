@@ -1,5 +1,4 @@
 ﻿using NCounterCore;
-using RCCAppPresenters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -313,8 +312,7 @@ namespace MainViewWinForms
                         }
                     }
                     // Send event to Presenter
-                    HeaderClickEventArgs args2 = new HeaderClickEventArgs(Dgv.Columns[col].Name);
-                    SortClick.Invoke(this, args2);
+                    SortClick.Invoke(this, EventArgs.Empty);
                 }
             }
         }

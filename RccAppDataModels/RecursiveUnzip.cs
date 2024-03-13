@@ -1,4 +1,5 @@
 ﻿using Ionic.Zip;
+using MessageCenter;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,25 +8,50 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TinyMessenger;
 
 namespace RccAppDataModels
 {
     class RecursiveUnzip
     {
-        public event EventHandler RequestPassword;
+        /// <summary>
+        /// The collection of files recursively extracted from the zip
+        /// </summary>
+        public List<string> ExtractedFiles { get; set; }
+        /// <summary>
+        /// Collection of any zips that need passwords for extraction (to be removed once extracted)
+        /// </summary>
+        public Dictionary<string, int> ZipsThatNeedPasswords { get; set; }
+        /// <summary>
+        /// Subscription token for the subscription to the password sent message
+        /// </summary>
+        public TinyMessageSubscriptionToken UnsubscribeToken { get; set; }
+        private string SearchPattern { get; set; }
+
+
+        public RecursiveUnzip(string zipPath, string searchPattern)
+        {
+            UnsubscribeToken = PresenterHub.MessageHub.Subscribe<PasswordSendMessage>
+                ((m) => ExtractWithPassword(m.Content));
+
+            ZipsThatNeedPasswords = new Dictionary<string, int>();
+            SearchPattern = searchPattern;
+            ExtractedFiles = RecursivelyGetFilesFromZip(zipPath, SearchPattern);
+        }
+        
         /// <summary>
         /// Recursively extract a zip (and any zips contained), enumerating all files with matching extension
         /// </summary>
         /// <param name="zipPath">Path to the zip to be extracted</param>
         /// <param name="searchPattern">Extension to search for</param>
         /// <returns>All files with matching extension</returns>
-        public static List<string> RecursivelyGetFilesFromZip(string zipPath, string searchPattern)
+        public List<string> RecursivelyGetFilesFromZip(string zipPath, string searchPattern)
         {
             // List to return
             List<string> returnList = new List<string>();
             // Top level zip to extract
             ZipFile topZip = new ZipFile(zipPath);
-            // Queue to contain zips for unzipping
+            // Enqueue zip to start recursive unzip process
             Queue<ZipFile> archiveQueue = new Queue<ZipFile>();
             archiveQueue.Enqueue(topZip);
 
@@ -40,7 +66,7 @@ namespace RccAppDataModels
                 string extractPath = $"{Path.GetTempFileName()}";
                 // Extract and get files
                 Tuple<List<string>, List<string>> extractedFiles = TryExtract(current, extractPath, searchPattern, null);
-                if (extractedFiles != null)
+                if (extractedFiles != null) // i.e. extraction successful
                 {
                     // Add files with selected extension to returnlist
                     returnList.AddRange(extractedFiles.Item1);
@@ -50,34 +76,12 @@ namespace RccAppDataModels
                         archiveQueue.Enqueue(new ZipFile(s));
                     }
                 }
-                else
+                else // Extraction unsuccessful; assume due to missing password
                 {
-                    // If extraction fails, assume due to missing password; have user enter password and re-try extraction
-                    int i = 0;
-                    while (i < 3) // Repeat three times then exit if all attempts failed
-                    {
-                        string newPassword = GetPassword(Path.GetFileName(current.Name));
-                        if (newPassword == null) { break; }
-                        Tuple<List<string>, List<string>> extractedFilesAgain = TryExtract(current, extractPath, searchPattern, newPassword);
-                        if (extractedFilesAgain != null)
-                        {
-                            returnList.AddRange(extractedFilesAgain.Item1);
-                            foreach (string s in extractedFilesAgain.Item2)
-                            {
-                                archiveQueue.Enqueue(new ZipFile(s));
-                            }
-                            break;
-                        }
-                        // If the above is null, assume wrong password again
-                        var result = MessageBox.Show("The password is incorrect. Do you want to re-enter it?",
-                                                      string.Empty,
-                                                      MessageBoxButtons.YesNo);
-                        if (result == DialogResult.No)
-                        {
-                            break;
-                        }
-                        i++;
-                    }
+                    // Add zip name to list of zips needing passwordswith number of passwords to try before giving up
+                    ZipsThatNeedPasswords.Add(current.Name, 3); 
+                    // Send message containing ZIP filename to open a PasswordEnter dialog 
+                    PresenterHub.MessageHub.Publish<PasswordRequestMessage>(new PasswordRequestMessage(this, current.Name));
                 }
             }
 
@@ -92,7 +96,7 @@ namespace RccAppDataModels
         /// <param name="searchPattern">Extension of files to be returned</param>
         /// <param name="password">Password for any password-locked zips</param>
         /// <returns></returns>
-        private static Tuple<List<string>, List<string>> TryExtract(ZipFile current, string extractPath, string searchPattern, string password)
+        private Tuple<List<string>, List<string>> TryExtract(ZipFile current, string extractPath, string searchPattern, string password)
         {
             try
             {
@@ -125,12 +129,55 @@ namespace RccAppDataModels
         }
 
         /// <summary>
+        /// Method for extracting zips with a given password (contains one dependency from class that can't be added to arguments -> SearchPattern)
+        /// </summary>
+        /// <param name="payload">Return from PasswordSend message containing filename (item1) and password (item2)</param>
+        private void ExtractWithPassword(Tuple<string, string> payload)
+        {
+            // Name of zip file to be extraction and user-entered password
+            string newPassword = payload.Item2;
+            if (newPassword == null) { throw new Exception("The password cannot be null"); }
+            string fileName = payload.Item1;
+            ZipFile zip = new ZipFile(fileName);
+            // Get temp folder to extract to
+            string extractPath = $"{Path.GetTempFileName()}";
+            Tuple<List<string>, List<string>> extractedFiles = TryExtract(zip, extractPath, SearchPattern, newPassword);
+            if (extractedFiles != null)
+            {
+                ExtractedFiles.AddRange(extractedFiles.Item1);
+                foreach (string s in extractedFiles.Item2)
+                {
+                    RecursivelyGetFilesFromZip(s, SearchPattern);
+                }
+                return;
+            }
+
+            // If the above is null, assume wrong password again; then check if number of tries left is > 0
+            if(ZipsThatNeedPasswords[fileName] > 0)
+            {
+                var result = MessageBox.Show("The password is incorrect. Do you want to re-enter it?",
+                                          string.Empty,
+                                          MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    ZipsThatNeedPasswords[fileName] -= 1;
+                    PresenterHub.MessageHub.Publish<PasswordRequestMessage>(new PasswordRequestMessage(this, fileName));
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Number of tries to extract {Path.GetFileName(fileName)} has been exhausted and it will not be extracted", 
+                    "Warning", MessageBoxButtons.OK);
+            }
+        }
+
+        /// <summary>
         /// Recursively enumerate files from a directory  while skipping any subdirs named _MACOSX
         /// </summary>
         /// <param name="path">path to directorty to enumerate files from</param>
         /// <param name="extension">search pattern/extension for files to collect</param>
         /// <returns>Tuple containing a collection of files with named extension and a collection of any zips</returns>
-        public static Tuple<List<string>, List<string>> GetFilesByExtention(string path, string extension)
+        public Tuple<List<string>, List<string>> GetFilesByExtention(string path, string extension)
         {
             List<string> out1 = new List<string>();
             List<string> zips = new List<string>();

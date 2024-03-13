@@ -1,5 +1,4 @@
-﻿using RCCAppPresenters;
-using RccAppDataModels;
+﻿using RccAppDataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +16,13 @@ namespace MainViewWinForms
             MainViewPresenter presenter = new MainViewPresenter(view, model);
             view.Presenter = presenter;
             return view;
+        }
+
+        public static PasswordEnterView PasswordEnterView(string fileName)
+        {
+            PasswordEnterView passwordView = new PasswordEnterView(fileName);
+            _ = new PasswordEnterPresenter(passwordView, fileName);
+            return passwordView;
         }
     }
 }

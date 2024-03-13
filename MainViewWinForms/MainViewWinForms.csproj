@@ -65,17 +65,23 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="DgvFromProperties.cs" />
-    <Compile Include="MainView.cs">
+    <Compile Include="FilesLoadingEventArgs.cs" />
+    <Compile Include="Views\IMainView.cs" />
+    <Compile Include="Views\IPasswordEnterView.cs" />
+    <Compile Include="Views\MainView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainView.Designer.cs">
+    <Compile Include="Views\MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presenters\MainViewPresenter.cs" />
     <Compile Include="MVPFactory.cs" />
-    <Compile Include="PasswordEnterView.cs">
+    <Compile Include="OneFieldPresenterArgs.cs" />
+    <Compile Include="Presenters\PasswordEnterPresenter.cs" />
+    <Compile Include="Views\PasswordEnterView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PasswordEnterView.Designer.cs">
+    <Compile Include="Views\PasswordEnterView.Designer.cs">
       <DependentUpon>PasswordEnterView.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -92,10 +98,10 @@
     <Compile Include="ThresholdSetFormcs.Designer.cs">
       <DependentUpon>ThresholdSetFormcs.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="MainView.resx">
+    <EmbeddedResource Include="Views\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PasswordEnterView.resx">
+    <EmbeddedResource Include="Views\PasswordEnterView.resx">
       <DependentUpon>PasswordEnterView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -128,6 +134,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MessageCenter\MessageCenter.csproj">
+      <Project>{ca1a742e-4786-4560-8ac9-14a8de6dc91e}</Project>
+      <Name>MessageCenter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NCounterCore\NCounterCore.csproj">
       <Project>{eba9b13b-8e41-4fbd-9654-034a3e1a02a4}</Project>
       <Name>NCounterCore</Name>
@@ -135,10 +145,6 @@
     <ProjectReference Include="..\RccAppDataModels\RccAppDataModels.csproj">
       <Project>{bb5627bf-7539-4052-adfc-c9603a38e13a}</Project>
       <Name>RccAppDataModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RCCAppPresenters\RCCAppPresenters.csproj">
-      <Project>{52d421be-9ea8-487e-b3c8-d4710505aee5}</Project>
-      <Name>RCCAppPresenters</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

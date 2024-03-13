@@ -1,6 +1,5 @@
 ﻿using RccExtensions;
 using NCounterCore;
-using RCCAppPresenters;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -46,7 +45,7 @@ namespace RccAppDataModels
             {
                 foreach (string s in zipsToLoad)
                 {
-                    IEnumerable<string> newFiles = RecursiveUnzip.RecursivelyGetFilesFromZip(s, fileTypes[fileTypeIndex]);
+                    List<string> newFiles = new RecursiveUnzip(s, fileTypes[fileTypeIndex]).ExtractedFiles;
                     filesToLoad.AddRange(newFiles);
                 }
             }

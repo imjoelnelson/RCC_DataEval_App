@@ -1,22 +1,28 @@
-﻿using NCounterCore;
+﻿using MessageCenter;
+using NCounterCore;
+using RccAppDataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TinyMessenger;
 
-namespace RCCAppPresenters
+namespace MainViewWinForms
 {
     public class MainViewPresenter
     {
         private IMainView MainView { get; set; }
         private IDataModel MainModel { get; set; }
 
+
         public MainViewPresenter(IMainView mainView, IDataModel mainModel)
         {
+            // get model and view refs
             MainView = mainView;
             MainModel = mainModel;
+            // hook events
             MainView.FilesLoading += new EventHandler(View_FilesLoading);
             MainView.FormLoaded += new EventHandler(View_FormLoaded);
             MainView.RccListCleared += new EventHandler(View_RccListCleared);
@@ -25,6 +31,18 @@ namespace RCCAppPresenters
             MainView.ColumnsSelected += new EventHandler(View_ColumnsSelected);
             MainView.SortClick += new EventHandler(View_SortingColumns);
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
+            // Subscribe to password request message
+            PresenterHub.MessageHub.Subscribe<PasswordRequestMessage>((m) => HandlePasswordRequest(m.Content));
+        }
+
+        private void HandlePasswordRequest(string fileName)
+        {
+            IPasswordEnterView view = MVPFactory.PasswordEnterView(fileName);
+            if(view.ShowAsDialog() == DialogResult.OK)
+            {
+                PresenterHub.MessageHub.Publish<PasswordSendMessage>(new PasswordSendMessage(this, Tuple.Create(fileName, view.Password)));
+            }
+            // else if cancel or skip button clicked, do not continue to try extracting
         }
 
         /// <summary>

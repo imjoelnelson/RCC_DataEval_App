@@ -11,18 +11,25 @@ using System.Windows.Forms;
 
 namespace MainViewWinForms
 {
-    public partial class PasswordEnterView : Form, RccAppPresenters.IPasswordEnterView
+    public partial class PasswordEnterView : Form, IPasswordEnterView
     {
-        public string CurrentPassword { get; set; }
+        public PasswordEnterPresenter PasswordPresenter { get; set; }
+        public string Password { get; set; }
 
         public event EventHandler PasswordEntered;
         public event EventHandler Skipped;
+
         public PasswordEnterView(string filePath)
         {
             InitializeComponent();
             string fileName = Path.GetFileNameWithoutExtension(filePath);
             fileNameTextBox.Text = $"Enter password for {fileName}";
         } 
+
+        public DialogResult ShowAsDialog()
+        {
+            return this.ShowDialog();
+        }
 
         public void CloseForm()
         {
@@ -32,7 +39,7 @@ namespace MainViewWinForms
 
         private void okButton_Click(object sender, EventArgs e)
         {
-            CurrentPassword = passwordTextBox.Text;
+            Password = passwordTextBox.Text;
             PasswordEntered.Invoke(this, EventArgs.Empty);
         }
 

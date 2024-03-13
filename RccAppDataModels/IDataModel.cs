@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RCCAppPresenters
+namespace RccAppDataModels
 {
     public interface IDataModel
     {
