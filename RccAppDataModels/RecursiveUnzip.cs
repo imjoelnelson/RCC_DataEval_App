@@ -27,6 +27,10 @@ namespace RccAppDataModels
         /// </summary>
         public TinyMessageSubscriptionToken UnsubscribeToken { get; set; }
         private string SearchPattern { get; set; }
+        /// <summary>
+        /// User's location for saving temp files/folders
+        /// </summary>
+        private string TempFileRoot { get; set; }
 
 
         public RecursiveUnzip(string zipPath, string searchPattern)
@@ -37,6 +41,8 @@ namespace RccAppDataModels
             ZipsThatNeedPasswords = new Dictionary<string, int>();
             SearchPattern = searchPattern;
             ExtractedFiles = RecursivelyGetFilesFromZip(zipPath, SearchPattern);
+            var temp = Path.GetTempFileName();
+            TempFileRoot = temp.Substring(0, temp.LastIndexOf('\\'));
         }
         
         /// <summary>
@@ -63,7 +69,10 @@ namespace RccAppDataModels
                 // Dequeue to get a zip to extract
                 ZipFile current = archiveQueue.Dequeue();
                 // Get temp folder to extract to
-                string extractPath = $"{Path.GetTempFileName()}";
+                Guid tempName = Guid.NewGuid();
+                string extractPath = GetTempFolderPath(TempFileRoot);
+                // Send directory name to main presenter for deleting when MainView is closing
+                PresenterHub.MessageHub.Publish<DirectoryToDeleteMessage>(new DirectoryToDeleteMessage(this, extractPath));
                 // Extract and get files
                 Tuple<List<string>, List<string>> extractedFiles = TryExtract(current, extractPath, searchPattern, null);
                 if (extractedFiles != null) // i.e. extraction successful
@@ -86,6 +95,22 @@ namespace RccAppDataModels
             }
 
             return returnList;
+        }
+
+        private string GetTempFolderPath(string tempRoot)
+        {
+            Guid guid = Guid.NewGuid();
+            string returnString = $"{tempRoot}\\{guid}";
+            try
+            {
+                Directory.CreateDirectory(returnString);
+                return returnString;
+            }
+            catch(Exception er)
+            {
+                MessageBox.Show($"{er.Message} \r\n\r\n{er.StackTrace}", "Temp Folder Error", MessageBoxButtons.OK);
+                return null;
+            }
         }
 
         /// <summary>
@@ -121,9 +146,19 @@ namespace RccAppDataModels
                 }
 
                 return Tuple.Create(out1, zips);
-            }
-            catch
+        }
+            catch(Exception er)
             {
+                // If zip opened in another application
+                if(er.GetType() == typeof(IOException))
+                {
+                    MessageBox.Show(
+                        $"ZIP, {Path.GetFileName(current.Name)} could not be accessed as it may be open in another application. Close this ZIP and try again to access its contents.",
+                        "I/O Exception", 
+                        MessageBoxButtons.OK);
+                    return Tuple.Create(new List<string>(), new List<string>());
+                }
+                // Otherwise, assume password needed; null retval will trigger process to open PasswordEnter dialog
                 return null;
             }
         }
@@ -138,37 +173,44 @@ namespace RccAppDataModels
             string newPassword = payload.Item2;
             if (newPassword == null) { throw new Exception("The password cannot be null"); }
             string fileName = payload.Item1;
-            ZipFile zip = new ZipFile(fileName);
-            // Get temp folder to extract to
-            string extractPath = $"{Path.GetTempFileName()}";
-            Tuple<List<string>, List<string>> extractedFiles = TryExtract(zip, extractPath, SearchPattern, newPassword);
-            if (extractedFiles != null)
+            // Ensure that ZIP should be extracted on this instance
+            if(ZipsThatNeedPasswords.Keys.Contains(fileName))
             {
-                ExtractedFiles.AddRange(extractedFiles.Item1);
-                foreach (string s in extractedFiles.Item2)
+                ZipFile zip = new ZipFile(fileName);
+                // Get temp folder to extract to
+                string extractPath = GetTempFolderPath(TempFileRoot);
+                // Send directory name to main presenter for deleting when MainView is closing
+                PresenterHub.MessageHub.Publish<DirectoryToDeleteMessage>(new DirectoryToDeleteMessage(this, extractPath));
+                Tuple<List<string>, List<string>> extractedFiles = TryExtract(zip, extractPath, SearchPattern, newPassword);
+                if (extractedFiles != null)
                 {
-                    RecursivelyGetFilesFromZip(s, SearchPattern);
+                    ExtractedFiles.AddRange(extractedFiles.Item1);
+                    foreach (string s in extractedFiles.Item2)
+                    {
+                        RecursivelyGetFilesFromZip(s, SearchPattern);
+                    }
+                    return;
                 }
-                return;
-            }
 
-            // If the above is null, assume wrong password again; then check if number of tries left is > 0
-            if(ZipsThatNeedPasswords[fileName] > 0)
-            {
-                var result = MessageBox.Show("The password is incorrect. Do you want to re-enter it?",
-                                          string.Empty,
-                                          MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
+                // If the above is null, assume wrong password again; then check if number of tries left is > 0
+                if (ZipsThatNeedPasswords[fileName] > 0)
                 {
-                    ZipsThatNeedPasswords[fileName] -= 1;
-                    PresenterHub.MessageHub.Publish<PasswordRequestMessage>(new PasswordRequestMessage(this, fileName));
+                    var result = MessageBox.Show("The password is incorrect. Do you want to re-enter it?",
+                                              string.Empty,
+                                              MessageBoxButtons.YesNo);
+                    if (result == DialogResult.Yes)
+                    {
+                        ZipsThatNeedPasswords[fileName] -= 1;
+                        PresenterHub.MessageHub.Publish<PasswordRequestMessage>(new PasswordRequestMessage(this, fileName));
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Number of tries to extract {Path.GetFileName(fileName)} has been exhausted and it will not be extracted",
+                        "Warning", MessageBoxButtons.OK);
                 }
             }
-            else
-            {
-                MessageBox.Show($"Number of tries to extract {Path.GetFileName(fileName)} has been exhausted and it will not be extracted", 
-                    "Warning", MessageBoxButtons.OK);
-            }
+            
         }
 
         /// <summary>

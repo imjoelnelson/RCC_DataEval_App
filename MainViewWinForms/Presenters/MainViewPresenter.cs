@@ -3,6 +3,7 @@ using NCounterCore;
 using RccAppDataModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,13 +16,14 @@ namespace MainViewWinForms
     {
         private IMainView MainView { get; set; }
         private IDataModel MainModel { get; set; }
-
+        private List<string> DirectoriesToDelete { get; set; }
 
         public MainViewPresenter(IMainView mainView, IDataModel mainModel)
         {
             // get model and view refs
             MainView = mainView;
             MainModel = mainModel;
+            DirectoriesToDelete = new List<string>();
             // hook events
             MainView.FilesLoading += new EventHandler(View_FilesLoading);
             MainView.FormLoaded += new EventHandler(View_FormLoaded);
@@ -30,19 +32,21 @@ namespace MainViewWinForms
             MainView.SelectingColumns += new EventHandler(View_SelectingColumns);
             MainView.ColumnsSelected += new EventHandler(View_ColumnsSelected);
             MainView.SortClick += new EventHandler(View_SortingColumns);
+            MainView.ThisFormClosed += new EventHandler(View_FormClosing);
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             // Subscribe to password request message
             PresenterHub.MessageHub.Subscribe<PasswordRequestMessage>((m) => HandlePasswordRequest(m.Content));
+            PresenterHub.MessageHub.Subscribe<DirectoryToDeleteMessage>((m) => HandleNewDirectoryToDelete(m.Content));
         }
 
         private void HandlePasswordRequest(string fileName)
         {
-            IPasswordEnterView view = MVPFactory.PasswordEnterView(fileName);
-            if(view.ShowAsDialog() == DialogResult.OK)
-            {
-                PresenterHub.MessageHub.Publish<PasswordSendMessage>(new PasswordSendMessage(this, Tuple.Create(fileName, view.Password)));
-            }
-            // else if cancel or skip button clicked, do not continue to try extracting
+            _ = MVPFactory.PasswordEnterView(fileName);
+        }
+
+        private void HandleNewDirectoryToDelete(string dirToDelete)
+        {
+            DirectoriesToDelete.Add(dirToDelete);
         }
 
         /// <summary>
@@ -121,6 +125,33 @@ namespace MainViewWinForms
             Console.Write("\r\n\r\n");
             MainModel.SortTable(MainView.SortList);
             MainView.DgvSourceChanged(MainModel.Rccs.Count);
+        }
+
+        private void View_FormClosing(object sender, EventArgs e)
+        {
+            // Delete temp directories and all files therein
+            if(DirectoriesToDelete.Count > 0)
+            {
+                List<string> filesToDelete = new List<string>();
+
+                for(int i = 0; i < DirectoriesToDelete.Count; i++)
+                {
+                    IEnumerable<string> files = Directory.EnumerateFiles(DirectoriesToDelete[i]);
+                    foreach(string s in files)
+                    {
+                        try
+                        {
+                            File.Delete(s);
+                        }
+                        catch { }
+                    }
+                    int filesAfter = Directory.EnumerateDirectories(DirectoriesToDelete[i]).Count();
+                    if(filesAfter < 1)
+                    {
+                        Directory.Delete(DirectoriesToDelete[i]);
+                    }
+                }
+            }
         }
     }
 }

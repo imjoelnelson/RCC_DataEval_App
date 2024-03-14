@@ -10,20 +10,14 @@ namespace MainViewWinForms
 {
     public class PasswordEnterPresenter
     {
-        IPasswordEnterView PasswordView { get; set; }
         public PasswordEnterPresenter(IPasswordEnterView passwordView, string fileName)
         {
-            PasswordView = passwordView;
             if(passwordView.ShowAsDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                // Call method to send TinyMessage with password payload destined for MainPresenter
+                PresenterHub.MessageHub.Publish<PasswordSendMessage>(new 
+                    PasswordSendMessage(this, Tuple.Create(fileName, passwordView.Password)));
             }
-        }
-
-        private void SendPasswordMessage(string fileName, string password)
-        {
-            GenericTinyMessage<Tuple<string, string>> passwordSend = new GenericTinyMessage<Tuple<string, string>>
-                (this, Tuple.Create(fileName, password));
+            passwordView.CloseForm();
         }
     }
 }

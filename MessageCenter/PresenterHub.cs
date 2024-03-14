@@ -7,11 +7,13 @@ using TinyMessenger;
 
 namespace MessageCenter
 {
+    // Hub
     public static class PresenterHub
     {
         public static TinyMessengerHub MessageHub = new TinyMessengerHub();
     }
-
+    
+    // Messages
     public class PasswordSendMessage : GenericTinyMessage<Tuple<string, string>>
     {
         public PasswordSendMessage(object sender, Tuple<string, string> content) : base(sender, content) { }
@@ -20,6 +22,11 @@ namespace MessageCenter
     public class PasswordRequestMessage : GenericTinyMessage<string>
     {
         public PasswordRequestMessage(object sender, string content) : base(sender, content) { }
+    }
+
+    public class DirectoryToDeleteMessage : GenericTinyMessage<string>
+    {
+        public DirectoryToDeleteMessage(object sender, string content) : base(sender, content) { }
     }
         
 }

@@ -49,7 +49,6 @@ namespace RccAppDataModels
                     filesToLoad.AddRange(newFiles);
                 }
             }
-
             // Add any RCC files to Rcc binding list
             if (fileTypeIndex == 0)
             {

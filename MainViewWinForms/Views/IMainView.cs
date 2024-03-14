@@ -24,6 +24,7 @@ namespace MainViewWinForms
         event EventHandler SelectingColumns;
         event EventHandler ColumnsSelected;
         event EventHandler SortClick;
+        event EventHandler ThisFormClosed;
         event EventHandler SentToQueue;
         event EventHandler ExportToCsv;
         event EventHandler CreateQCPlot;

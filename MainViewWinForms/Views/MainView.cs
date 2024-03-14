@@ -11,31 +11,76 @@ namespace MainViewWinForms
 {
     public partial class MainView : Form, IMainView
     {
-        // Presenter
+        #region properties
+        /// <summary>
+        /// This View's presenter
+        /// </summary>
         public MainViewPresenter Presenter { get; set; }
-        // File loading
+        /// <summary>
+        /// Index indicating which of the import toolstrip menu items has been clicked 
+        /// </summary>
         public int FileTypeIndex { get; set; }
 
-        // DataGridView properties
-        private DBDataGridView Dgv { get; set; }
+        // *****     DataGridView properties     *****
+        /// <summary>
+        /// Properties selected to be displayed as columns in main datagridview
+        /// </summary>
         public List<string> SelectedProperties { get; set; }
-
-        private static Font gvHeaderFont = new Font(DefaultFont, FontStyle.Bold);
+        /// <summary>
+        /// List of properties to sort datagridview by (passed to model by presenter to sort the bound list)
+        /// </summary>
         public Dictionary<string, bool> SortList { get; set; }
+        /// <summary>
+        /// Main display control for this form
+        /// </summary>
+        private DBDataGridView Dgv { get; set; }
+        /// <summary>
+        /// Font for main datagridview headers
+        /// </summary>
+        private static Font gvHeaderFont = new Font(DefaultFont, FontStyle.Bold);
+        #endregion
 
-        // Implementing IRawDataView events
+        #region Events from interface
+        // *****     Implementing IRawDataView events     *****
+        /// <summary>
+        /// Tells presenter there are files to pass to model for loading
+        /// </summary>
         public event EventHandler FilesLoading;
+        /// <summary>
+        /// Triggers presenter to pass selected properties (i.e. columns to include) for building main datagridview
+        /// </summary>
         public event EventHandler FormLoaded;
+        /// <summary>
+        /// Triggers presenter to tell model to clear the RCC binding list when Clear Button is clicked
+        /// </summary>
         public event EventHandler RccListCleared;
+        /// <summary>
+        /// After thresholds dialog closed, triggers Presenter to tell Model to update flags in the RCC objects in the BindingList
+        /// </summary>
         public event EventHandler ThresholdsUpdated;
+        /// <summary>
+        /// Tells presenter to grab RCC properties from static dictionary in Rcc to pass back to view for property selection Checked List Box
+        /// </summary>
         public event EventHandler SelectingColumns;
+        /// <summary>
+        /// When view's select columns dialog is closed, triggers presenter to update the datagridview with selected columns as well as update Dgv width
+        /// </summary>
         public event EventHandler ColumnsSelected;
+        /// <summary>
+        /// Indicates a column has been selected for sorting on
+        /// </summary>
         public event EventHandler SortClick;
+        /// <summary>
+        /// Triggers presenter to clear any temp folders/files created when extracting zips (plus any future form closing actions)
+        /// </summary>
+        public event EventHandler ThisFormClosed;
         public event EventHandler SentToQueue;
         public event EventHandler ExportToCsv;
         public event EventHandler CreateQCPlot;
         public event EventHandler ReorderRows;
         public event EventHandler Filter;
+        #endregion
+
         public MainView()
         {
             InitializeComponent();
@@ -46,6 +91,13 @@ namespace MainViewWinForms
             this.WindowState = FormWindowState.Maximized;
         }
 
+        #region methods
+        /// <summary>
+        /// Method for buidling the view's datagridview control
+        /// </summary>
+        /// <param name="properties">Collection of all properties that could be displayed as columns</param>
+        /// <param name="selectedProperties">Sets which columns (properties) should be displayed</param>
+        /// <param name="source">RCC binding source for the gridview, passed from model by presenter</param>
         public void SetDgv(Dictionary<string, Tuple<bool, string, int>> properties, 
             List<string> selectedProperties, BindingSource source)
         {
@@ -90,6 +142,10 @@ namespace MainViewWinForms
             panel1.Controls.Add(Dgv);
         }
 
+        /// <summary>
+        /// Sets the datagridview width based on selected columns
+        /// </summary>
+        /// <param name="cols">Collection of selected columns</param>
         private void SetDgvWidth(DataGridViewColumnCollection cols)
         {
             int retVal = 0;
@@ -101,6 +157,10 @@ namespace MainViewWinForms
             Dgv.Width = retVal;
         }
 
+        /// <summary>
+        /// Collects thresholds from settings either on constructing the form or when ThresholdSet dialog is closed
+        /// </summary>
+        /// <returns></returns>
         public QcThresholds CollectThresholds() // Too much connection with Model here; need to make more generic
         {
             QcThresholds retVal = new QcThresholds();
@@ -114,6 +174,10 @@ namespace MainViewWinForms
             return retVal;
         }
 
+        /// <summary>
+        /// For updating datagridview dimensions when columns/rows changed and updating sort glyphs when sorting on different columns
+        /// </summary>
+        /// <param name="count"></param>
         public void DgvSourceChanged(int count)
         {
             if(count > 0)
@@ -139,8 +203,9 @@ namespace MainViewWinForms
         }
 
         /// <summary>
-        /// Gets mouseover row and column coordinates for right click event
+        /// Gets mouseover row and column coordinates for right click event on main datagridview
         /// </summary>
+        /// <param name="dgv">The main datagridview</param>
         /// <param name="X">e.X from mouseclick event</param>
         /// <param name="Y">e.Y from mouseclick event</param>
         /// <returns></returns>
@@ -152,6 +217,11 @@ namespace MainViewWinForms
             return Tuple.Create(currentMouseOverRow, currentMouseOverCol);
         }
 
+        /// <summary>
+        /// When SelectColumns item selected from column header right click context menu; displays SelectColumnsDialog
+        /// </summary>
+        /// <param name="columns">All RCC properties available</param>
+        /// <param name="selectedProperties">RCC properties currently selected</param>
         public void ShowSelectColumnsDialog(List<Tuple<string, string>> columns, List<string> selectedProperties)
         {
             using(SelectColumnsDialog form = new SelectColumnsDialog(columns, selectedProperties.ToArray()))
@@ -168,6 +238,10 @@ namespace MainViewWinForms
             }
         }
 
+        /// <summary>
+        /// Sets sort glyphs of Dgv columns based on columns selected for sorting and direction
+        /// </summary>
+        /// <param name="sortList">Dictionary indicating columns selected and bool for whether ascending</param>
         public void DgvSortGlyphHandling(Dictionary<string, bool> sortList)
         {
             // Clear previous sort glyphs
@@ -181,8 +255,9 @@ namespace MainViewWinForms
                 Dgv.Columns[p.Key].HeaderCell.SortGlyphDirection = p.Value ? SortOrder.Ascending : SortOrder.Descending;
             }
         }
+        #endregion
 
-        // *****    Event Handling    *****
+        #region Event Handling
         private void LoadRCCsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FileTypeIndex = 0;
@@ -361,6 +436,13 @@ namespace MainViewWinForms
             }
 
         }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            ThisFormClosed.Invoke(this, EventArgs.Empty);
+            this.Dispose();
+        }
+        #endregion
     }
 }
 
