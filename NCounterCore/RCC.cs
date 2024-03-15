@@ -1,5 +1,4 @@
-﻿using ExtensionMethods;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -805,6 +804,10 @@ namespace NCounterCore
             return Tuple.Create(item1, item2);
         }
 
+        /// <summary>
+        /// Calculates QC values and sets flags based on provided thresholds
+        /// </summary>
+        /// <param name="thresholds">QC thresholds obtained from settings (editable from dialog from main view)</param>
         public void SetQcValuesAndFlags(QcThresholds thresholds)
         {
             // Imaging QC
@@ -842,7 +845,7 @@ namespace NCounterCore
         /// </summary>
         /// <param name="posNames">Targets names of the top 5 ERCC POS controls</param>
         /// <param name="counts">ProbeCount collection from RCC</param>
-        /// <returns></returns>
+        /// <returns>Double indicating pearson r^2 of correlation of log2 POS control counts vs. log2 of their concentrations</returns>
         private double GetPosLinearity(IEnumerable<string> posNames, Dictionary<string, int> counts)
         {
             IEnumerable<int> vals0 = posNames.Select(x => counts[x]);
@@ -871,11 +874,11 @@ namespace NCounterCore
         }
 
         /// <summary>
-        /// Gets LOD value for LOD QC
+        /// Gets LOD value for LOD QC using NEG probes
         /// </summary>
         /// <param name="negNames">Target names of the ERCC NEG controls</param>
         /// <param name="counts">ProbeCount collection from RCC</param>
-        /// <returns></returns>
+        /// <returns>Double indicating background threshold</returns>
         private double GetLod(IEnumerable<string> negNames, Dictionary<string, int> counts, int lodSdCoeff)
         {
             IEnumerable<double> logs = negNames.Select(x => Convert.ToDouble(counts[x]));
@@ -883,6 +886,11 @@ namespace NCounterCore
             return Math.Round(retVal, 1);
         }
 
+        /// <summary>
+        /// Gets geomean of counts for targets with "Housekeeping" codeclass
+        /// </summary>
+        /// <param name="hkNames"></param>
+        /// <param name="counts"></param>
         public void SetHkGeoMean(IEnumerable<string> hkNames, Dictionary<string, int> counts)
         {
             if(hkNames.Count() < 1)

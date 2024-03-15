@@ -68,6 +68,7 @@
     <Compile Include="FilesLoadingEventArgs.cs" />
     <Compile Include="Views\IMainView.cs" />
     <Compile Include="Views\IPasswordEnterView.cs" />
+    <Compile Include="Views\IPkcSelectView.cs" />
     <Compile Include="Views\MainView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -98,6 +99,15 @@
     <Compile Include="Views\DialogsWithouMVP\ThresholdSetFormcs.Designer.cs">
       <DependentUpon>ThresholdSetFormcs.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presenters\PkcSelectPresenter.cs" />
+    <Compile Include="Views\PkcAddRemoveArgs.cs" />
+    <Compile Include="Views\PkcSelectView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\PkcSelectView.Designer.cs">
+      <DependentUpon>PkcSelectView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ViewUtils.cs" />
     <EmbeddedResource Include="Views\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
@@ -119,6 +129,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\DialogsWithouMVP\ThresholdSetFormcs.resx">
       <DependentUpon>ThresholdSetFormcs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\PkcSelectView.resx">
+      <DependentUpon>PkcSelectView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

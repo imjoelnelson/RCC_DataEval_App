@@ -94,7 +94,6 @@ namespace NCounterCore
                     Accession = accession;
                     TargetName = name;
                 }
-
             }
             else
             {

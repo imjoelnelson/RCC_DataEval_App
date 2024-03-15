@@ -74,11 +74,11 @@ namespace MainViewWinForms
         /// Triggers presenter to clear any temp folders/files created when extracting zips (plus any future form closing actions)
         /// </summary>
         public event EventHandler ThisFormClosed;
+        /// <summary>
+        /// Triggers presenter to build csv from this forms main dgv
+        /// </summary>
         public event EventHandler SentToQueue;
-        public event EventHandler ExportToCsv;
         public event EventHandler CreateQCPlot;
-        public event EventHandler ReorderRows;
-        public event EventHandler Filter;
         #endregion
 
         public MainView()
@@ -322,9 +322,9 @@ namespace MainViewWinForms
                 // Right click on column header
                 if (args.Button == MouseButtons.Right)
                 {
-                    MenuItem[] items = new MenuItem[4];
+                    MenuItem[] items = new MenuItem[2];
                     items[0] = new MenuItem("Select Columns To Display", Item_SelectColumns);
-                    items[2] = new MenuItem("Save Table As A CSV", Item_SaveAsCsv);
+                    items[1] = new MenuItem("Save Table As A CSV", Item_SaveAsCsv);
 
                     ContextMenu menu = new ContextMenu(items);
                     menu.Show(temp, new Point(args.X, args.Y));
@@ -400,7 +400,7 @@ namespace MainViewWinForms
         private void Item_SaveAsCsv(object sender, EventArgs e)
         {
             // Convert Dgv to string array
-            string[] lines = Util.ConvertDgvToStrings(Dgv);
+            string[] lines = Views.ViewUtils.ConvertDgvToStrings(Dgv);
 
             if(lines != null)
             {

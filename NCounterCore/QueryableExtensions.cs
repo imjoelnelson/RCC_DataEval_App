@@ -21,6 +21,9 @@ namespace RccExtensions
         Descending = 1
     }
 
+    /// <summary>
+    /// Represents a sortable datagridview column, giving the order in the sort hierarchy as well as direction (i.e. ascending/descending)
+    /// </summary>
     public class SortableColumn : ISort
     {
         public SortableColumn(int order, bool dir)
@@ -35,13 +38,28 @@ namespace RccExtensions
                 Direction = SortDirection.Descending;
             }
         }
+        /// <summary>
+        /// Order within the sorting hierarchy (i.e. OrderBy X, ThenBy Y ...)
+        /// </summary>
         public int Order { get; set; }
+        /// <summary>
+        /// Bool indicating whether sorting is done ascending (i.e. false -> descending)
+        /// </summary>
         public SortDirection Direction { get; set; }
     }
 
-    
+    /// <summary>
+    /// Contains extension method for dynamic, multi-column sorting of datagridview rows
+    /// </summary>
     public static class QueryableExtensions
     {
+        /// <summary>
+        /// Extension method for multicolumn sorting of datagridview rows
+        /// </summary>
+        /// <typeparam name="TModel">Object that a dgv row represents</typeparam>
+        /// <param name="collection">IEnumerable collection containing the objects the dgv rows represent</param>
+        /// <param name="sortedColumns">Dictionary of TModel property names and associated SortableColumns</param>
+        /// <returns></returns>
         public static IQueryable<TModel> OrderByColumns<TModel>(
             this IQueryable<TModel> collection,
             IDictionary<string, ISort> sortedColumns)
@@ -79,16 +97,15 @@ namespace RccExtensions
                 }
 
                 // itemType is the type of the TModel
-                // exp.Body.Type is the type of the property. For instance, for FileName, it's
-                //     a String. For BindingDensity, it's a double.
+                // exp.Body.Type is the type of the property
                 Type[] types = new Type[] { itemType, exp.Body.Type };
 
                 // Build the call expression
-                // E.G. OrderBy(x => x.CartridgeID).ThenBy(x => x.LaneID)
+                // e.g. OrderBy(x => x.CartridgeID).ThenBy(x => x.LaneID) ...
                 var mce = Expression.Call(typeof(Queryable), method, types,
                     collection.Expression, exp);
 
-                // Now you can run the expression against the collection
+                // Run the expression against the collection
                 collection = collection.Provider.CreateQuery<TModel>(mce);
             }
 

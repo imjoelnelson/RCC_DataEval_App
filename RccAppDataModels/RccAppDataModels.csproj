@@ -49,12 +49,14 @@
   <ItemGroup>
     <Compile Include="GuiCursor.cs" />
     <Compile Include="IDataModel.cs" />
+    <Compile Include="IPkcSelectModel.cs" />
     <Compile Include="LockPic.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LockPic.resx</DependentUpon>
     </Compile>
     <Compile Include="OneStringEventArgs.cs" />
+    <Compile Include="PkcSelectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RccDataModel.cs" />
     <Compile Include="RecursiveUnzip.cs" />

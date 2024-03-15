@@ -26,10 +26,7 @@ namespace MainViewWinForms
         event EventHandler SortClick;
         event EventHandler ThisFormClosed;
         event EventHandler SentToQueue;
-        event EventHandler ExportToCsv;
         event EventHandler CreateQCPlot;
-        event EventHandler ReorderRows;
-        event EventHandler Filter;
 
         // Methods
         void SetDgv(Dictionary<string, Tuple<bool, string, int>> properties,

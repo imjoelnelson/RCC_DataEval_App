@@ -44,7 +44,7 @@ namespace NCounterCore
         };
 
         /// <summary>
-        /// Constructor when generating from an RLF file
+        /// Constructor when generating RLF objects from an RLF file
         /// </summary>
         /// <param name="filePath">Path of RLF file</param>
         public Rlf(string filePath)
