@@ -13,7 +13,7 @@ namespace MainViewWinForms.Views
         event EventHandler AddButtonCicked;
         event EventHandler<PkcAddRemoveArgs> RemoveButtonClicked;
         event EventHandler NextButtonClicked;
-
+        event EventHandler<PkcSelectBoxEventArgs> TabPageTextBoxModified;
         void CloseForm();
     }
 }

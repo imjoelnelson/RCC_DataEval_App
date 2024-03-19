@@ -24,5 +24,12 @@ namespace MainViewWinForms
             _ = new PasswordEnterPresenter(passwordView, fileName);
             return passwordView;
         }
+
+        public static Views.PkcSelectView PkcView(List<string> cartridgeIDs)
+        {
+            Views.PkcSelectView view = new Views.PkcSelectView(cartridgeIDs);
+            PkcSelectModel model = new PkcSelectModel(cartridgeIDs);
+            MainViewWinForms.Pre
+        }
     }
 }

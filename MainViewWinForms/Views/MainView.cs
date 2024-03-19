@@ -255,6 +255,15 @@ namespace MainViewWinForms
                 Dgv.Columns[p.Key].HeaderCell.SortGlyphDirection = p.Value ? SortOrder.Ascending : SortOrder.Descending;
             }
         }
+
+        /// <summary>
+        /// Only needed if app has to close due to app folder not being able to be created
+        /// </summary>
+        public void FormClose()
+        {
+            this.Close();
+            this.Dispose();
+        }
         #endregion
 
         #region Event Handling

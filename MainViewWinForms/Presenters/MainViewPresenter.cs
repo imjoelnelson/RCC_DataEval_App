@@ -24,7 +24,7 @@ namespace MainViewWinForms
             MainView = mainView;
             MainModel = mainModel;
             DirectoriesToDelete = new List<string>();
-            // hook events
+            // View events
             MainView.FilesLoading += new EventHandler(View_FilesLoading);
             MainView.FormLoaded += new EventHandler(View_FormLoaded);
             MainView.RccListCleared += new EventHandler(View_RccListCleared);
@@ -33,7 +33,10 @@ namespace MainViewWinForms
             MainView.ColumnsSelected += new EventHandler(View_ColumnsSelected);
             MainView.SortClick += new EventHandler(View_SortingColumns);
             MainView.ThisFormClosed += new EventHandler(View_FormClosing);
+            // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
+            MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
+            MainModel.DspRccsLoaded += new EventHandler(Model_DspRccsLoaded);
             // Subscribe to password request message
             PresenterHub.MessageHub.Subscribe<PasswordRequestMessage>((m) => HandlePasswordRequest(m.Content));
             PresenterHub.MessageHub.Subscribe<DirectoryToDeleteMessage>((m) => HandleNewDirectoryToDelete(m.Content));
@@ -152,6 +155,20 @@ namespace MainViewWinForms
                     }
                 }
             }
+        }
+
+        private void Model_AppFolderFailed(object sender, EventArgs e)
+        {
+            MainView.FormClose();
+        }
+
+        private void Model_DspRccsLoaded(object sender, EventArgs e)
+        {
+            List<string> cartIds = MainModel.Rccs.Where(x => x.IsDsp)
+                                                 .Select(x => x.CartridgeID)
+                                                 .Distinct()
+                                                 .ToList();
+
         }
     }
 }

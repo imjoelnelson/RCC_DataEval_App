@@ -15,6 +15,8 @@ namespace RccAppDataModels
         BindingSource RccSource { get; set; }
 
         event EventHandler RccListChanged;
+        event EventHandler AppFolderCreationFailed;
+        event EventHandler DspRccsLoaded;
 
         void CreateObjectsFromFiles(string[] fileNames, int fileTypeIndex, QcThresholds thresholds);
         void UpdateThresholds(QcThresholds thresholds);

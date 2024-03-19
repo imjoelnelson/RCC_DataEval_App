@@ -58,7 +58,7 @@ namespace NCounterCore
             {
                 if (_FileName != value)
                 {
-                    _FileName = value;
+                    _FileName = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -85,7 +85,7 @@ namespace NCounterCore
             {
                 if (_SampleName != value)
                 {
-                    _SampleName = value;
+                    _SampleName = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -102,7 +102,7 @@ namespace NCounterCore
             {
                 if (_Owner != value)
                 {
-                    _Owner = value;
+                    _Owner = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -119,7 +119,7 @@ namespace NCounterCore
             {
                 if (_Comments != value)
                 {
-                    _Comments = value;
+                    _Comments = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -136,7 +136,7 @@ namespace NCounterCore
             {
                 if (_Date != value)
                 {
-                    _Date = value;
+                    _Date = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -154,12 +154,13 @@ namespace NCounterCore
             {
                 if(_RlfName != value)
                 {
-                    _RlfName = value;
+                    _RlfName = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
         }
         private string _RlfName;
+        public bool IsDsp { get; set; }
         #endregion
 
         #region Lane Attribute Properties
@@ -224,7 +225,7 @@ namespace NCounterCore
             {
                 if (_Instrument != value)
                 {
-                    _Instrument = value;
+                    _Instrument = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -241,7 +242,7 @@ namespace NCounterCore
             {
                 if (_StagePosition != value)
                 {
-                    _StagePosition = value;
+                    _StagePosition = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -275,7 +276,7 @@ namespace NCounterCore
             {
                 if (_CartridgeID != value)
                 {
-                    _CartridgeID = value;
+                    _CartridgeID = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -292,7 +293,7 @@ namespace NCounterCore
             {
                 if (_CartridgeBarcode != value)
                 {
-                    _CartridgeBarcode = value;
+                    _CartridgeBarcode = value ?? string.Empty;
                     NotifyPropertyChanged();
                 }
             }
@@ -514,6 +515,12 @@ namespace NCounterCore
             // Get Lane Attributes from Lane_Attribute section
             GetLaneAttributes(lines.Skip(indices[4] + 1).Take(indices[5] - (indices[4] + 1)).ToList());
 
+            if(IsDsp)
+            {
+                return; // Control for getting RLF, CodeSummary, and QC sections passed back to model 
+                        //   so user can first enter PKCs
+            }
+
             // Get codesummary
             if (ThisRLF.FromRlfFile) // When RLF loaded first
             {
@@ -641,11 +648,14 @@ namespace NCounterCore
             {
                 if (rlfString.StartsWith("DSP_"))
                 {
-                    // Get Readers via UI
-                    //ThisRLF = new Rlf(readers)
+                    IsDsp = true;
+                    RlfName = "Dsp_v1.0";
+                    return;
                 }
                 else
                 {
+                    IsDsp = false;
+                    
                     bool found = rlfs.TryGetValue(rlfString, out Rlf thisRlf);
                     if (found)
                     {

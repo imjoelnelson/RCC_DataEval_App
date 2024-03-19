@@ -3,6 +3,7 @@ using NCounterCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 
 namespace RccAppDataModels
@@ -13,9 +14,15 @@ namespace RccAppDataModels
         public System.Windows.Forms.BindingSource  RccSource{ get; set; }
         public BindingList<Rcc> SelectedRccs { get; set; }
         public Dictionary<string, Rlf> Rlfs { get; set; }
-        public Dictionary<string, PkcReader> Pkcs { get; set; }
+        public Dictionary<string, string> Pkcs { get; set; }
+
+        private static string AppDataFolderName = "RccEvalAppData"; // <-- MODIFY NAME OF APPLICATION FOLDER IN ROAMING HERE
+        private string RlfPath { get; set; }
+        private string PkcPath { get; set; }
 
         public event EventHandler RccListChanged;
+        public event EventHandler AppFolderCreationFailed;
+        public event EventHandler DspRccsLoaded;
 
         public RccDataModel()
         {
@@ -24,9 +31,50 @@ namespace RccAppDataModels
             RccSource.DataSource = Rccs;
             SelectedRccs = new BindingList<Rcc>();
             Rlfs = new Dictionary<string, Rlf>();
-            Pkcs = new Dictionary<string, PkcReader>();
+            Pkcs = new Dictionary<string, string>();
+
+            // Check if application folder present in AppData\Roaming
+            var appFolderPath = $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData)}\\{AppDataFolderName}";
+            CheckSetAppDataFolder(appFolderPath);
         }
 
+        private void CheckSetAppDataFolder(string appFolderPath)
+        {
+            if (!Directory.Exists(appFolderPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(appFolderPath);
+                }
+                catch(Exception er)
+                {
+                    System.Windows.Forms.MessageBox.Show($"The application's main folder could not be created due to the following error and the app must close:\r\n\r\n{er.Message}",
+                                                          "App Folder Creation Error",
+                                                          System.Windows.Forms.MessageBoxButtons.OK);
+                    AppFolderCreationFailed.Invoke(this, EventArgs.Empty);
+                }
+            }
+            // Check on subfolders
+            var RlfPath = $"{appFolderPath}\\RCC";
+            if (!Directory.Exists(RlfPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(RlfPath);
+                }
+                catch { }
+            }
+            var PkcPath = $"{appFolderPath}\\PKC";
+            if(!Directory.Exists(PkcPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(PkcPath);
+                }
+                catch { }
+            }
+        }
+        
         public void CreateObjectsFromFiles(string[] fileNames, int fileTypeIndex, QcThresholds thresholds)
         {
             List<string> filesToLoad = new List<string>();
@@ -74,24 +122,43 @@ namespace RccAppDataModels
                     Rccs.Add(tempList2[i]);
                 }
                 ListChanged(); // Send update signal out to View through Presenter
+                if(Rccs.Any(x => x.IsDsp))
+                {
+                    DspRccsLoaded.Invoke(this, EventArgs.Empty);
+                }
             }
             // Add any RLFs to Rlf collection
             else if (fileTypeIndex == 1)
             {
                 for (int i = 0; i < filesToLoad.Count; i++)
                 {
+                    // Copy file to RLF folder in app folder
+                    string savePath = $"{RlfPath}\\{Path.GetFileName(filesToLoad[i])}";
+                    try
+                    {
+                        File.Copy(filesToLoad[i], savePath);
+                    }
+                    catch { }
+                    // Add to RLF dictionary
                     Rlf temp = new Rlf(filesToLoad[i]);
                     // Validate temp and then:
                     Rlfs.Add(temp.Name, temp);
                 }
             }
-            // Add any PKCs to PkcReader collection
+            // Add any PKCs to Pkc collection
             else
             {
                 for(int i = 0; i < filesToLoad.Count; i++)
                 {
-                    PkcReader reader = new PkcReader(filesToLoad[i]);
-                    Pkcs.Add(reader.Name, reader);
+                    // Copy file to PKC folder in app folder
+                    string savePath = $"{PkcPath}\\{Path.GetFileName(filesToLoad[i])}";
+                    try
+                    {
+                        File.Copy(filesToLoad[i], savePath);
+                    }
+                    catch { }
+                    // Add to PKC list
+                    Pkcs.Add(Path.GetFileNameWithoutExtension(savePath), savePath);
                 }
             }
         }

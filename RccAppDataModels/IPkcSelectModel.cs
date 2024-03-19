@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NCounterCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace RccAppDataModels
 {
     public interface IPkcSelectModel
     {
-        Dictionary<string, string> SavedPkcList { get; set; }
+        List<CartridgePkcSelectItem> CartridgePkcs { get; set; }
 
-        Dictionary<string, string> GetSavedPkcsFromFile();
+        void RowPkcsChanged(string cartridgeID, int row, List<Tuple<string, string>> selectedPkcs);
     }
 }

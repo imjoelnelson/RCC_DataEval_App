@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CartridgePkcSelectItem.cs" />
     <Compile Include="GuiCursor.cs" />
     <Compile Include="IDataModel.cs" />
     <Compile Include="IPkcSelectModel.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RccDataModel.cs" />
     <Compile Include="RecursiveUnzip.cs" />
+    <Compile Include="RowPkcSelectItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MessageCenter\MessageCenter.csproj">

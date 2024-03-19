@@ -101,6 +101,10 @@
     </Compile>
     <Compile Include="Presenters\PkcSelectPresenter.cs" />
     <Compile Include="Views\PkcAddRemoveArgs.cs" />
+    <Compile Include="Views\PkcSelectBoxEventArgs.cs" />
+    <Compile Include="Views\PkcSelectTabPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Views\PkcSelectView.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -12,7 +12,7 @@ namespace MainViewWinForms.Views
         IPkcSelectView View { get; set; }
         IPkcSelectModel Model { get; set; }
 
-        public PkcSelectPresenter(IPkcSelectView view, IPkcSelectModel model)
+        public PkcSelectPresenter(IPkcSelectView view, IPkcSelectModel model, List<string> cartIDs)
         {
             View = view;
             Model = model;
@@ -20,6 +20,7 @@ namespace MainViewWinForms.Views
             View.AddButtonCicked += new EventHandler(View_AddButtonClicked);
             View.RemoveButtonClicked += new EventHandler<PkcAddRemoveArgs>(View_RemoveButtonClicked);
             View.NextButtonClicked += new EventHandler(View_NextButtonClicked);
+            View.TabPageTextBoxModified += new EventHandler<PkcSelectBoxEventArgs>(View_TabPageTextBoxModified);
         }
 
         private void View_AddButtonClicked(object sender, EventArgs e)
@@ -33,6 +34,11 @@ namespace MainViewWinForms.Views
         }
 
         private void View_NextButtonClicked(object sender, EventArgs e)
+        {
+
+        }
+
+        private void View_TabPageTextBoxModified(object sender, PkcSelectBoxEventArgs e)
         {
 
         }

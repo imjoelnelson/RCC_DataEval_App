@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using NCounterCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +10,18 @@ namespace RccAppDataModels
 {
     public class PkcSelectModel : IPkcSelectModel
     {
-        public Dictionary<string, string> SavedPkcList { get; set; }
+        public List<CartridgePkcSelectItem> CartridgePkcs { get; set; }
 
-        public Dictionary<string, string> GetSavedPkcsFromFile()
+        public PkcSelectModel(List<string> CartridgeIDs)
         {
-            // Do I check for App directory in Roaming here or should that be a utility for models
+            CartridgePkcs = new List<CartridgePkcSelectItem>();
+        }
+
+        public void RowPkcsChanged(string cartridgeID, int row, List<Tuple<string, string>> selectedPkcs)
+        {
+            CartridgePkcSelectItem cartItem = CartridgePkcs.Where(x => x.CartridgeID.Equals(cartridgeID)).FirstOrDefault();
+            RowPkcSelectItem rowItem = cartItem.SelectedPkcsPerRow[row];
+            rowItem.SetRowPkcSelectItem(cartridgeID, row, selectedPkcs);
         }
     }
 }

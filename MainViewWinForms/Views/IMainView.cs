@@ -34,5 +34,6 @@ namespace MainViewWinForms
         void DgvSourceChanged(int count);
         QcThresholds CollectThresholds();
         void ShowSelectColumnsDialog(List<Tuple<string, string>> columns, List<string> selectedProperties);
+        void FormClose();
     }
 }

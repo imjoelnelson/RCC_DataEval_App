@@ -17,10 +17,20 @@ namespace MainViewWinForms.Views
         public event EventHandler AddButtonCicked;
         public event EventHandler<PkcAddRemoveArgs> RemoveButtonClicked;
         public event EventHandler NextButtonClicked;
+        public event EventHandler<PkcSelectBoxEventArgs> TabPageTextBoxModified;
 
-        public PkcSelectView()
+        public PkcSelectView(List<string> cartIDs)
         {
             InitializeComponent();
+
+            TabControl tabControl = new TabControl();
+            tabControl.Location = new Point(390, 12);
+            tabControl.Size = new Size(470, 1045);
+            for(int i = 0; i < cartIDs.Count; i++)
+            {
+                PkcSelectTabPage page = new PkcSelectTabPage(cartIDs[i]);
+                page.TextboxModified += new EventHandler<PkcSelectBoxEventArgs>(TabPage_TextBoxModified);
+            }
 
             SelectedPkcs = new string[8];
         }
@@ -55,12 +65,17 @@ namespace MainViewWinForms.Views
         {
             if(listBox1.SelectedItem != null)
             {
-                // Set sneder textbox text to name of selected PKC
+                // Set sender textbox text to name of selected PKC
                 TextBox box = sender as TextBox;
                 box.Text = ((KeyValuePair<string, string>)listBox1.SelectedItem).Key;
                 // Set SelectedPkcs array, at the index of textbox in question, to the same PKC name from listbox selection
                 SelectedPkcs[(int)box.Tag] = box.Text;
             }
+        }
+
+        private void TabPage_TextBoxModified(object sender, PkcSelectBoxEventArgs e)
+        {
+            TabPageTextBoxModified.Invoke(sender, e);
         }
     }
 }

@@ -10,13 +10,16 @@ namespace NCounterCore
     /// <summary>
     /// Checks to make sure all included PKCs don't include duplicate DSP_IDs (i.e. are compatible) and then merges the DSP_ID to ProbeItem dictionaries
     /// </summary>
-    internal class PkcColllector : IPkcReader
+    public class PkcCollector : IPkcReader
     {
-        public string Name { get; set; } // May not need to initialize Name
+        public string Name { get; set; }
         public Dictionary<string, ProbeItem> DspTranslator { get; private set; }
+        public List<string> OverlappingIDs { get; private set; }
 
-        internal PkcColllector(IEnumerable<IPkcReader> readers)
+        public PkcCollector(IEnumerable<IPkcReader> readers)
         {
+            OverlappingIDs = new List<string>();
+            
             if (readers.Count() > 1)
             {
                 Dictionary<string, ProbeItem> merged = new Dictionary<string, ProbeItem>(readers.Select(x => x.DspTranslator.Count).Sum());
@@ -30,10 +33,7 @@ namespace NCounterCore
                         }
                         else
                         {
-                            MessageBox.Show($"The selected PKCs could not be imported because the DSP_ID, {p.Key} is present in at least two of them. Check to ensure the correct PKCs were selected.",
-                                "Incompatible PKCs Detected",
-                                MessageBoxButtons.OK);
-                            return;
+                            OverlappingIDs.Add(p.Key);
                         }
                     }
                 }
