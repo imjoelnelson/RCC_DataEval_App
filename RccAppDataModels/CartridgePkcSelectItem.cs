@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NCounterCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,33 +9,35 @@ namespace RccAppDataModels
 {
     public class CartridgePkcSelectItem
     {
+        // ID of the cartridge that PKCs are being selected for
         public string CartridgeID { get; set; }
         /// <summary>
         /// Collection containing Tuple<"PKC name", "PKC full path">
         /// </summary>
-        public RowPkcSelectItem[] SelectedPkcsPerRow { get; set; }
+        public PkcCollector Collector { get; set; }
+        /// <summary>
+        /// Error message indicating DSP_IDs that are incompatible with the selected PKCs
+        /// </summary>
+        public string ErrorMessage { get; set; }
 
         public CartridgePkcSelectItem(string cartridgeID)
         {
             CartridgeID = cartridgeID;
-            SelectedPkcsPerRow = new RowPkcSelectItem[8];
-            for (int i = 0; i < 8; i++)
+            ErrorMessage = string.Empty;
+        }
+
+        public void AddSelectedPkcs(string cartridgeID, string[] selectedPkcs)
+        {
+            IEnumerable<PkcReader> readers = selectedPkcs.Select(x => new PkcReader(x));
+            Collector = new PkcCollector(readers);
+            if(Collector.OverlappingIDs.Count > 0)
             {
-                SelectedPkcsPerRow[i] = new RowPkcSelectItem();
+                ErrorMessage = $"In cartridge, {CartridgeID}, the following DSP_IDs were used by more than one PKC:\r\n{string.Join("\r\n", Collector.OverlappingIDs)}\r\n\r\nCheck that you selected the correct PKCs.";
+            }
+            else
+            {
+                ErrorMessage = string.Empty;
             }
         }
-
-        public void AddSelectedPkcs(string cartridgeID, int row, List<Tuple<string, string>> selectedPkcs)
-        {
-            SelectedPkcsPerRow[row].SetRowPkcSelectItem(cartridgeID, row, selectedPkcs);
-        }
-
-        //SelectedPkcs = selectedPkcs;
-        //    List<PkcReader> readers = SelectedPkcs.Select(x => new PkcReader(x.Item2)).ToList();
-        //Collector = new PkcCollector(readers);
-        //    if(Collector.OverlappingIDs.Count > 0)
-        //    {
-        //        ErrorMessage = $"In cartridge, {CartridgeID}, the following DSP_IDs were used by more than one PKC:\r\n{string.Join("\r\n", Collector.OverlappingIDs)}\r\n\r\nCheck that you selected the correct PKCs.";
-        //    }
     }
 }

@@ -91,16 +91,11 @@ namespace NCounterCore
         /// Constructor for RLF when DSP RLF or RCC loaded
         /// </summary>
         /// <param name="readers"></param>
-        public Rlf(IEnumerable<IPkcReader> readers)
+        public Rlf(bool fromFile)
         {
-            PkcColllector collector = new PkcColllector(readers);
-            if (collector != null)
-            {
-                Name = "DSP_v1.0";
-                ThisType = RlfType.DSP;
-                Probes = collector.DspTranslator;
-            }
-            FromRlfFile = true;
+            Name = "DSP_v1.0";
+            ThisType = RlfType.DSP;
+            FromRlfFile = fromFile;
         }
 
 
@@ -247,6 +242,11 @@ namespace NCounterCore
         public void AddProbesFromRcc(Dictionary<string, ProbeItem> input)
         {
             Probes = input;
+        }
+
+        public void AddTranslatorForDsp(Dictionary<string, ProbeItem> translator)
+        {
+            Probes = translator;
         }
     }
 }

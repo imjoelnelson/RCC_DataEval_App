@@ -25,11 +25,12 @@ namespace MainViewWinForms
             return passwordView;
         }
 
-        public static Views.PkcSelectView PkcView(List<string> cartridgeIDs)
+        public static Views.PkcSelectView PkcView(List<string> cartridgeIDs, Dictionary<string, string> savedPkcs)
         {
             Views.PkcSelectView view = new Views.PkcSelectView(cartridgeIDs);
-            PkcSelectModel model = new PkcSelectModel(cartridgeIDs);
-            MainViewWinForms.Pre
+            PkcSelectModel model = new PkcSelectModel(cartridgeIDs, savedPkcs);
+            _ = new Presenters.PkcSelectPresenter(view, model, cartridgeIDs);
+            return view;
         }
     }
 }

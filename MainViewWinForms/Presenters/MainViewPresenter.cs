@@ -20,10 +20,11 @@ namespace MainViewWinForms
 
         public MainViewPresenter(IMainView mainView, IDataModel mainModel)
         {
+            // Initializing
+            DirectoriesToDelete = new List<string>();
             // get model and view refs
             MainView = mainView;
             MainModel = mainModel;
-            DirectoriesToDelete = new List<string>();
             // View events
             MainView.FilesLoading += new EventHandler(View_FilesLoading);
             MainView.FormLoaded += new EventHandler(View_FormLoaded);
@@ -37,9 +38,12 @@ namespace MainViewWinForms
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
             MainModel.DspRccsLoaded += new EventHandler(Model_DspRccsLoaded);
-            // Subscribe to password request message
+            // Subscribe to messages
             PresenterHub.MessageHub.Subscribe<PasswordRequestMessage>((m) => HandlePasswordRequest(m.Content));
             PresenterHub.MessageHub.Subscribe<DirectoryToDeleteMessage>((m) => HandleNewDirectoryToDelete(m.Content));
+            PresenterHub.MessageHub.Subscribe<PkcAddMessage>((m) => HandlePkcAdd(m.Content));
+            PresenterHub.MessageHub.Subscribe<PkcRemoveMessage>((m) => HandlePkcRemove(m.Content));
+            PresenterHub.MessageHub.Subscribe<TranslatorSendMessage>((m) => HandleTranslatorSend(m.Content));
         }
 
         private void HandlePasswordRequest(string fileName)
@@ -50,6 +54,32 @@ namespace MainViewWinForms
         private void HandleNewDirectoryToDelete(string dirToDelete)
         {
             DirectoriesToDelete.Add(dirToDelete);
+        }
+
+        private void HandlePkcAdd(string pkcPath)
+        {
+            string name = Path.GetFileNameWithoutExtension(pkcPath);
+            if(!MainModel.Pkcs.ContainsKey(name))
+            {
+                MainModel.AddPkc(pkcPath);
+            }
+        }
+
+        private void HandlePkcRemove(string pkcName)
+        {
+            if(MainModel.Pkcs.ContainsKey(pkcName))
+            {
+                MainModel.Pkcs.Remove(pkcName);
+            }
+        }
+
+        /// <summary>
+        /// Complete RCC processing (add RLF and finish codesum) after PKCs have been selected
+        /// </summary>
+        /// <param name="translator">Tuple containing the cartridge ID in question and the cognate DSP_ID-to-target translator</param>
+        private void HandleTranslatorSend(Tuple<string, Dictionary<string, ProbeItem>> translator)
+        {
+            MainModel.ApplyRlfToDspRccs(MainModel.Rccs.ToList(), translator.Item1, translator.Item2);
         }
 
         /// <summary>
@@ -164,11 +194,12 @@ namespace MainViewWinForms
 
         private void Model_DspRccsLoaded(object sender, EventArgs e)
         {
-            List<string> cartIds = MainModel.Rccs.Where(x => x.IsDsp)
+            List<string> cartIds = MainModel.Rccs.Where(x => x.ThisRLF.ThisType == RlfType.DSP)
                                                  .Select(x => x.CartridgeID)
                                                  .Distinct()
                                                  .ToList();
-
+            Views.IPkcSelectView view = MVPFactory.PkcView(cartIds, MainModel.Pkcs);
+            view.ShowForm();
         }
     }
 }

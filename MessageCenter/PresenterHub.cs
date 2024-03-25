@@ -28,5 +28,16 @@ namespace MessageCenter
     {
         public DirectoryToDeleteMessage(object sender, string content) : base(sender, content) { }
     }
-        
+    public class PkcAddMessage : GenericTinyMessage<string>
+    {
+        public PkcAddMessage(object sender, string content) : base(sender, content) { }
+    }
+    public class PkcRemoveMessage : GenericTinyMessage<string>
+    {
+        public PkcRemoveMessage(object sender, string content) : base(sender, content) { }
+    }
+    public class TranslatorSendMessage : GenericTinyMessage<Tuple<string, Dictionary<string, NCounterCore.ProbeItem>>>
+    {
+        public TranslatorSendMessage(object sender, Tuple<string, Dictionary<string, NCounterCore.ProbeItem>> content) : base(sender, content) { }
+    }
 }

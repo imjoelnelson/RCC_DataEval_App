@@ -12,27 +12,35 @@ namespace MainViewWinForms.Views
 {
     public partial class PkcSelectView : Form, IPkcSelectView
     {
-        public string[] SelectedPkcs { get; set; }
-
         public event EventHandler AddButtonCicked;
         public event EventHandler<PkcAddRemoveArgs> RemoveButtonClicked;
         public event EventHandler NextButtonClicked;
-        public event EventHandler<PkcSelectBoxEventArgs> TabPageTextBoxModified;
+        public event EventHandler<PkcSelectBoxEventArgs> TabPageListBox2DoubleClicked;
 
         public PkcSelectView(List<string> cartIDs)
         {
             InitializeComponent();
 
             TabControl tabControl = new TabControl();
-            tabControl.Location = new Point(390, 12);
-            tabControl.Size = new Size(470, 1045);
+            tabControl.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Regular);
+            tabControl.ShowToolTips = true;
+            tabControl.ItemSize = new Size(100, 20);
+            tabControl.SizeMode = TabSizeMode.Fixed;
+            tabControl.Dock = DockStyle.Fill;
+            tabControl.TabPages.Clear();
             for(int i = 0; i < cartIDs.Count; i++)
             {
                 PkcSelectTabPage page = new PkcSelectTabPage(cartIDs[i]);
-                page.TextboxModified += new EventHandler<PkcSelectBoxEventArgs>(TabPage_TextBoxModified);
+                page.ListBox2DoubleClicked += new EventHandler<PkcSelectBoxEventArgs>(TabPage_ListBox2DoubleClicked);
+                tabControl.TabPages.Add(page);
             }
+            this.panel1.Controls.Add(tabControl);
+            tabControl.Focus();
+        }
 
-            SelectedPkcs = new string[8];
+        public void ShowForm()
+        {
+            this.ShowDialog();
         }
 
         public void CloseForm()
@@ -68,14 +76,12 @@ namespace MainViewWinForms.Views
                 // Set sender textbox text to name of selected PKC
                 TextBox box = sender as TextBox;
                 box.Text = ((KeyValuePair<string, string>)listBox1.SelectedItem).Key;
-                // Set SelectedPkcs array, at the index of textbox in question, to the same PKC name from listbox selection
-                SelectedPkcs[(int)box.Tag] = box.Text;
             }
         }
 
-        private void TabPage_TextBoxModified(object sender, PkcSelectBoxEventArgs e)
+        private void TabPage_ListBox2DoubleClicked(object sender, PkcSelectBoxEventArgs e)
         {
-            TabPageTextBoxModified.Invoke(sender, e);
+            TabPageListBox2DoubleClicked.Invoke(sender, e);
         }
     }
 }

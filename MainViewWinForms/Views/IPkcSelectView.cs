@@ -8,12 +8,12 @@ namespace MainViewWinForms.Views
 {
     public interface IPkcSelectView
     {
-        string[] SelectedPkcs { get; set; }
-
         event EventHandler AddButtonCicked;
         event EventHandler<PkcAddRemoveArgs> RemoveButtonClicked;
         event EventHandler NextButtonClicked;
-        event EventHandler<PkcSelectBoxEventArgs> TabPageTextBoxModified;
+        event EventHandler<PkcSelectBoxEventArgs> TabPageListBox2DoubleClicked;
+
+        void ShowForm();
         void CloseForm();
     }
 }

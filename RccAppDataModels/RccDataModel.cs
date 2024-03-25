@@ -14,7 +14,7 @@ namespace RccAppDataModels
         public System.Windows.Forms.BindingSource  RccSource{ get; set; }
         public BindingList<Rcc> SelectedRccs { get; set; }
         public Dictionary<string, Rlf> Rlfs { get; set; }
-        public Dictionary<string, string> Pkcs { get; set; }
+        public Dictionary<string, string> Pkcs { get; set; } // <-- Keep this collection here rather than in Pkc MVP to handle mainform PKCs adds (holds the info in case PKC dir cannot be located)
 
         private static string AppDataFolderName = "RccEvalAppData"; // <-- MODIFY NAME OF APPLICATION FOLDER IN ROAMING HERE
         private string RlfPath { get; set; }
@@ -122,7 +122,7 @@ namespace RccAppDataModels
                     Rccs.Add(tempList2[i]);
                 }
                 ListChanged(); // Send update signal out to View through Presenter
-                if(Rccs.Any(x => x.IsDsp))
+                if(Rccs.Any(x => x.ThisRLF.ThisType == RlfType.DSP))
                 {
                     DspRccsLoaded.Invoke(this, EventArgs.Empty);
                 }
@@ -150,15 +150,7 @@ namespace RccAppDataModels
             {
                 for(int i = 0; i < filesToLoad.Count; i++)
                 {
-                    // Copy file to PKC folder in app folder
-                    string savePath = $"{PkcPath}\\{Path.GetFileName(filesToLoad[i])}";
-                    try
-                    {
-                        File.Copy(filesToLoad[i], savePath);
-                    }
-                    catch { }
-                    // Add to PKC list
-                    Pkcs.Add(Path.GetFileNameWithoutExtension(savePath), savePath);
+                    AddPkc(filesToLoad[i]);
                 }
             }
         }
@@ -215,6 +207,32 @@ namespace RccAppDataModels
             Rccs = new BindingList<Rcc>(Rccs.AsQueryable<Rcc>().OrderByColumns<Rcc>(columnsToSortOn).ToList());
             RccSource.DataSource = Rccs;
             RccSource.ResetBindings(false);
+        }
+
+        public void AddPkc(string pkcPath)
+        {
+            string name = Path.GetFileNameWithoutExtension(pkcPath);
+            if(!Pkcs.ContainsKey(name))
+            {
+                // Copy file to PKC folder in app folder
+                string savePath = $"{PkcPath}\\{Path.GetFileName(pkcPath)}";
+                try
+                {
+                    File.Copy(pkcPath, savePath);
+                }
+                catch { }
+                // Add to PKC list
+                Pkcs.Add(name, savePath);
+            }
+        }
+
+        public void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, Dictionary<string, ProbeItem> translator)
+        {
+            IEnumerable<Rcc> cartRccs = rccs.Where(x => x.CartridgeID == cartridgeID);
+            foreach(Rcc rcc in cartRccs)
+            {
+                rcc.ApplyRlfandProcessDsp(translator);
+            }
         }
     }
 }

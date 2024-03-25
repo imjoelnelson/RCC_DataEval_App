@@ -13,6 +13,8 @@ namespace RccAppDataModels
     {
         BindingList<Rcc> Rccs { get; set; }
         BindingSource RccSource { get; set; }
+        Dictionary<string, Rlf> Rlfs { get; set; }
+        Dictionary<string, string> Pkcs { get; set; }
 
         event EventHandler RccListChanged;
         event EventHandler AppFolderCreationFailed;
@@ -23,5 +25,7 @@ namespace RccAppDataModels
         void ListChanged();
         void ClearRccs();
         void SortTable(Dictionary<string, bool> sortList);
+        void AddPkc(string pkcPath);
+        void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, Dictionary<string, ProbeItem> translator);
     }
 }

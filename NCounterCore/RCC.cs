@@ -64,6 +64,14 @@ namespace NCounterCore
             }
         }
         private string _FileName;
+        /// <summary>
+        /// Store of raw file lines for when parts of RCC must be processed after initialization
+        /// </summary>
+        private List<string> Lines { get; set; }
+        /// <summary>
+        /// Storage of section indices for when parts of RCC must be processed after initialization
+        /// </summary>
+        private int[] Indices { get; set; }
         #endregion
 
         #region Header Attribute Properties
@@ -160,7 +168,6 @@ namespace NCounterCore
             }
         }
         private string _RlfName;
-        public bool IsDsp { get; set; }
         #endregion
 
         #region Lane Attribute Properties
@@ -515,10 +522,13 @@ namespace NCounterCore
             // Get Lane Attributes from Lane_Attribute section
             GetLaneAttributes(lines.Skip(indices[4] + 1).Take(indices[5] - (indices[4] + 1)).ToList());
 
-            if(IsDsp)
+            if(ThisRLF.ThisType == RlfType.DSP)
             {
-                return; // Control for getting RLF, CodeSummary, and QC sections passed back to model 
-                        //   so user can first enter PKCs
+                // Skip setting codesummary section (to be processed later after RLF object created from PkcReaders)
+                SetQcValuesAndFlags(thresholds);
+                Lines = lines;
+                Indices = indices;
+                return; // Control for getting RLF and CodeSummary passed back to view/presenters so user can first enter PKCs
             }
 
             // Get codesummary
@@ -648,14 +658,12 @@ namespace NCounterCore
             {
                 if (rlfString.StartsWith("DSP_"))
                 {
-                    IsDsp = true;
                     RlfName = "Dsp_v1.0";
+                    ThisRLF = new Rlf(true);
                     return;
                 }
                 else
                 {
-                    IsDsp = false;
-                    
                     bool found = rlfs.TryGetValue(rlfString, out Rlf thisRlf);
                     if (found)
                     {
@@ -826,8 +834,8 @@ namespace NCounterCore
             // Density QC
             BindingDensityPass = IsSprint ? BindingDensity <= thresholds.SprintDensityThreshold :
                 BindingDensity <= thresholds.SprintDensityThreshold;
-            if (ThisRLF.ThisType != RlfType.Generic || ThisRLF.ThisType != RlfType.DSP
-                || ThisRLF.ThisType != RlfType.PlexSet) // Controls processed differently for these assays
+            if (ThisRLF.ThisType != RlfType.Generic && ThisRLF.ThisType != RlfType.DSP
+                && ThisRLF.ThisType != RlfType.PlexSet) // Controls processed differently for these assays
             {
                 // Linearity QC
                 PosLinearity = GetPosLinearity(ThisRLF.Probes.Values
@@ -840,13 +848,16 @@ namespace NCounterCore
                 LodPass = ProbeCounts["POS_E(0.5)"] > Lod;
             }
             // Percent above threshold
-            if (thresholds.CountThreshold > -1)
+            if (ThisRLF.ThisType != RlfType.Generic && ThisRLF.ThisType != RlfType.DSP && ThisRLF.ThisType != RlfType.PlexSet)
             {
-                GetPctAboveThresh(thresholds.CountThreshold);
-            }
-            else
-            {
-                GetPctAboveThresh(Convert.ToInt32(Lod));
+                if (thresholds.CountThreshold > -1)
+                {
+                    GetPctAboveThresh(thresholds.CountThreshold);
+                }
+                else
+                {
+                    GetPctAboveThresh(Convert.ToInt32(Lod));
+                }
             }
         }
 
@@ -911,6 +922,12 @@ namespace NCounterCore
             IEnumerable<int> hkCounts = hkNames.Select(x => counts[x]);
             double retVal = Util.GetGeoMean(hkCounts.ToArray());
             GeoMeanOfHKs = Math.Round(retVal, 1);
+        }
+
+        public void ApplyRlfandProcessDsp(Dictionary<string, ProbeItem> translator)
+        {
+            ThisRLF.AddTranslatorForDsp(translator);
+            GetProbeCounts(Lines.Skip(Indices[6] + 1).Take(Indices[7] - (Indices[6] + 1)).ToList(), ThisRLF.ThisType);
         }
 
         // NotifyPropertyChanged implementation
