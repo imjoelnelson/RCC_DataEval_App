@@ -17,8 +17,9 @@ namespace RccAppDataModels
         public Dictionary<string, string> Pkcs { get; set; } // <-- Keep this collection here rather than in Pkc MVP to handle mainform PKCs adds (holds the info in case PKC dir cannot be located)
 
         private static string AppDataFolderName = "RccEvalAppData"; // <-- MODIFY NAME OF APPLICATION FOLDER IN ROAMING HERE
-        private string RlfPath { get; set; }
-        private string PkcPath { get; set; }
+        private int IdCounter { get; set; }
+        private string RlfRootPath { get; set; }
+        private string PkcRootPath { get; set; }
 
         public event EventHandler RccListChanged;
         public event EventHandler AppFolderCreationFailed;
@@ -30,12 +31,14 @@ namespace RccAppDataModels
             RccSource = new System.Windows.Forms.BindingSource();
             RccSource.DataSource = Rccs;
             SelectedRccs = new BindingList<Rcc>();
-            Rlfs = new Dictionary<string, Rlf>();
-            Pkcs = new Dictionary<string, string>();
+            IdCounter = 0;
 
-            // Check if application folder present in AppData\Roaming
+            // Check if application folder and subfolders present in AppData\Roaming
             var appFolderPath = $"{System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData)}\\{AppDataFolderName}";
             CheckSetAppDataFolder(appFolderPath);
+            // Get dictionaries of RLFs and PKCs previously saved
+            Rlfs = new Dictionary<string, Rlf>();
+            Pkcs = GetSavedPkcs(PkcRootPath);
         }
 
         private void CheckSetAppDataFolder(string appFolderPath)
@@ -55,23 +58,36 @@ namespace RccAppDataModels
                 }
             }
             // Check on subfolders
-            var RlfPath = $"{appFolderPath}\\RCC";
-            if (!Directory.Exists(RlfPath))
+            RlfRootPath = $"{appFolderPath}\\RCC";
+            if (!Directory.Exists(RlfRootPath))
             {
                 try
                 {
-                    Directory.CreateDirectory(RlfPath);
+                    Directory.CreateDirectory(RlfRootPath);
                 }
                 catch { }
             }
-            var PkcPath = $"{appFolderPath}\\PKC";
-            if(!Directory.Exists(PkcPath))
+            PkcRootPath = $"{appFolderPath}\\PKC";
+            if(!Directory.Exists(PkcRootPath))
             {
                 try
                 {
-                    Directory.CreateDirectory(PkcPath);
+                    Directory.CreateDirectory(PkcRootPath);
                 }
                 catch { }
+            }
+        }
+
+        private Dictionary<string, string> GetSavedPkcs(string pkcPath)
+        {
+            IEnumerable<string> pkcFilePaths = Directory.EnumerateFiles(pkcPath, "*.pkc", SearchOption.TopDirectoryOnly);
+            if(pkcFilePaths.Count() > 0)
+            {
+                return pkcFilePaths.ToDictionary(x => Path.GetFileNameWithoutExtension(x), x => x);
+            }
+            else
+            {
+                return new Dictionary<string, string>();
             }
         }
         
@@ -101,8 +117,9 @@ namespace RccAppDataModels
                 GuiCursor.WaitCursor(() => {
                     for (int i = 0; i < filesToLoad.Count; i++)
                     {
-                        Rcc temp = new Rcc(filesToLoad[i], Rlfs, thresholds);
+                        Rcc temp = new Rcc(filesToLoad[i], IdCounter, Rlfs, thresholds);
                         tempList.Add(temp);
+                        IdCounter++;
                         // Add ThisRlf to Rlf collection if not present in collection
                         if (temp.RlfImported)
                         {
@@ -133,7 +150,7 @@ namespace RccAppDataModels
                 for (int i = 0; i < filesToLoad.Count; i++)
                 {
                     // Copy file to RLF folder in app folder
-                    string savePath = $"{RlfPath}\\{Path.GetFileName(filesToLoad[i])}";
+                    string savePath = $"{RlfRootPath}\\{Path.GetFileName(filesToLoad[i])}";
                     try
                     {
                         File.Copy(filesToLoad[i], savePath);
@@ -209,30 +226,156 @@ namespace RccAppDataModels
             RccSource.ResetBindings(false);
         }
 
-        public void AddPkc(string pkcPath)
+        public void AddPkc(string thisPkcPath)
         {
-            string name = Path.GetFileNameWithoutExtension(pkcPath);
-            if(!Pkcs.ContainsKey(name))
+            // Attempt to save PKC
+            string savePath = $"{PkcRootPath}\\{Path.GetFileName(thisPkcPath)}";
+            bool saved;
+            try
             {
-                // Copy file to PKC folder in app folder
-                string savePath = $"{PkcPath}\\{Path.GetFileName(pkcPath)}";
-                try
-                {
-                    File.Copy(pkcPath, savePath);
-                }
-                catch { }
-                // Add to PKC list
-                Pkcs.Add(name, savePath);
+                File.Copy(thisPkcPath, savePath);
+                saved = true;
+            }
+            catch { saved = false; }
+
+            // Update Pkc list
+            string name = Path.GetFileNameWithoutExtension(thisPkcPath);
+            if (saved)
+            {
+                Pkcs[name] = savePath;
+            }
+            else
+            {
+                Pkcs[name] = thisPkcPath; // Should be set by ref in PKC model but ... just in case
             }
         }
 
-        public void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, Dictionary<string, ProbeItem> translator)
+        public void RemovePkc(string pkcPath)
+        {
+            try
+            {
+                File.Delete(pkcPath);
+            }
+            catch { }
+            var name = Path.GetFileNameWithoutExtension(pkcPath);
+            if(Pkcs.ContainsKey(name)) // Again, just in case
+            {
+                Pkcs.Remove(name);
+            }
+        }
+
+        public void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, string rlfName, Dictionary<string, ProbeItem> translator)
         {
             IEnumerable<Rcc> cartRccs = rccs.Where(x => x.CartridgeID == cartridgeID);
             foreach(Rcc rcc in cartRccs)
             {
-                rcc.ApplyRlfandProcessDsp(translator);
+                rcc.ApplyRlfandProcessDsp(rlfName, translator);
             }
+        }
+
+        public string[][] BuildRawDataTable(List<Rcc> rccs)
+        {
+            if(rccs == null)
+            {
+                throw new Exception("RCC list cannot be null.");
+            }
+            if(rccs.Count < 1)
+            {
+                throw new Exception("RCC list must have 1 or more RCCs");
+            }
+            IEnumerable<Rlf> rlfs = rccs.Select(x => x.ThisRLF);
+            int rlfCount = rlfs.Select(x => x.Name).Distinct().Count();
+
+            // <<<REPLACE LATER WITH LIST FROM PREFERENCES>>>
+            List<string> selectedProperties = new string[] { "FileName", "SampleName", "LaneID", "Owner", "Comments", "RlfName", "Instrument",
+                        "CartridgeID", "CartridgeBarcode", "FovCount", "FovCounted", "BindingDensity" }.ToList();
+
+            if (rlfs.Any(x => x.ThisType == RlfType.PlexSet || x.ThisType == RlfType.DSP))
+            {
+                if((rlfs.Any(x => x.ThisType == RlfType.DSP) && rlfCount > 1)
+                    || (rlfs.Any(x => x.ThisType == RlfType.PlexSet) && rlfCount > 1))
+                {
+                    // Triggers error message via presenter as this should be the only condition where this method returns null
+                    return null;
+                }
+                else
+                {
+                    // Build multiplex raw data table or give option for table vs. plate view
+                    var table = new RawProbeCountsTable(rccs, rccs[0].ThisRLF, selectedProperties, rccs[0].ThisRLF.ThisType == RlfType.DSP);
+                    if (table != null)
+                    {
+                        return table.TableLines;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            else
+            {
+                // Single RLF table
+                if (rlfCount < 2)
+                {
+                    
+                    // Easiest given Rlf count == 1; no need to change
+                    Rlf rlf = rccs[0].ThisRLF;
+                    // Table using all probes
+                    var table = new RawProbeCountsTable(rccs, rlf, selectedProperties);
+                    if (table != null)
+                    {
+                        return table.TableLines;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                // Multi-RLF table
+                else
+                {
+                    if(!rlfs.All(x => x.FromRlfFile))
+                    {
+                        // load all RLFs from files with dialog
+                        // Check if all RLFs now loaded; if not return null and message
+                        return null;
+                    }
+
+                    // Get targets present in all RLFs
+                    List<List<string>> listOfLists = rlfs.Select(x => x.Probes.Select(y => y.Value.ProbeID).ToList()).ToList();
+                    var intersection = listOfLists.Skip(1).Aggregate(new HashSet<string>(listOfLists.First()),
+                        (h, e) => { h.IntersectWith(e); return h; });
+                    // <<<REPLACE LATER WITH LIST FROM PREFERENCES>>>
+                    var table = new RawProbeCountsTable(rccs, rccs.Select(x => x.ThisRLF).Distinct().ToList(), selectedProperties);
+                    if (table != null)
+                    {
+                        return table.TableLines;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public string[][] TransformTable(string[][] lines)
+        {
+            if(lines.Any(x => x.Length != lines[0].Length))
+            {
+                throw new Exception("TransformTable cannot operate on jagged array");
+            }
+            List<List<string>> transformed = new List<List<string>>(lines[0].Length);
+            for(int r = 0; r < lines[0].Length; r++)
+            {
+                List<string> temp = new List<string>(lines.Length);
+                for(int c = 0; c < lines.Length; c++)
+                {
+                    temp.Add(lines[c][r]);
+                }
+                transformed.Add(temp);
+            }
+            return transformed.Select(x => x.ToArray()).ToArray();
         }
     }
 }

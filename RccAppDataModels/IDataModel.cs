@@ -26,6 +26,9 @@ namespace RccAppDataModels
         void ClearRccs();
         void SortTable(Dictionary<string, bool> sortList);
         void AddPkc(string pkcPath);
-        void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, Dictionary<string, ProbeItem> translator);
+        void RemovePkc(string pkcPath);
+        void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, string rlfName, Dictionary<string, ProbeItem> translator);
+        string[][] BuildRawDataTable(List<Rcc> rccs);
+        string[][] TransformTable(string[][] lines);
     }
 }

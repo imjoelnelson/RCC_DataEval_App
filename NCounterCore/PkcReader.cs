@@ -39,10 +39,12 @@ namespace NCounterCore
                 List<string> ids = targetArray[i]["DSP_ID"].Select(x => (string)x).ToList();
                 for (int j = 0; j < ids.Count; j++)
                 {
-                    translator.Add(ids[j], new ProbeItem((string)targetArray[i]["CodeClass"],
+                    var item = new ProbeItem((string)targetArray[i]["CodeClass"],
                                                          (string)targetArray[i]["DisplayName"],
                                                          lets[j],
-                                                         RlfType.DSP));
+                                                         RlfType.DSP);
+                    item.ProbeID = ids[j];
+                    translator.Add(ids[j], item);
                 }
             }
 

@@ -16,7 +16,7 @@ namespace NCounterCore
         /// <summary>
         /// Usually follows the format {a-zA-Z0-9}_C\d\d\d\d or {a-zA-Z0-9}_PS\d\d\d\d) unless a special internal (to Nanostring) RLF
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
         /// <summary>
         /// Enum indicating assay type; used to determine some assay-specific values and processing routes
         /// </summary>
@@ -244,8 +244,9 @@ namespace NCounterCore
             Probes = input;
         }
 
-        public void AddTranslatorForDsp(Dictionary<string, ProbeItem> translator)
+        public void AddTranslatorAndNameForDsp(string name, Dictionary<string, ProbeItem> translator)
         {
+            Name = name;
             Probes = translator;
         }
     }

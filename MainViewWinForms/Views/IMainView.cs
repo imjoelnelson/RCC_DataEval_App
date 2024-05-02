@@ -25,15 +25,16 @@ namespace MainViewWinForms
         event EventHandler ColumnsSelected;
         event EventHandler SortClick;
         event EventHandler ThisFormClosed;
-        event EventHandler SentToQueue;
-        event EventHandler CreateQCPlot;
+        event EventHandler<Views.RccSelectEventArgs> BuildRawCountsTable;
 
         // Methods
+        void ShowErrorMessage(string message, string caption);
         void SetDgv(Dictionary<string, Tuple<bool, string, int>> properties,
             List<string> selectedProperties, System.Windows.Forms.BindingSource source);
         void DgvSourceChanged(int count);
         QcThresholds CollectThresholds();
         void ShowSelectColumnsDialog(List<Tuple<string, string>> columns, List<string> selectedProperties);
         void FormClose();
+        void SaveTable(string[][] tableLines);
     }
 }

@@ -111,6 +111,7 @@
     <Compile Include="Views\PkcSelectView.Designer.cs">
       <DependentUpon>PkcSelectView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\RccSelectEventArgs.cs" />
     <Compile Include="Views\ViewUtils.cs" />
     <EmbeddedResource Include="Views\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
@@ -169,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\password-lock-icon-free-vector.jpg" />
+    <None Include="Resources\green-arrow.jpg" />
     <Content Include="Resources\remove-icon-png-7116.png" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>

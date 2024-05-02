@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CartridgePkcSelectItem.cs" />
+    <Compile Include="DisplayItem.cs" />
     <Compile Include="GuiCursor.cs" />
     <Compile Include="IDataModel.cs" />
     <Compile Include="IPkcSelectModel.cs" />
@@ -56,9 +57,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LockPic.resx</DependentUpon>
     </Compile>
-    <Compile Include="OneStringEventArgs.cs" />
+    <Compile Include="ModelPkcAddRemoveArgs.cs" />
+    <Compile Include="ModelPkcSelectBoxArgs.cs" />
     <Compile Include="PkcSelectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawProbeCountsTable.cs" />
     <Compile Include="RccDataModel.cs" />
     <Compile Include="RecursiveUnzip.cs" />
   </ItemGroup>

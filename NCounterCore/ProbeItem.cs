@@ -15,7 +15,7 @@ namespace NCounterCore
         /// <summary>
         /// Primary key for probes if RLF loaded; otherwise name is primary key
         /// </summary>
-        public string ProbeID { get; private set; }
+        public string ProbeID { get; set; }
         public string Barcode { get; private set; }
         public string Sequence { get; private set; }
 

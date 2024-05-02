@@ -35,13 +35,10 @@ namespace MainViewWinForms.Views
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.listBox2 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tabPage1.SuspendLayout();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBox1
@@ -50,13 +47,13 @@ namespace MainViewWinForms.Views
             this.listBox1.ItemHeight = 25;
             this.listBox1.Location = new System.Drawing.Point(12, 51);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(445, 479);
+            this.listBox1.Size = new System.Drawing.Size(445, 504);
             this.listBox1.TabIndex = 1;
             // 
             // addButton
             // 
             this.addButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.addButton.Location = new System.Drawing.Point(217, 542);
+            this.addButton.Location = new System.Drawing.Point(12, 562);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(117, 40);
             this.addButton.TabIndex = 2;
@@ -67,7 +64,7 @@ namespace MainViewWinForms.Views
             // removeButton
             // 
             this.removeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.removeButton.Location = new System.Drawing.Point(340, 542);
+            this.removeButton.Location = new System.Drawing.Point(135, 561);
             this.removeButton.Name = "removeButton";
             this.removeButton.Size = new System.Drawing.Size(117, 40);
             this.removeButton.TabIndex = 3;
@@ -89,7 +86,7 @@ namespace MainViewWinForms.Views
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(983, 542);
+            this.button1.Location = new System.Drawing.Point(983, 562);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(117, 40);
             this.button1.TabIndex = 13;
@@ -99,34 +96,13 @@ namespace MainViewWinForms.Views
             // nextButton
             // 
             this.nextButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nextButton.Location = new System.Drawing.Point(860, 542);
+            this.nextButton.Location = new System.Drawing.Point(860, 562);
             this.nextButton.Name = "nextButton";
             this.nextButton.Size = new System.Drawing.Size(117, 40);
             this.nextButton.TabIndex = 14;
-            this.nextButton.Text = "Next";
+            this.nextButton.Text = "OK";
             this.nextButton.UseVisualStyleBackColor = true;
             this.nextButton.Click += new System.EventHandler(this.nextButton_Click);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.listBox2);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(8, 39);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(454, 477);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // listBox2
-            // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.ItemHeight = 25;
-            this.listBox2.Location = new System.Drawing.Point(6, 37);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(442, 429);
-            this.listBox2.TabIndex = 1;
             // 
             // label1
             // 
@@ -138,46 +114,45 @@ namespace MainViewWinForms.Views
             this.label1.TabIndex = 0;
             this.label1.Text = "Select PKCs";
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(8, 39);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(454, 477);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.textBox1.Location = new System.Drawing.Point(479, 51);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(153, 479);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TabStop = false;
-            this.textBox1.Text = "Double-click PKCs in the Available Box to move to the Selected PKCs box \r\n\r\nDoubl" +
-    "e click a PKC in the Selected PKCs box to remove it\r\n\r\nSelect one or more PKCs f" +
-    "or each Cartridge\'s Selected PKCs box";
-            // 
             // panel1
             // 
             this.panel1.Location = new System.Drawing.Point(649, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(451, 527);
+            this.panel1.Size = new System.Drawing.Size(451, 553);
             this.panel1.TabIndex = 15;
+            // 
+            // button2
+            // 
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(485, 239);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(136, 44);
+            this.button2.TabIndex = 16;
+            this.button2.Text = "Select   >>";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.SelectButton_Clicked);
+            // 
+            // button3
+            // 
+            this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Location = new System.Drawing.Point(485, 301);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(136, 44);
+            this.button3.TabIndex = 17;
+            this.button3.Text = "<<  Remove";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.TabPage_RemoveButtonClicked);
             // 
             // PkcSelectView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1120, 604);
+            this.ClientSize = new System.Drawing.Size(1120, 614);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.nextButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
@@ -189,8 +164,6 @@ namespace MainViewWinForms.Views
             this.MinimizeBox = false;
             this.Name = "PkcSelectView";
             this.Text = "Enter PKCs Used";
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,11 +176,9 @@ namespace MainViewWinForms.Views
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button nextButton;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }

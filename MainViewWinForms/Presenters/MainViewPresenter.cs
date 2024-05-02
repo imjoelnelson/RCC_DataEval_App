@@ -34,6 +34,7 @@ namespace MainViewWinForms
             MainView.ColumnsSelected += new EventHandler(View_ColumnsSelected);
             MainView.SortClick += new EventHandler(View_SortingColumns);
             MainView.ThisFormClosed += new EventHandler(View_FormClosing);
+            MainView.BuildRawCountsTable += new EventHandler<Views.RccSelectEventArgs>(View_BuildRawCountsTable);
             // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
@@ -59,27 +60,21 @@ namespace MainViewWinForms
         private void HandlePkcAdd(string pkcPath)
         {
             string name = Path.GetFileNameWithoutExtension(pkcPath);
-            if(!MainModel.Pkcs.ContainsKey(name))
-            {
-                MainModel.AddPkc(pkcPath);
-            }
+            MainModel.AddPkc(pkcPath);
         }
 
-        private void HandlePkcRemove(string pkcName)
+        private void HandlePkcRemove(string pkcPath)
         {
-            if(MainModel.Pkcs.ContainsKey(pkcName))
-            {
-                MainModel.Pkcs.Remove(pkcName);
-            }
+            MainModel.RemovePkc(pkcPath);
         }
 
         /// <summary>
         /// Complete RCC processing (add RLF and finish codesum) after PKCs have been selected
         /// </summary>
         /// <param name="translator">Tuple containing the cartridge ID in question and the cognate DSP_ID-to-target translator</param>
-        private void HandleTranslatorSend(Tuple<string, Dictionary<string, ProbeItem>> translator)
+        private void HandleTranslatorSend(Tuple<string, string, Dictionary<string, ProbeItem>> translator)
         {
-            MainModel.ApplyRlfToDspRccs(MainModel.Rccs.ToList(), translator.Item1, translator.Item2);
+            MainModel.ApplyRlfToDspRccs(MainModel.Rccs.ToList(), translator.Item1, translator.Item2, translator.Item3);
         }
 
         /// <summary>
@@ -200,6 +195,22 @@ namespace MainViewWinForms
                                                  .ToList();
             Views.IPkcSelectView view = MVPFactory.PkcView(cartIds, MainModel.Pkcs);
             view.ShowForm();
+        }
+
+        private void View_BuildRawCountsTable(object sender, Views.RccSelectEventArgs e)
+        {
+            string[][] lines = MainModel.BuildRawDataTable(MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList());
+            if(lines != null)
+            {
+                string[][] transformed = MainModel.TransformTable(lines);
+                MainView.SaveTable(transformed);
+            }
+            else
+            {
+                string message = "For multiplex assays only RCCs from one RLF at a time can be exported as a table";
+                string caption = "Warning";
+                MainView.ShowErrorMessage(message, caption);
+            }
         }
     }
 }

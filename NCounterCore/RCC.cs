@@ -43,6 +43,7 @@ namespace NCounterCore
         #endregion
 
         #region Misc Properties
+        public int ID { get; private set; }
         public string RccReadErrorMessage { get; private set; }
         /// <summary>
         /// Indicates to data model class that ThisRlf should be added to RLF list
@@ -494,7 +495,7 @@ namespace NCounterCore
         /// </summary>
         /// <param name="filePath">Path to the RCC file</param>
         /// <param name="rlfs">List of already loaded RLFs in the Model being loaded into</param>
-        public Rcc(string filePath, Dictionary<string, Rlf> rlfs, QcThresholds thresholds)
+        public Rcc(string filePath, int id, Dictionary<string, Rlf> rlfs, QcThresholds thresholds)
         {
             // Read in data
             FileName = Path.GetFileNameWithoutExtension(filePath);
@@ -742,6 +743,7 @@ namespace NCounterCore
             }
             else if (type == RlfType.DSP)
             {
+                var test0 = this.FileName;
                 for (int i = 0; i < lines.Count; i++)
                 {
                     string[] bits = lines[i].Split(',');
@@ -752,7 +754,7 @@ namespace NCounterCore
                         bool found = ThisRLF.Probes.TryGetValue(bits[1], out item);
                         if (found)
                         {
-                            probeCounts.Add(item.TargetName, Util.SafeParseInt(bits[3]));
+                            probeCounts.Add(item.ProbeID, Util.SafeParseInt(bits[3]));
                         }
                     }
                 }
@@ -924,10 +926,10 @@ namespace NCounterCore
             GeoMeanOfHKs = Math.Round(retVal, 1);
         }
 
-        public void ApplyRlfandProcessDsp(Dictionary<string, ProbeItem> translator)
+        public void ApplyRlfandProcessDsp(string rlfName, Dictionary<string, ProbeItem> translator)
         {
-            ThisRLF.AddTranslatorForDsp(translator);
-            GetProbeCounts(Lines.Skip(Indices[6] + 1).Take(Indices[7] - (Indices[6] + 1)).ToList(), ThisRLF.ThisType);
+            ThisRLF.AddTranslatorAndNameForDsp(rlfName, translator);
+            ProbeCounts = GetProbeCounts(Lines.Skip(Indices[6] + 1).Take(Indices[7] - (Indices[6] + 1)).ToList(), ThisRLF.ThisType);
         }
 
         // NotifyPropertyChanged implementation

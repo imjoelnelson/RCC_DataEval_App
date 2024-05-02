@@ -111,6 +111,5 @@ namespace RccExtensions
 
             return collection;
         }
-    
     }
 }

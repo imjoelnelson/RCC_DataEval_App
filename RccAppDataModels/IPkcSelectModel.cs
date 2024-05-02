@@ -12,7 +12,11 @@ namespace RccAppDataModels
         Dictionary<string, string> SavedPkcs { get; set; }
         List<CartridgePkcSelectItem> CartridgePkcs { get; set; }
 
-        void PkcsChanged(string cartridgeID, string[] selectedPkcs);
+        event EventHandler<ModelPkcSelectBoxArgs> SelectedPkcsChanged;
+        event EventHandler<ModelPkcAddRemoveArgs> SavedPkcsChanged;
+
+        void AddNewCartridgePkcs(string cartridgeID, string[] selectedPkcs, Dictionary<string, string> translator);
+        void ClearSelectedCartridgePkcs(string cartridgeID, string[] pkcsToRemove);
         void AddPkcToSavedList(string pkcPath);
         void RemovePkcFromSavedList(string pkcKey);
     }

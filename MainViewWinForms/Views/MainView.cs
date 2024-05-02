@@ -77,8 +77,7 @@ namespace MainViewWinForms
         /// <summary>
         /// Triggers presenter to build csv from this forms main dgv
         /// </summary>
-        public event EventHandler SentToQueue;
-        public event EventHandler CreateQCPlot;
+        public event EventHandler<Views.RccSelectEventArgs> BuildRawCountsTable;
         #endregion
 
         public MainView()
@@ -92,6 +91,10 @@ namespace MainViewWinForms
         }
 
         #region methods
+        public void ShowErrorMessage(string message, string caption)
+        {
+            MessageBox.Show(message, caption, MessageBoxButtons.OK);
+        }
         /// <summary>
         /// Method for buidling the view's datagridview control
         /// </summary>
@@ -263,6 +266,86 @@ namespace MainViewWinForms
         {
             this.Close();
             this.Dispose();
+        }
+
+        public void SaveTable(string[][] tableLines)
+        {
+            if (tableLines.Length > 0)
+            {
+                string path = string.Empty;
+                using (System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog())
+                {
+                    sfd.Filter = "CSV|*.csv|TXT|*.txt";
+                    sfd.RestoreDirectory = true;
+                    sfd.ValidateNames = true;
+                    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        List<string> lines = new List<string>();
+                        string csvSeparator;
+                        if (sfd.FilterIndex == 1)
+                        {
+                            // <<< REPLACE SEPARATOR LATER WITH VALUE FROM PREFERENCES >>>
+                            csvSeparator = ",";
+                        }
+                        else
+                        {
+                             csvSeparator = "\t";
+
+                        }
+                        lines.AddRange(tableLines.Select(x => string.Join(csvSeparator, x)));
+                        try
+                        {
+                            File.WriteAllLines(sfd.FileName, lines);
+                        }
+                        catch (Exception er)
+                        {
+                            MessageBox.Show($"{er.Message}\r\n\r\n{er.StackTrace}", "Table Error", MessageBoxButtons.OK);
+                        }
+                        path = sfd.FileName;
+                    }
+                }
+
+                OpenFileAfterSaved(path, 5000);
+            }
+        }
+
+        private void OpenFileAfterSaved(string path, int maxDelay)
+        {
+            // Ask if user wants to open file
+            string message = $"Would you like to open {Path.GetFileName(path)} now?";
+            string cap = "File Saved";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            DialogResult result = MessageBox.Show(message, cap, buttons);
+            // Open file if 'yes'
+            if (result == DialogResult.Yes)
+            {
+                int sleepAmount = 1000; // Delay to give time for file to be saved before trying to open
+                int sleepStart = 0;
+                int maxSleep = maxDelay;
+                while (true)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(path);
+                        break;
+                    }
+                    catch (Exception er)
+                    {
+                        if (sleepStart <= maxSleep)
+                        {
+                            System.Threading.Thread.Sleep(sleepAmount);
+                            sleepStart += sleepAmount;
+                        }
+                        else
+                        {
+                            MessageBox.Show($"The file could not be opened due to an exception:\r\n\r\n{er.Message}\r\n\r\n{er.StackTrace}",
+                                            "File Open Error",
+                                            MessageBoxButtons.OK);
+                            return;
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -450,6 +533,28 @@ namespace MainViewWinForms
         {
             ThisFormClosed.Invoke(this, EventArgs.Empty);
             this.Dispose();
+        }
+
+        private void rawCountsTableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Collect selected RCCs
+            var selectedRows = Dgv.SelectedCells.Cast<DataGridViewCell>().Select(x => x.RowIndex).ToList();
+            List<int> selectedIDs = new List<int>(selectedRows.Count);
+            for(int i = 0; i < selectedRows.Count; i++)
+            {
+                var temp = (Rcc)Dgv.Rows[i].DataBoundItem;
+                selectedIDs.Add(temp.ID);
+            }
+            if(selectedIDs.Count > 0)
+            {
+                // Send message via presenter to model to build table
+                BuildRawCountsTable.Invoke(this, new Views.RccSelectEventArgs(selectedIDs));
+            }
+            else
+            {
+                MessageBox.Show("Select RCCs (i.e. highlight rows) to include in the raw data table.", "No RCCs Selected", MessageBoxButtons.OK);
+                return;
+            }
         }
         #endregion
     }
