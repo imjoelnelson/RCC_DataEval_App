@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="SelectedProperties" Type="System.String" Scope="User">
-      <Value Profile="(Default)">FileName,SampleName,RlfName,LaneID,Date,Instrument,CartridgeID,PctFovCounted,PctFovPass,BindingDensity,BindingDensityPass,PosLinearity,PosLinearityPass,Lod,LodPass,PctAboveThresh,GeoMeanOfPos,GeoMeanOfHks</Value>
+      <Value Profile="(Default)">FileName,SampleName,LaneID,Owner,Comments,RlfName,Instrument,CartridgeID,CartridgeBarcode,FovCount,FovCounted,BindingDensity</Value>
     </Setting>
     <Setting Name="ImagingThreshold" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.75</Value>

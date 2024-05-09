@@ -27,7 +27,7 @@ namespace RccAppDataModels
         /// <param name="rccs">List of RCCs included in the table</param>
         /// <param name="rlf">The RLF used for all the RCCs</param>
         /// <param name="properties">RCC properties to include in the header section of the table (from user prefs)</param>
-        public RawProbeCountsTable(List<Rcc> rccs, Rlf rlf, List<string> properties)
+        public RawProbeCountsTable(List<Rcc> rccs, Rlf rlf, string[] properties)
         {
             List<string[]> collector = new List<string[]>(rccs.Count + 2);
 
@@ -45,7 +45,7 @@ namespace RccAppDataModels
             }
 
             // List capacity for column building
-            int cap = properties.Count + 7 + orderedProbesToKeep.Count;
+            int cap = properties.Length + 7 + orderedProbesToKeep.Count;
 
             // ** First column
             List<string> firstCol = new List<string>(cap);
@@ -60,7 +60,7 @@ namespace RccAppDataModels
 
             // ** CodeClass column
             List<string> secondCol = new List<string>(cap);
-            secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Count));
+            secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
             secondCol.Add("--------------------");
             secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
             secondCol.AddRange(new string[] { "--------------------", "CodeClass" });
@@ -78,7 +78,7 @@ namespace RccAppDataModels
         /// <param name="rccs">List of RCCs included in the table</param>
         /// <param name="rlfs">List of RLFs used by all included RCCs</param>
         /// <param name="properties">RCC properties to include in the header section of the table (from user prefs)</param>
-        public RawProbeCountsTable(List<Rcc> rccs, List<Rlf> rlfs, List<string> properties)
+        public RawProbeCountsTable(List<Rcc> rccs, List<Rlf> rlfs, string[] properties)
         {
             List<string[]> collector = new List<string[]>(rccs.Count + 2);
 
@@ -103,7 +103,7 @@ namespace RccAppDataModels
             }
 
             // List capacity for column building
-            int cap = properties.Count + 7 + orderedProbesToKeep.Count;
+            int cap = properties.Length + 7 + orderedProbesToKeep.Count;
 
             // ** First column
             List<string> firstCol = new List<string>(cap);
@@ -118,7 +118,7 @@ namespace RccAppDataModels
 
             // ** CodeClass column
             List<string> secondCol = new List<string>(cap);
-            secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Count));
+            secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
             secondCol.Add("--------------------");
             secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
             secondCol.AddRange(new string[] { "--------------------", "CodeClass" });
@@ -138,7 +138,7 @@ namespace RccAppDataModels
         /// <param name="rlf">RLF object from either PlexSet RLF or based on PKC readers for DSP</param>
         /// <param name="properties">RCC properties to include in the header section of the table (from user prefs)</param>
         /// <param name="IsDsp">Boolean indicating if the RCCs are PlexSet or from DSP readout</param>
-        public RawProbeCountsTable(List<Rcc> rccs, Rlf rlf, List<string> properties, bool IsDsp)
+        public RawProbeCountsTable(List<Rcc> rccs, Rlf rlf, string[] properties, bool IsDsp)
         {
             List<string[]> collector = new List<string[]>(rccs.Count + 2);
 
@@ -146,11 +146,13 @@ namespace RccAppDataModels
             {
                 // Get ordered probes with included codeclasses
                 List<ProbeItem> orderedProbesToKeep = new List<ProbeItem>(rlf.Probes.Count);
+                // Get codeclasses represented in the RCCs
                 List<string> includedCodeClasses = rlf.Probes.Select(x => x.Value.CodeClass).Distinct().ToList();
+                // For iterating through PlexRows
                 string[] lets = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
-                for(int j = 0; j < lets.Length; j++)
+                for(int j = 0; j < lets.Length; j++) // Order first by PlexRow
                 {
-                    for (int i = 0; i < RawTableProbeOrder.Length; i++)
+                    for (int i = 0; i < RawTableProbeOrder.Length; i++) // Then by CodeClass
                     {
                         if (includedCodeClasses.Contains(RawTableProbeOrder[i]))
                         {
@@ -159,14 +161,14 @@ namespace RccAppDataModels
                             if (retainedProbes.Count() > 0)
                             {
                                 orderedProbesToKeep.AddRange(retainedProbes.Select(x => x.Value)
-                                                                           .OrderBy(y => y.TargetName));
+                                                                           .OrderBy(y => y.TargetName));  // Then finally order by target name
                             }
                         }
                     }
                 }
 
                 // List capacity for column building
-                int cap = properties.Count + 7 + orderedProbesToKeep.Count;
+                int cap = properties.Length + 7 + orderedProbesToKeep.Count;
 
                 // ** First column
                 List<string> firstCol = new List<string>(cap);
@@ -181,7 +183,7 @@ namespace RccAppDataModels
 
                 // ** CodeClass column
                 List<string> secondCol = new List<string>(cap);
-                secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Count));
+                secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
                 secondCol.Add("--------------------");
                 secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
                 secondCol.AddRange(new string[] { "--------------------", "CodeClass" });
@@ -190,7 +192,7 @@ namespace RccAppDataModels
 
                 // ** Well column
                 List<string> thirdCol = new List<string>(cap);
-                thirdCol.AddRange(Enumerable.Repeat(string.Empty, properties.Count));
+                thirdCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
                 thirdCol.Add("--------------------");
                 thirdCol.AddRange(Enumerable.Repeat(string.Empty, 4));
                 thirdCol.AddRange(new string[] { "--------------------", "Plate Row" });
@@ -218,7 +220,7 @@ namespace RccAppDataModels
                 }
 
                 // List capacity for column building
-                int cap = properties.Count + 7 + orderedProbesToKeep.Count;
+                int cap = properties.Length + 7 + orderedProbesToKeep.Count;
 
                 // ** First column
                 List<string> firstCol = new List<string>(cap);
@@ -232,7 +234,7 @@ namespace RccAppDataModels
 
                 // ** Codeclass column
                 List<string> secondCol = new List<string>(cap);
-                secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Count));
+                secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
                 secondCol.Add("--------------------");
                 secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
                 secondCol.AddRange(new string[] { "--------------------", "CodeClass" });
@@ -241,7 +243,7 @@ namespace RccAppDataModels
 
                 // ** Well column
                 List<string> thirdCol = new List<string>(cap);
-                secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Count));
+                secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
                 secondCol.Add("--------------------");
                 secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
                 secondCol.AddRange(new string[] { "--------------------", "Plate Row" });
@@ -263,13 +265,13 @@ namespace RccAppDataModels
         /// <param name="properties">RCC properties to include in the header section</param>
         /// <param name="probes">Selected probes to be included in the table</param>
         /// <returns>Single column from RCC raw count table as string[]</returns>
-        public string[] GetRccColumn(Rcc rcc, List<string> properties, List<string> probes)
+        public string[] GetRccColumn(Rcc rcc, string[] properties, List<string> probes)
         {
             // Collector with length for header, flags, 2 separator lines, and probes
-            List<string> collector = new List<string>(properties.Count + probes.Count + 7);
+            List<string> collector = new List<string>(properties.Length + probes.Count + 7);
             
             // Add header row info
-            for (int i = 0; i < properties.Count; i++)
+            for (int i = 0; i < properties.Length; i++)
             {
                 bool gotValue = TryGetPropertyValue(rcc, properties[i], out string val);
                 collector.Add(gotValue ? val : string.Empty);

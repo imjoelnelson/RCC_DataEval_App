@@ -26,6 +26,7 @@ namespace MainViewWinForms
         event EventHandler SortClick;
         event EventHandler ThisFormClosed;
         event EventHandler<Views.RccSelectEventArgs> BuildRawCountsTable;
+        event EventHandler OpenRawCountTablePreferences;
 
         // Methods
         void ShowErrorMessage(string message, string caption);

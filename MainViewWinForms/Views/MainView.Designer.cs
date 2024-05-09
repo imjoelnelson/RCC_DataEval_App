@@ -37,11 +37,11 @@ namespace MainViewWinForms
             this.importPKCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearRCCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataAssessmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.targetCountsTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferrenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setThresholdsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataAssessmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.targetCountsTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -49,6 +49,7 @@ namespace MainViewWinForms
             this.clearButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.rawCountTablePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -65,7 +66,7 @@ namespace MainViewWinForms
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1624, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(1624, 42);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -77,84 +78,85 @@ namespace MainViewWinForms
             this.importPKCsToolStripMenuItem,
             this.clearRCCsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 36);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 38);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // importRCCsToolStripMenuItem
             // 
             this.importRCCsToolStripMenuItem.Name = "importRCCsToolStripMenuItem";
-            this.importRCCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importRCCsToolStripMenuItem.Size = new System.Drawing.Size(280, 44);
             this.importRCCsToolStripMenuItem.Text = "Import RCCs";
             this.importRCCsToolStripMenuItem.Click += new System.EventHandler(this.LoadRCCsToolStripMenuItem_Click);
             // 
             // importRLFsToolStripMenuItem
             // 
             this.importRLFsToolStripMenuItem.Name = "importRLFsToolStripMenuItem";
-            this.importRLFsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importRLFsToolStripMenuItem.Size = new System.Drawing.Size(280, 44);
             this.importRLFsToolStripMenuItem.Text = "Import RLFs";
             this.importRLFsToolStripMenuItem.Click += new System.EventHandler(this.LoadRLFsToolStripMenuItem_Click);
             // 
             // importPKCsToolStripMenuItem
             // 
             this.importPKCsToolStripMenuItem.Name = "importPKCsToolStripMenuItem";
-            this.importPKCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.importPKCsToolStripMenuItem.Size = new System.Drawing.Size(280, 44);
             this.importPKCsToolStripMenuItem.Text = "Import PKCs";
             this.importPKCsToolStripMenuItem.Click += new System.EventHandler(this.LoadPKCsToolStripMenuItem_Click);
             // 
             // clearRCCsToolStripMenuItem
             // 
             this.clearRCCsToolStripMenuItem.Name = "clearRCCsToolStripMenuItem";
-            this.clearRCCsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.clearRCCsToolStripMenuItem.Size = new System.Drawing.Size(280, 44);
             this.clearRCCsToolStripMenuItem.Text = "Clear RCCs";
             this.clearRCCsToolStripMenuItem.Click += new System.EventHandler(this.clearRCCsToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(75, 36);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(75, 38);
             this.editToolStripMenuItem.Text = "Edit";
-            // 
-            // preferrenceToolStripMenuItem
-            // 
-            this.preferrenceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.setThresholdsToolStripMenuItem,
-            this.cSVCellToolStripMenuItem});
-            this.preferrenceToolStripMenuItem.Name = "preferrenceToolStripMenuItem";
-            this.preferrenceToolStripMenuItem.Size = new System.Drawing.Size(159, 36);
-            this.preferrenceToolStripMenuItem.Text = "Preferences";
-            // 
-            // setThresholdsToolStripMenuItem
-            // 
-            this.setThresholdsToolStripMenuItem.Name = "setThresholdsToolStripMenuItem";
-            this.setThresholdsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
-            this.setThresholdsToolStripMenuItem.Text = "Set Thresholds";
-            this.setThresholdsToolStripMenuItem.Click += new System.EventHandler(this.setThresholdsToolStripMenuItem_Click);
-            // 
-            // cSVCellToolStripMenuItem
-            // 
-            this.cSVCellToolStripMenuItem.Name = "cSVCellToolStripMenuItem";
-            this.cSVCellToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
-            this.cSVCellToolStripMenuItem.Text = "CSV Cell Delimiter";
             // 
             // dataAssessmentToolStripMenuItem
             // 
             this.dataAssessmentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.targetCountsTableToolStripMenuItem});
             this.dataAssessmentToolStripMenuItem.Name = "dataAssessmentToolStripMenuItem";
-            this.dataAssessmentToolStripMenuItem.Size = new System.Drawing.Size(109, 36);
+            this.dataAssessmentToolStripMenuItem.Size = new System.Drawing.Size(109, 38);
             this.dataAssessmentToolStripMenuItem.Text = "Review";
             // 
             // targetCountsTableToolStripMenuItem
             // 
             this.targetCountsTableToolStripMenuItem.Name = "targetCountsTableToolStripMenuItem";
-            this.targetCountsTableToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.targetCountsTableToolStripMenuItem.Size = new System.Drawing.Size(336, 44);
             this.targetCountsTableToolStripMenuItem.Text = "Raw Counts Table";
             this.targetCountsTableToolStripMenuItem.Click += new System.EventHandler(this.rawCountsTableToolStripMenuItem_Click);
+            // 
+            // preferrenceToolStripMenuItem
+            // 
+            this.preferrenceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.setThresholdsToolStripMenuItem,
+            this.cSVCellToolStripMenuItem,
+            this.rawCountTablePreferencesToolStripMenuItem});
+            this.preferrenceToolStripMenuItem.Name = "preferrenceToolStripMenuItem";
+            this.preferrenceToolStripMenuItem.Size = new System.Drawing.Size(159, 38);
+            this.preferrenceToolStripMenuItem.Text = "Preferences";
+            // 
+            // setThresholdsToolStripMenuItem
+            // 
+            this.setThresholdsToolStripMenuItem.Name = "setThresholdsToolStripMenuItem";
+            this.setThresholdsToolStripMenuItem.Size = new System.Drawing.Size(457, 44);
+            this.setThresholdsToolStripMenuItem.Text = "Set Thresholds";
+            this.setThresholdsToolStripMenuItem.Click += new System.EventHandler(this.setThresholdsToolStripMenuItem_Click);
+            // 
+            // cSVCellToolStripMenuItem
+            // 
+            this.cSVCellToolStripMenuItem.Name = "cSVCellToolStripMenuItem";
+            this.cSVCellToolStripMenuItem.Size = new System.Drawing.Size(457, 44);
+            this.cSVCellToolStripMenuItem.Text = "CSV Cell Delimiter";
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(85, 36);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(85, 38);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // panel1
@@ -180,7 +182,7 @@ namespace MainViewWinForms
             this.clearButton,
             this.helpToolStripButton,
             this.toolStripSeparator1});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 40);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 42);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -225,6 +227,13 @@ namespace MainViewWinForms
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 52);
             // 
+            // rawCountTablePreferencesToolStripMenuItem
+            // 
+            this.rawCountTablePreferencesToolStripMenuItem.Name = "rawCountTablePreferencesToolStripMenuItem";
+            this.rawCountTablePreferencesToolStripMenuItem.Size = new System.Drawing.Size(457, 44);
+            this.rawCountTablePreferencesToolStripMenuItem.Text = "Raw Count Table Preferences";
+            this.rawCountTablePreferencesToolStripMenuItem.Click += new System.EventHandler(this.rawCountTablePreferencesToolStripMenuItem_Click);
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -267,5 +276,6 @@ namespace MainViewWinForms
         private System.Windows.Forms.ToolStripMenuItem dataAssessmentToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem targetCountsTableToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rawCountTablePreferencesToolStripMenuItem;
     }
 }

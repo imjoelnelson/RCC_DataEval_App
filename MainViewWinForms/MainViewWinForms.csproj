@@ -66,9 +66,13 @@
     </Compile>
     <Compile Include="DgvFromProperties.cs" />
     <Compile Include="FilesLoadingEventArgs.cs" />
+    <Compile Include="Presenters\RccPropertyConfigPresenter.cs" />
+    <Compile Include="Views\DgvCellClickEventArgs.cs" />
     <Compile Include="Views\IMainView.cs" />
     <Compile Include="Views\IPasswordEnterView.cs" />
     <Compile Include="Views\IPkcSelectView.cs" />
+    <Compile Include="Views\IRawCountsPlateView.cs" />
+    <Compile Include="Views\IRccPropertyConfigView.cs" />
     <Compile Include="Views\MainView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +115,18 @@
     <Compile Include="Views\PkcSelectView.Designer.cs">
       <DependentUpon>PkcSelectView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\RawCountsPlateViewcs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\RawCountsPlateViewcs.Designer.cs">
+      <DependentUpon>RawCountsPlateViewcs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RccPropertyConfigView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\RccPropertyConfigView.Designer.cs">
+      <DependentUpon>RccPropertyConfigView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\RccSelectEventArgs.cs" />
     <Compile Include="Views\ViewUtils.cs" />
     <EmbeddedResource Include="Views\MainView.resx">
@@ -137,6 +153,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PkcSelectView.resx">
       <DependentUpon>PkcSelectView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\RawCountsPlateViewcs.resx">
+      <DependentUpon>RawCountsPlateViewcs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\RccPropertyConfigView.resx">
+      <DependentUpon>RccPropertyConfigView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

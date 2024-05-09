@@ -35,6 +35,7 @@ namespace MainViewWinForms
             MainView.SortClick += new EventHandler(View_SortingColumns);
             MainView.ThisFormClosed += new EventHandler(View_FormClosing);
             MainView.BuildRawCountsTable += new EventHandler<Views.RccSelectEventArgs>(View_BuildRawCountsTable);
+            MainView.OpenRawCountTablePreferences += new EventHandler(View_OpenRawCountTablePreferences);
             // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
@@ -199,7 +200,8 @@ namespace MainViewWinForms
 
         private void View_BuildRawCountsTable(object sender, Views.RccSelectEventArgs e)
         {
-            string[][] lines = MainModel.BuildRawDataTable(MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList());
+            string[] rccProperties = Properties.Settings.Default.SelectedProperties.Split(',');
+            string[][] lines = MainModel.BuildRawDataTable(MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList(), rccProperties);
             if(lines != null)
             {
                 string[][] transformed = MainModel.TransformTable(lines);
@@ -211,6 +213,12 @@ namespace MainViewWinForms
                 string caption = "Warning";
                 MainView.ShowErrorMessage(message, caption);
             }
+        }
+
+        private void View_OpenRawCountTablePreferences(object sender, EventArgs e)
+        {
+            Views.IRccPropertyConfigView view = MVPFactory.RccPropertyView();
+            view.ShowForm();
         }
     }
 }

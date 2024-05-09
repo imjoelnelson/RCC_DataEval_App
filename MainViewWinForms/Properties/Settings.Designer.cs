@@ -25,9 +25,8 @@ namespace MainViewWinForms.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("FileName,SampleName,RlfName,LaneID,Date,Instrument,CartridgeID,PctFovCounted,PctF" +
-            "ovPass,BindingDensity,BindingDensityPass,PosLinearity,PosLinearityPass,Lod,LodPa" +
-            "ss,PctAboveThresh,GeoMeanOfPos,GeoMeanOfHks")]
+        [global::System.Configuration.DefaultSettingValueAttribute("FileName,SampleName,LaneID,Owner,Comments,RlfName,Instrument,CartridgeID,Cartridg" +
+            "eBarcode,FovCount,FovCounted,BindingDensity")]
         public string SelectedProperties {
             get {
                 return ((string)(this["SelectedProperties"]));

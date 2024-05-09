@@ -78,6 +78,10 @@ namespace MainViewWinForms
         /// Triggers presenter to build csv from this forms main dgv
         /// </summary>
         public event EventHandler<Views.RccSelectEventArgs> BuildRawCountsTable;
+        /// <summary>
+        /// Triggers presenter to call for RawCountTablePrefs dialog from MVPFactory
+        /// </summary>
+        public event EventHandler OpenRawCountTablePreferences;
         #endregion
 
         public MainView()
@@ -555,6 +559,11 @@ namespace MainViewWinForms
                 MessageBox.Show("Select RCCs (i.e. highlight rows) to include in the raw data table.", "No RCCs Selected", MessageBoxButtons.OK);
                 return;
             }
+        }
+
+        private void rawCountTablePreferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenRawCountTablePreferences.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }

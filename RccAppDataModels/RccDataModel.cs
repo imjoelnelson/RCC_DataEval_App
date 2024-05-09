@@ -273,7 +273,7 @@ namespace RccAppDataModels
             }
         }
 
-        public string[][] BuildRawDataTable(List<Rcc> rccs)
+        public string[][] BuildRawDataTable(List<Rcc> rccs, string[] selectedProperties)
         {
             if(rccs == null)
             {
@@ -285,10 +285,6 @@ namespace RccAppDataModels
             }
             IEnumerable<Rlf> rlfs = rccs.Select(x => x.ThisRLF);
             int rlfCount = rlfs.Select(x => x.Name).Distinct().Count();
-
-            // <<<REPLACE LATER WITH LIST FROM PREFERENCES>>>
-            List<string> selectedProperties = new string[] { "FileName", "SampleName", "LaneID", "Owner", "Comments", "RlfName", "Instrument",
-                        "CartridgeID", "CartridgeBarcode", "FovCount", "FovCounted", "BindingDensity" }.ToList();
 
             if (rlfs.Any(x => x.ThisType == RlfType.PlexSet || x.ThisType == RlfType.DSP))
             {
