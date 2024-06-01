@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace RccAppDataModels
 {
-    interface IRawCountsPlateModel
+    public interface IRawCountsPlateModel
     {
-        
+        string[] PlexQcPropertyList { get; set; }
+        string SelectedQcProperty { get; set; }
+        string[][] DisplayMatrix { get; set; }
     }
 }

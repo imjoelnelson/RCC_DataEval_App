@@ -58,6 +58,8 @@ namespace MainViewWinForms.Views
             this.Col12a = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.closeButton = new System.Windows.Forms.Button();
+            this.qcSelectorCombo = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
@@ -78,7 +80,7 @@ namespace MainViewWinForms.Views
             this.Column10,
             this.Column11,
             this.Column12});
-            this.dataGridView1.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView1.Location = new System.Drawing.Point(0, 75);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 200;
             this.dataGridView1.RowTemplate.Height = 33;
@@ -209,7 +211,7 @@ namespace MainViewWinForms.Views
             this.Col10a,
             this.Col11a,
             this.Col12a});
-            this.dataGridView2.Location = new System.Drawing.Point(0, 114);
+            this.dataGridView2.Location = new System.Drawing.Point(0, 180);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowHeadersWidth = 200;
             this.dataGridView2.RowTemplate.Height = 33;
@@ -314,7 +316,7 @@ namespace MainViewWinForms.Views
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(0, 993);
+            this.textBox1.Location = new System.Drawing.Point(12, 1069);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(500, 157);
@@ -325,19 +327,42 @@ namespace MainViewWinForms.Views
             // 
             this.closeButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.closeButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.closeButton.Location = new System.Drawing.Point(1853, 1104);
+            this.closeButton.Location = new System.Drawing.Point(1853, 1180);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(150, 46);
             this.closeButton.TabIndex = 3;
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
             // 
+            // qcSelectorCombo
+            // 
+            this.qcSelectorCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.qcSelectorCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.qcSelectorCombo.FormattingEnabled = true;
+            this.qcSelectorCombo.Location = new System.Drawing.Point(286, 12);
+            this.qcSelectorCombo.Name = "qcSelectorCombo";
+            this.qcSelectorCombo.Size = new System.Drawing.Size(346, 39);
+            this.qcSelectorCombo.TabIndex = 4;
+            this.qcSelectorCombo.SelectedIndexChanged += new System.EventHandler(this.qcSelectorCombo_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(256, 31);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "QC Data To Display";
+            // 
             // RawCountsPlateViewcs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.closeButton;
-            this.ClientSize = new System.Drawing.Size(2087, 1170);
+            this.ClientSize = new System.Drawing.Size(2087, 1246);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.qcSelectorCombo);
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.dataGridView2);
@@ -382,5 +407,7 @@ namespace MainViewWinForms.Views
         private System.Windows.Forms.DataGridViewTextBoxColumn Col12a;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button closeButton;
+        private System.Windows.Forms.ComboBox qcSelectorCombo;
+        private System.Windows.Forms.Label label1;
     }
 }

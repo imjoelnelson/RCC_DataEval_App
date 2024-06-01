@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="DgvFromProperties.cs" />
     <Compile Include="FilesLoadingEventArgs.cs" />
+    <Compile Include="Presenters\RawCountsPlateViewPresenter.cs" />
     <Compile Include="Presenters\RccPropertyConfigPresenter.cs" />
     <Compile Include="Views\DgvCellClickEventArgs.cs" />
     <Compile Include="Views\IMainView.cs" />

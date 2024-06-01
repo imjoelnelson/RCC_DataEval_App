@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MainViewWinForms.Views
 {
-    class DgvCellClickEventArgs : EventArgs
+    public class DgvCellClickEventArgs : EventArgs
     {
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }

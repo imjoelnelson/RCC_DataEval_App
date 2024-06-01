@@ -814,9 +814,8 @@ namespace NCounterCore
                     }
                     else
                     {
-                        string row = Rlf.PsTranslateRow[item.PlexRow];
-                        item1.Add($"{item.TargetName}_{row}", item);
-                        item2.Add($"{item.TargetName}_{row}", Util.SafeParseInt(bits[3]));
+                        item1.Add($"{item.TargetName}_{item.PlexRow}", item);
+                        item2.Add($"{item.TargetName}_{item.PlexRow}", Util.SafeParseInt(bits[3]));
                     }
                 }
             }

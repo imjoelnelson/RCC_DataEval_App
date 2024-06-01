@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace MainViewWinForms.Views
 {
-    interface IRawCountsPlateView
+    public interface IRawCountsPlateView
     {
+        string SelectedQcProperty { get; set; }
+
         event EventHandler<DgvCellClickEventArgs> PlateViewCellClick;
-        void BindToLaneQcDgv(System.Windows.Forms.BindingSource source);
-        void BindToPlateDgv(System.Windows.Forms.BindingSource source);
+        event EventHandler ComboBoxSelectionChanged;
     }
 }

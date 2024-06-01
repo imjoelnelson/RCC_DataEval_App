@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -149,7 +150,6 @@ namespace RccAppDataModels
                 // Get codeclasses represented in the RCCs
                 List<string> includedCodeClasses = rlf.Probes.Select(x => x.Value.CodeClass).Distinct().ToList();
                 // For iterating through PlexRows
-                string[] lets = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
                 for(int j = 0; j < lets.Length; j++) // Order first by PlexRow
                 {
                     for (int i = 0; i < RawTableProbeOrder.Length; i++) // Then by CodeClass
@@ -157,7 +157,7 @@ namespace RccAppDataModels
                         if (includedCodeClasses.Contains(RawTableProbeOrder[i]))
                         {
                             var retainedProbes = rlf.Probes.Where(x => x.Value.CodeClass.Equals(RawTableProbeOrder[i]) &&
-                                                                       x.Value.PlexRow.Equals(lets[j]));
+                                                                       x.Value.PlexRow.Equals(j));
                             if (retainedProbes.Count() > 0)
                             {
                                 orderedProbesToKeep.AddRange(retainedProbes.Select(x => x.Value)
@@ -196,7 +196,7 @@ namespace RccAppDataModels
                 thirdCol.Add("--------------------");
                 thirdCol.AddRange(Enumerable.Repeat(string.Empty, 4));
                 thirdCol.AddRange(new string[] { "--------------------", "Plate Row" });
-                thirdCol.AddRange(orderedProbesToKeep.Select(x => x.PlexRow));
+                thirdCol.AddRange(orderedProbesToKeep.Select(x => char.ConvertFromUtf32(x.PlexRow + 41)));
                 collector.Add(thirdCol.ToArray());
 
                 // ** Add RCC columns

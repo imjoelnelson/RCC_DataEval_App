@@ -33,7 +33,6 @@ namespace NCounterCore
             JObject json = JObject.Parse(fullRead);
             JArray targetArray = (JArray)json["Targets"];
             Dictionary<string, ProbeItem> translator = new Dictionary<string, ProbeItem>(targetArray.Count * 8);
-            string[] lets = new string[] { "A", "B", "C", "D", "E", "F", "G", "H" };
             for (int i = 0; i < targetArray.Count; i++)
             {
                 List<string> ids = targetArray[i]["DSP_ID"].Select(x => (string)x).ToList();
@@ -41,7 +40,7 @@ namespace NCounterCore
                 {
                     var item = new ProbeItem((string)targetArray[i]["CodeClass"],
                                                          (string)targetArray[i]["DisplayName"],
-                                                         lets[j],
+                                                         j,
                                                          RlfType.DSP);
                     item.ProbeID = ids[j];
                     translator.Add(ids[j], item);

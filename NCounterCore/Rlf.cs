@@ -214,7 +214,7 @@ namespace NCounterCore
                     if (ThisType == RlfType.PlexSet && (item.CodeClass.StartsWith("E") || item.CodeClass.StartsWith("H")))
                     {
                         // Concatenate row indicator with target name
-                        dict.Add($"{item.TargetName}_{PsTranslateRow[item.PlexRow]}", item);
+                        dict.Add($"{item.TargetName}_{item.PlexRow}", item);
                     }
                     else
                     {

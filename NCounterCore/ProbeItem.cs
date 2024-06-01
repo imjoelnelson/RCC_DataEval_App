@@ -41,9 +41,9 @@ namespace NCounterCore
 
         // ********  GeoMx or PlexSet-specific  *********
         /// <summary>
-        /// Indicator of the well on 96 well plate where hybridization took place; in format [1-8]
+        /// Index of the row on hybridization plate where the sample would have been hybridized
         /// </summary>
-        public string PlexRow { get; set; }
+        public int PlexRow { get; set; }
 
         /// <summary>
         /// Contructor for creating ProbeItems from RCCs (i.e. when RCCs loaded before or without RLF)
@@ -70,13 +70,6 @@ namespace NCounterCore
                     CorrectionCoefficient = Util.SafeParseDouble(bits[1]);
                 }
             }
-            else if (type == RlfType.DSP)
-            {
-                CodeClass = codeClass;
-                TargetName = name;
-                PlexRow = accession; // Shoehorned in to use same constructor
-                Accession = string.Empty;
-            }
             else if (type == RlfType.PlexSet)
             {
                 if (codeClass.StartsWith("P") || codeClass.StartsWith("N")) // For POS and NEG probes with row specified in Name field
@@ -85,12 +78,12 @@ namespace NCounterCore
                     Accession = accession;
                     string[] bits = name.Split('_'); // Concatenated probe name and row specifier (e.g. POS_1)
                     TargetName = bits[0];
-                    PlexRow = Rlf.PsRowTranslate[bits[1]];
+                    PlexRow = Int32.Parse(Rlf.PsTranslateRow[bits[1]]) - 1; // Convert row letter to index
                 }
                 else // For Endogenous and HK probes with row designator concatenated with codeclass
                 {
                     CodeClass = codeClass.Substring(0, CodeClass.Length - 2);
-                    PlexRow = Rlf.PsRowTranslate[codeClass.Substring(CodeClass.Length - 2, 1)];
+                    PlexRow = Int32.Parse(codeClass.Substring(CodeClass.Length - 2, 1)) - 1;
                     Accession = accession;
                     TargetName = name;
                 }
@@ -99,6 +92,22 @@ namespace NCounterCore
             {
                 TargetName = name;
             }
+        }
+
+        /// <summary>
+        /// /Constructor for DSP probe items
+        /// </summary>
+        /// <param name="codeClass"></param>
+        /// <param name="name"></param>
+        /// <param name="accession"></param>
+        /// <param name="plexRow"></param>
+        /// <param name="type"></param>
+        public ProbeItem(string codeClass, string name, int plexRow, RlfType type)
+        {
+            CodeClass = codeClass;
+            TargetName = name;
+            PlexRow = plexRow; // Shoehorned in to use same constructor
+            Accession = string.Empty;
         }
 
 
