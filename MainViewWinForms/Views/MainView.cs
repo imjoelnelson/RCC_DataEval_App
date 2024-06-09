@@ -31,6 +31,10 @@ namespace MainViewWinForms
         /// </summary>
         public Dictionary<string, bool> SortList { get; set; }
         /// <summary>
+        /// List of RlfTypes among selected RCCs
+        /// </summary>
+        public List<RlfType> SelectedRlfTypes { get; set; }
+        /// <summary>
         /// Main display control for this form
         /// </summary>
         private DBDataGridView Dgv { get; set; }
@@ -82,6 +86,15 @@ namespace MainViewWinForms
         /// Triggers presenter to call for RawCountTablePrefs dialog from MVPFactory
         /// </summary>
         public event EventHandler OpenRawCountTablePreferences;
+        /// <summary>
+        /// Triggers presenter to have model search for types of selected RCCs to send back which options should be available
+        /// </summary>
+        public event EventHandler<Views.RccSelectEventArgs> DgvSelectionChanged;
+        /// <summary>
+        /// Triggers presenter to have model build a plate view raw counts table
+        /// </summary>
+        public event EventHandler<Views.RccSelectEventArgs> BuildPlateViewTable;
+        public event EventHandler<Views.RccSelectEventArgs> OpenSampleVSampleScatterDialog;
         #endregion
 
         public MainView()
@@ -115,6 +128,7 @@ namespace MainViewWinForms
             Dgv.DataSource = source;
             Dgv.ScrollBars = ScrollBars.None;
             Dgv.Click += new EventHandler(Dgv_Click);
+            Dgv.SelectionChanged += new EventHandler(Dgv_SelectionChanged);
 
             for (int i = 0; i < selectedProperties.Count; i++)
             {
@@ -272,6 +286,10 @@ namespace MainViewWinForms
             this.Dispose();
         }
 
+        /// <summary>
+        /// Saves matrix/table (string[][]) as a csv
+        /// </summary>
+        /// <param name="tableLines">the matrix/table (string[][]) to be saved</param>
         public void SaveTable(string[][] tableLines)
         {
             if (tableLines.Length > 0)
@@ -313,6 +331,28 @@ namespace MainViewWinForms
             }
         }
 
+        /// <summary>
+        /// Sets eval and analysis options available based on types present in selected RCCs
+        /// </summary>
+        /// <param name="types">The list of types present in the RCCs selected in the main Dgv</param>
+        public void UpdateTypesPresent(List<RlfType> types)
+        {
+            SelectedRlfTypes = types;
+            if(types.Contains(RlfType.DSP) || types.Contains(RlfType.PlexSet))
+            {
+                rawCountsPlateViewToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                rawCountsPlateViewToolStripMenuItem.Enabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Opens the saved CSV after being saved by SaveTable(string[][])
+        /// </summary>
+        /// <param name="path">Path in temp folder where the file is saved</param>
+        /// <param name="maxDelay">Amount of time to check to see if file has been saved at path before giving up</param>
         private void OpenFileAfterSaved(string path, int maxDelay)
         {
             // Ask if user wants to open file
@@ -350,6 +390,34 @@ namespace MainViewWinForms
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the IDs of selected rows to pass, via presenter, to methods in main model that require selected RCCs
+        /// </summary>
+        /// <returns>List of IDs of selected RCCs as a list of int</returns>
+        private List<int> GetSelectedRows()
+        {
+            var selectedRows = Dgv.SelectedCells.Cast<DataGridViewCell>().Select(x => x.RowIndex).ToList();
+            List<int> selectedIDs;
+            if(selectedRows.Count > 0)
+            {
+                selectedIDs = new List<int>(selectedRows.Count);
+                for (int i = 0; i < selectedRows.Count; i++)
+                {
+                    var temp = (Rcc)Dgv.Rows[selectedRows[i]].DataBoundItem;
+                    selectedIDs.Add(temp.ID);
+                }
+            }
+            else
+            {
+                selectedIDs = new List<int>(Dgv.Rows.Count);
+                for (int i = 0; i < Dgv.Rows.Count; i++)
+                {
+                    var temp = (Rcc)Dgv.Rows[i].DataBoundItem;
+                }
+            }
+            return selectedIDs;
         }
         #endregion
 
@@ -541,14 +609,8 @@ namespace MainViewWinForms
 
         private void rawCountsTableToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // Collect selected RCCs
-            var selectedRows = Dgv.SelectedCells.Cast<DataGridViewCell>().Select(x => x.RowIndex).ToList();
-            List<int> selectedIDs = new List<int>(selectedRows.Count);
-            for(int i = 0; i < selectedRows.Count; i++)
-            {
-                var temp = (Rcc)Dgv.Rows[i].DataBoundItem;
-                selectedIDs.Add(temp.ID);
-            }
+            // Collect selected RCC IDs
+            List<int> selectedIDs = GetSelectedRows();
             if(selectedIDs.Count > 0)
             {
                 // Send message via presenter to model to build table
@@ -565,7 +627,26 @@ namespace MainViewWinForms
         {
             OpenRawCountTablePreferences.Invoke(this, EventArgs.Empty);
         }
+
+        private void Dgv_SelectionChanged(object sender, EventArgs e)
+        {
+            Views.RccSelectEventArgs args = new Views.RccSelectEventArgs(GetSelectedRows());
+            DgvSelectionChanged.Invoke(this, args);
+        }
+
+        private void rawCountsPlateViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Views.RccSelectEventArgs args = new Views.RccSelectEventArgs(GetSelectedRows());
+            BuildPlateViewTable.Invoke(this, args);
+        }
+
         #endregion
+
+        private void sampleVsSampleCorrelationScatterplotToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Views.RccSelectEventArgs args = new Views.RccSelectEventArgs(GetSelectedRows());
+            OpenSampleVSampleScatterDialog.Invoke(this, args);
+        }
     }
 }
 

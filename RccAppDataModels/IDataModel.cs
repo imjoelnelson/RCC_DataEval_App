@@ -28,7 +28,8 @@ namespace RccAppDataModels
         void AddPkc(string pkcPath);
         void RemovePkc(string pkcPath);
         void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, string rlfName, Dictionary<string, ProbeItem> translator);
-        string[][] BuildRawDataTable(List<Rcc> rccs, string[] rccProperties);
+        string[][] BuildRawDataTable(List<int> ids, string[] rccProperties);
         string[][] TransformTable(string[][] lines);
+        List<RlfType> GetRlfTypes(List<int> ids);
     }
 }

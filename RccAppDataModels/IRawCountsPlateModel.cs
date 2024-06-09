@@ -10,6 +10,9 @@ namespace RccAppDataModels
     {
         string[] PlexQcPropertyList { get; set; }
         string SelectedQcProperty { get; set; }
-        string[][] DisplayMatrix { get; set; }
+        List<NCounterCore.Rcc> Rccs { get; set; }
+
+        string[][] GetSelectedCellQcData(string selectedProperty, List<NCounterCore.Rcc> rccs);
+        string[][] GetSelectedLaneQcData(List<NCounterCore.Rcc> rccs);
     }
 }

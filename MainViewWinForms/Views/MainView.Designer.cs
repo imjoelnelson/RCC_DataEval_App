@@ -39,9 +39,11 @@ namespace MainViewWinForms
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataAssessmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.targetCountsTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rawCountsPlateViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferrenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setThresholdsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rawCountTablePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -49,7 +51,7 @@ namespace MainViewWinForms
             this.clearButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.rawCountTablePreferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -118,7 +120,9 @@ namespace MainViewWinForms
             // dataAssessmentToolStripMenuItem
             // 
             this.dataAssessmentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.targetCountsTableToolStripMenuItem});
+            this.targetCountsTableToolStripMenuItem,
+            this.rawCountsPlateViewToolStripMenuItem,
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem});
             this.dataAssessmentToolStripMenuItem.Name = "dataAssessmentToolStripMenuItem";
             this.dataAssessmentToolStripMenuItem.Size = new System.Drawing.Size(109, 38);
             this.dataAssessmentToolStripMenuItem.Text = "Review";
@@ -126,9 +130,17 @@ namespace MainViewWinForms
             // targetCountsTableToolStripMenuItem
             // 
             this.targetCountsTableToolStripMenuItem.Name = "targetCountsTableToolStripMenuItem";
-            this.targetCountsTableToolStripMenuItem.Size = new System.Drawing.Size(336, 44);
+            this.targetCountsTableToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
             this.targetCountsTableToolStripMenuItem.Text = "Raw Counts Table";
             this.targetCountsTableToolStripMenuItem.Click += new System.EventHandler(this.rawCountsTableToolStripMenuItem_Click);
+            // 
+            // rawCountsPlateViewToolStripMenuItem
+            // 
+            this.rawCountsPlateViewToolStripMenuItem.Enabled = false;
+            this.rawCountsPlateViewToolStripMenuItem.Name = "rawCountsPlateViewToolStripMenuItem";
+            this.rawCountsPlateViewToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
+            this.rawCountsPlateViewToolStripMenuItem.Text = "Raw Counts Plate View";
+            this.rawCountsPlateViewToolStripMenuItem.Click += new System.EventHandler(this.rawCountsPlateViewToolStripMenuItem_Click);
             // 
             // preferrenceToolStripMenuItem
             // 
@@ -152,6 +164,13 @@ namespace MainViewWinForms
             this.cSVCellToolStripMenuItem.Name = "cSVCellToolStripMenuItem";
             this.cSVCellToolStripMenuItem.Size = new System.Drawing.Size(457, 44);
             this.cSVCellToolStripMenuItem.Text = "CSV Cell Delimiter";
+            // 
+            // rawCountTablePreferencesToolStripMenuItem
+            // 
+            this.rawCountTablePreferencesToolStripMenuItem.Name = "rawCountTablePreferencesToolStripMenuItem";
+            this.rawCountTablePreferencesToolStripMenuItem.Size = new System.Drawing.Size(457, 44);
+            this.rawCountTablePreferencesToolStripMenuItem.Text = "Raw Count Table Preferences";
+            this.rawCountTablePreferencesToolStripMenuItem.Click += new System.EventHandler(this.rawCountTablePreferencesToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -227,12 +246,12 @@ namespace MainViewWinForms
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 52);
             // 
-            // rawCountTablePreferencesToolStripMenuItem
+            // sampleVsSampleCorrelationScatterplotToolStripMenuItem
             // 
-            this.rawCountTablePreferencesToolStripMenuItem.Name = "rawCountTablePreferencesToolStripMenuItem";
-            this.rawCountTablePreferencesToolStripMenuItem.Size = new System.Drawing.Size(457, 44);
-            this.rawCountTablePreferencesToolStripMenuItem.Text = "Raw Count Table Preferences";
-            this.rawCountTablePreferencesToolStripMenuItem.Click += new System.EventHandler(this.rawCountTablePreferencesToolStripMenuItem_Click);
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Name = "sampleVsSampleCorrelationScatterplotToolStripMenuItem";
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Text = "Sample vs sample correlation scatterplot";
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Click += new System.EventHandler(this.sampleVsSampleCorrelationScatterplotToolStripMenuItem_Click);
             // 
             // MainView
             // 
@@ -277,5 +296,7 @@ namespace MainViewWinForms
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem targetCountsTableToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rawCountTablePreferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rawCountsPlateViewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sampleVsSampleCorrelationScatterplotToolStripMenuItem;
     }
 }

@@ -150,7 +150,7 @@ namespace RccAppDataModels
                 // Get codeclasses represented in the RCCs
                 List<string> includedCodeClasses = rlf.Probes.Select(x => x.Value.CodeClass).Distinct().ToList();
                 // For iterating through PlexRows
-                for(int j = 0; j < lets.Length; j++) // Order first by PlexRow
+                for(int j = 0; j < 8; j++) // Order first by PlexRow
                 {
                     for (int i = 0; i < RawTableProbeOrder.Length; i++) // Then by CodeClass
                     {
@@ -175,8 +175,8 @@ namespace RccAppDataModels
                 // Add included properties names to first column
                 firstCol.AddRange(properties);
                 // Add Flag names to first column
-                firstCol.AddRange(new string[] { "--------------------", "Imaging QC Flag", "Density QC Flag", "Linearity QC Flag",
-                "LOD QC Flag", "--------------------", "Probe Name" });
+                firstCol.AddRange(new string[] { "--------------------", "Imaging QC Flag", "Density QC Flag", 
+                    "--------------------", "Probe Name" });
                 // Add probes to first column and add to collector
                 firstCol.AddRange(orderedProbesToKeep.Select(x => x.TargetName));
                 collector.Add(firstCol.ToArray());
@@ -185,7 +185,7 @@ namespace RccAppDataModels
                 List<string> secondCol = new List<string>(cap);
                 secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
                 secondCol.Add("--------------------");
-                secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
+                secondCol.AddRange(Enumerable.Repeat(string.Empty, 2));
                 secondCol.AddRange(new string[] { "--------------------", "CodeClass" });
                 secondCol.AddRange(orderedProbesToKeep.Select(x => x.CodeClass));
                 collector.Add(secondCol.ToArray());
@@ -194,9 +194,9 @@ namespace RccAppDataModels
                 List<string> thirdCol = new List<string>(cap);
                 thirdCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
                 thirdCol.Add("--------------------");
-                thirdCol.AddRange(Enumerable.Repeat(string.Empty, 4));
+                thirdCol.AddRange(Enumerable.Repeat(string.Empty, 2));
                 thirdCol.AddRange(new string[] { "--------------------", "Plate Row" });
-                thirdCol.AddRange(orderedProbesToKeep.Select(x => char.ConvertFromUtf32(x.PlexRow + 41)));
+                thirdCol.AddRange(orderedProbesToKeep.Select(x => char.ConvertFromUtf32(x.PlexRow + 65)));
                 collector.Add(thirdCol.ToArray());
 
                 // ** Add RCC columns
@@ -227,8 +227,8 @@ namespace RccAppDataModels
                 // Add included properties names to first column
                 firstCol.AddRange(properties);
                 // Add Flag names to first column
-                firstCol.AddRange(new string[] { "--------------------", "Imaging QC Flag", "Density QC Flag", "Linearity QC Flag",
-                    "LOD QC Flag", "--------------------", "Probe Name" });
+                firstCol.AddRange(new string[] { "--------------------", "Imaging QC Flag", "Density QC Flag",
+                    "--------------------", "Probe Name" });
                 firstCol.AddRange(orderedProbesToKeep.Select(x => x.TargetName.Substring(0, x.TargetName.IndexOf('_'))));
                 collector.Add(firstCol.ToArray());
 
@@ -236,18 +236,18 @@ namespace RccAppDataModels
                 List<string> secondCol = new List<string>(cap);
                 secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
                 secondCol.Add("--------------------");
-                secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
+                secondCol.AddRange(Enumerable.Repeat(string.Empty, 2));
                 secondCol.AddRange(new string[] { "--------------------", "CodeClass" });
                 secondCol.AddRange(orderedProbesToKeep.Select(x => x.CodeClass.Substring(0, x.CodeClass.Length - 2)));
                 collector.Add(secondCol.ToArray());
 
                 // ** Well column
                 List<string> thirdCol = new List<string>(cap);
-                secondCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
-                secondCol.Add("--------------------");
-                secondCol.AddRange(Enumerable.Repeat(string.Empty, 4));
-                secondCol.AddRange(new string[] { "--------------------", "Plate Row" });
-                secondCol.AddRange(orderedProbesToKeep.Select(x => x.PlexRow));
+                thirdCol.AddRange(Enumerable.Repeat(string.Empty, properties.Length));
+                thirdCol.Add("--------------------");
+                thirdCol.AddRange(Enumerable.Repeat(string.Empty, 2));
+                thirdCol.AddRange(new string[] { "--------------------", "Plate Row" });
+                thirdCol.AddRange(orderedProbesToKeep.Select(x => char.ConvertFromUtf32(65 + x.PlexRow)));
                 collector.Add(thirdCol.ToArray());
 
                 // Add RCC columns
@@ -285,10 +285,15 @@ namespace RccAppDataModels
             collector.Add(rcc.PctFovPass ? string.Empty : "<<FLAG>>");
             //      * Add density flag
             collector.Add(rcc.BindingDensityPass ? string.Empty : "<<FLAG>>");
-            //      * Add POS linearity flag
-            collector.Add(rcc.PosLinearityPass ? string.Empty : "<<FLAG>>");
-            //      * Add LOD flag
-            collector.Add(rcc.LodPass ? string.Empty : "<<FLAG>>");
+
+            // sample singleplex flags
+            if(rcc.ThisRLF.ThisType != RlfType.DSP && rcc.ThisRLF.ThisType != RlfType.PlexSet)
+            {
+                //      * Add POS linearity flag
+                collector.Add(rcc.PosLinearityPass ? string.Empty : "<<FLAG>>");
+                //      * Add LOD flag
+                collector.Add(rcc.LodPass ? string.Empty : "<<FLAG>>");
+            }
             
             // Add separator
             collector.Add("--------------------");

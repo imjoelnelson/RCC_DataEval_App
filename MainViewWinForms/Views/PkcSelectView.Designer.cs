@@ -47,6 +47,7 @@ namespace MainViewWinForms.Views
             this.listBox1.ItemHeight = 25;
             this.listBox1.Location = new System.Drawing.Point(12, 51);
             this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBox1.Size = new System.Drawing.Size(445, 504);
             this.listBox1.TabIndex = 1;
             // 
@@ -163,7 +164,7 @@ namespace MainViewWinForms.Views
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PkcSelectView";
-            this.Text = "Enter PKCs Used";
+            this.Text = "1";
             this.ResumeLayout(false);
             this.PerformLayout();
 

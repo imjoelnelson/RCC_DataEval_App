@@ -30,19 +30,24 @@ namespace MainViewWinForms.Presenters
             Model = model;
 
             View.ComboBoxSelectionChanged += new EventHandler(View_ComboBoxSelectionChanged);
+            View.SetQcPropertySelectorComboItems(model.PlexQcPropertyList);
+
+            string[][] mat0 = Model.GetSelectedLaneQcData(model.Rccs);
+            string[][] mat1 = Model.GetSelectedCellQcData(Model.SelectedQcProperty, model.Rccs);
+            view.SetDgv1Values(mat0);
+            view.SetDgv2Values(mat1);
         }
 
         private void View_ComboBoxSelectionChanged(object sender, EventArgs e)
         {
-            
-
+            if(Model.Rccs != null)
+            {
+                if(Model.Rccs.Count > 0)
+                {
+                    string[][] mat = Model.GetSelectedCellQcData(View.SelectedQcProperty, Model.Rccs);
+                    View.SetDgv2Values(mat);
+                }
+            }
         }
-
-        private void UpdateViewDGV(string selectedProperty)
-        {
-            
-        }
-
-
     }
 }

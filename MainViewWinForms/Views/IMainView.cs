@@ -15,6 +15,7 @@ namespace MainViewWinForms
         MainViewPresenter Presenter { get; set; }
         List<string> SelectedProperties { get; set; }
         Dictionary<string, bool> SortList { get; set; }
+        List<RlfType> SelectedRlfTypes { get; set; }
 
         // Events
         event EventHandler FilesLoading;
@@ -27,6 +28,9 @@ namespace MainViewWinForms
         event EventHandler ThisFormClosed;
         event EventHandler<Views.RccSelectEventArgs> BuildRawCountsTable;
         event EventHandler OpenRawCountTablePreferences;
+        event EventHandler<Views.RccSelectEventArgs> DgvSelectionChanged;
+        event EventHandler<Views.RccSelectEventArgs> BuildPlateViewTable;
+        event EventHandler<Views.RccSelectEventArgs> OpenSampleVSampleScatterDialog;
 
         // Methods
         void ShowErrorMessage(string message, string caption);
@@ -37,5 +41,6 @@ namespace MainViewWinForms
         void ShowSelectColumnsDialog(List<Tuple<string, string>> columns, List<string> selectedProperties);
         void FormClose();
         void SaveTable(string[][] tableLines);
+        void UpdateTypesPresent(List<RlfType> types);
     }
 }

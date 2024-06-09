@@ -273,16 +273,17 @@ namespace RccAppDataModels
             }
         }
 
-        public string[][] BuildRawDataTable(List<Rcc> rccs, string[] selectedProperties)
+        public string[][] BuildRawDataTable(List<int> ids, string[] selectedProperties)
         {
-            if(rccs == null)
+            if(ids == null)
             {
                 throw new Exception("RCC list cannot be null.");
             }
-            if(rccs.Count < 1)
+            if(ids.Count < 1)
             {
                 throw new Exception("RCC list must have 1 or more RCCs");
             }
+            List<Rcc> rccs = Rccs.Where(x => ids.Contains(x.ID)).ToList();
             IEnumerable<Rlf> rlfs = rccs.Select(x => x.ThisRLF);
             int rlfCount = rlfs.Select(x => x.Name).Distinct().Count();
 
@@ -372,6 +373,15 @@ namespace RccAppDataModels
                 transformed.Add(temp);
             }
             return transformed.Select(x => x.ToArray()).ToArray();
+        }
+
+        public List<RlfType> GetRlfTypes(List<int> ids)
+        {
+            if (ids == null) return null;
+            return Rccs.Where(x => ids.Contains(x.ID))
+                       .Select(x => x.ThisRLF.ThisType)
+                       .Distinct()
+                       .ToList();
         }
     }
 }

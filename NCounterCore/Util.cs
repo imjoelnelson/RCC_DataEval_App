@@ -66,5 +66,15 @@ namespace NCounterCore
             IEnumerable<double> dubs = input.Select(x => x > 0 ? Math.Log(x, 2) : 0.0);
             return Math.Pow(2, dubs.Sum() / dubs.Count());
         }
+
+        /// <summary>
+        /// Returns log2 transformation of a double
+        /// </summary>
+        /// <param name="input">the double to transform</param>
+        /// <returns>Double representing log2 transformation of input</returns>
+        public static double GetLog2(double input)
+        {
+            return input > 0 ? Math.Log(input, 2) : 0;
+        }
     }
 }

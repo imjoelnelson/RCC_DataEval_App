@@ -63,6 +63,7 @@
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Rcc.cs" />
     <Compile Include="Rlf.cs" />
+    <Compile Include="RlfEqualityComparer.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -65,5 +65,39 @@ namespace MainViewWinForms
             _ = new Presenters.RccPropertyConfigPresenter(view);
             return view;
         }
+
+        public static Views.RawCountsPlateViewcs RawCountPlateView(List<NCounterCore.Rcc> rccs)
+        {
+            Views.RawCountsPlateViewcs view = new Views.RawCountsPlateViewcs(rccs.Select(x => x.CartridgeID).First());
+            RawCountsPlateModel model = new RawCountsPlateModel(rccs.OrderBy(x => x.LaneID).ToList(), "Hyb POS Control Count", view.Threshold);
+            Presenters.RawCountsPlateViewPresenter presenter = new Presenters.RawCountsPlateViewPresenter(view, model);
+
+            return view;
+        }
+
+        public static Views.SampleVsScatterplotView SampleVsScatterView(List<NCounterCore.Rcc> rccs)
+        {
+            List<string> rlfs = rccs.Select(x => x.ThisRLF.Name).Distinct().ToList();
+            if (rlfs.Count > 1)
+            {
+                System.Windows.Forms.MessageBox.Show("The included RCCs represent more than one RLF however this function is currently only compatible with one RLF. Try again after selecting RCCs from only one RLF.",
+                                                     "Multiple RLFs Detected",
+                                                     System.Windows.Forms.MessageBoxButtons.OK);
+                return null;
+            }
+            if(rccs[0].ThisRLF.ThisType == NCounterCore.RlfType.DSP || rccs[0].ThisRLF.ThisType == NCounterCore.RlfType.PlexSet)
+            {
+                System.Windows.Forms.MessageBox.Show("The included RCCs are from a sample-multiplexed assay, however this function is currently incompatible with sample-multiplexed assays.",
+                                                     "Sample-Multiplexed Assay Detected",
+                                                     System.Windows.Forms.MessageBoxButtons.OK);
+                return null;
+            }
+
+            Views.SampleVsScatterplotView view = new Views.SampleVsScatterplotView(rccs.Count);
+            SampleVsScatterplotModel model = new SampleVsScatterplotModel(rccs);
+            _ = new Presenters.SampleVsScatterplotPresenter(view, model);
+
+            return view;
+        }
     }
 }

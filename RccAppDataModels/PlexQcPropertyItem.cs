@@ -26,13 +26,13 @@ namespace RccAppDataModels
         /// <summary>
         /// For filtering property items to include in combobox based on whether RCCs are from DSP readout or PlexSet
         /// </summary>
-        public bool IsDsp { get; set; }
+        public bool IsDspOnly { get; set; }
 
-        public PlexQcPropertyItem(string name, GetValue callback, bool isDsp)
+        public PlexQcPropertyItem(string name, GetValue callback, bool isDspOnly)
         {
             Name = name;
             Callback = callback;
-            IsDsp = isDsp;
+            IsDspOnly = isDspOnly;
         }
     }
 }

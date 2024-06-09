@@ -36,6 +36,9 @@ namespace MainViewWinForms
             MainView.ThisFormClosed += new EventHandler(View_FormClosing);
             MainView.BuildRawCountsTable += new EventHandler<Views.RccSelectEventArgs>(View_BuildRawCountsTable);
             MainView.OpenRawCountTablePreferences += new EventHandler(View_OpenRawCountTablePreferences);
+            MainView.DgvSelectionChanged += new EventHandler<Views.RccSelectEventArgs>(View_RccSelectionChanged);
+            MainView.BuildPlateViewTable += new EventHandler<Views.RccSelectEventArgs>(View_BuildPlateViewTable);
+            MainView.OpenSampleVSampleScatterDialog += new EventHandler<Views.RccSelectEventArgs>(View_OpenSampleVSampleScatterDialog);
             // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
@@ -200,18 +203,23 @@ namespace MainViewWinForms
 
         private void View_BuildRawCountsTable(object sender, Views.RccSelectEventArgs e)
         {
+            if(MainView.SelectedRlfTypes.Contains(RlfType.DSP) || MainView.SelectedRlfTypes.Contains(RlfType.PlexSet))
+            {
+                if(MainView.SelectedRlfTypes.Count > 1)
+                {
+                    string message = "Selected RCCs include sample-multiplexed (DSP and/or PlexSet) and non-multiplexed assays, which are incompatible with each other. Select only sample-multiplexed or non-multiplexed assays and try again.";
+                    string caption = "Warning";
+                    MainView.ShowErrorMessage(message, caption);
+                    return;
+                }
+            }
+
             string[] rccProperties = Properties.Settings.Default.SelectedProperties.Split(',');
-            string[][] lines = MainModel.BuildRawDataTable(MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList(), rccProperties);
+            string[][] lines = MainModel.BuildRawDataTable(e.IDs, rccProperties);
             if(lines != null)
             {
                 string[][] transformed = MainModel.TransformTable(lines);
                 MainView.SaveTable(transformed);
-            }
-            else
-            {
-                string message = "For multiplex assays only RCCs from one RLF at a time can be exported as a table";
-                string caption = "Warning";
-                MainView.ShowErrorMessage(message, caption);
             }
         }
 
@@ -219,6 +227,37 @@ namespace MainViewWinForms
         {
             Views.IRccPropertyConfigView view = MVPFactory.RccPropertyView();
             view.ShowForm();
+        }
+
+        private void View_RccSelectionChanged(object sender, Views.RccSelectEventArgs e)
+        {
+            List<RlfType> rlfTypes = MainModel.GetRlfTypes(e.IDs);
+            MainView.UpdateTypesPresent(rlfTypes);
+        }
+
+        private void View_BuildPlateViewTable(object sender, Views.RccSelectEventArgs e)
+        {
+            if (MainView.SelectedRlfTypes.Contains(RlfType.DSP) || MainView.SelectedRlfTypes.Contains(RlfType.PlexSet))
+            {
+                if (MainView.SelectedRlfTypes.Count > 1)
+                {
+                    string message = "Selected RCCs include sample-multiplexed (DSP and/or PlexSet) and non-multiplexed assays, which are incompatible with each other. Select only sample-multiplexed or non-multiplexed assays and try again.";
+                    string caption = "Warning";
+                    MainView.ShowErrorMessage(message, caption);
+                    return;
+                }
+            }
+
+            Views.IRawCountsPlateView view = MVPFactory.RawCountPlateView(MainModel.Rccs
+                .Where(x => e.IDs.Contains(x.ID)).ToList());
+            view.ShowThisDialog();
+        }
+
+        private void View_OpenSampleVSampleScatterDialog(object sender, Views.RccSelectEventArgs e)
+        {
+            Views.SampleVsScatterplotView view = MVPFactory.SampleVsScatterView(MainModel.Rccs
+                .Where(x => e.IDs.Contains(x.ID)).ToList());
+            view.ShowThisDialog();
         }
     }
 }
