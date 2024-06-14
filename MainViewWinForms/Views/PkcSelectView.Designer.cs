@@ -164,7 +164,7 @@ namespace MainViewWinForms.Views
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PkcSelectView";
-            this.Text = "1";
+            this.Text = "Select PKCs For All Cartridges";
             this.ResumeLayout(false);
             this.PerformLayout();
 

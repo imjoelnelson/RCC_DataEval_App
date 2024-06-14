@@ -193,12 +193,14 @@ namespace MainViewWinForms
 
         private void Model_DspRccsLoaded(object sender, EventArgs e)
         {
-            List<string> cartIds = MainModel.Rccs.Where(x => x.ThisRLF.ThisType == RlfType.DSP)
-                                                 .Select(x => x.CartridgeID)
-                                                 .Distinct()
-                                                 .ToList();
-            Views.IPkcSelectView view = MVPFactory.PkcView(cartIds, MainModel.Pkcs);
-            view.ShowForm();
+            IEnumerable<Rcc> dspRccs = MainModel.Rccs.Where(x => x.ThisRLF.ThisType == RlfType.DSP);
+            List<string> cartIds = dspRccs.Count() > 0 ? dspRccs.Select(x => x.CartridgeID).Distinct().ToList()
+                                                       : new List<string>();
+            Views.IPkcSelectView view = cartIds.Count > 0 ? MVPFactory.PkcView(cartIds, MainModel.Pkcs) : null;
+            if(view != null)
+            {
+                view.ShowForm();
+            }
         }
 
         private void View_BuildRawCountsTable(object sender, Views.RccSelectEventArgs e)
@@ -226,7 +228,10 @@ namespace MainViewWinForms
         private void View_OpenRawCountTablePreferences(object sender, EventArgs e)
         {
             Views.IRccPropertyConfigView view = MVPFactory.RccPropertyView();
-            view.ShowForm();
+            if(view != null)
+            {
+                view.ShowForm();
+            }
         }
 
         private void View_RccSelectionChanged(object sender, Views.RccSelectEventArgs e)
@@ -250,14 +255,20 @@ namespace MainViewWinForms
 
             Views.IRawCountsPlateView view = MVPFactory.RawCountPlateView(MainModel.Rccs
                 .Where(x => e.IDs.Contains(x.ID)).ToList());
-            view.ShowThisDialog();
+            if(view != null)
+            {
+                view.ShowThisDialog();
+            }
         }
 
         private void View_OpenSampleVSampleScatterDialog(object sender, Views.RccSelectEventArgs e)
         {
             Views.SampleVsScatterplotView view = MVPFactory.SampleVsScatterView(MainModel.Rccs
                 .Where(x => e.IDs.Contains(x.ID)).ToList());
-            view.ShowThisDialog();
+            if(view != null)
+            {
+                view.ShowThisDialog();
+            }
         }
     }
 }

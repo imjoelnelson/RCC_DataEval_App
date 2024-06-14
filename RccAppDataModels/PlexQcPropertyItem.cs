@@ -10,15 +10,15 @@ namespace RccAppDataModels
     public class PlexQcPropertyItem
     {
         /// <summary>
+        /// Name of the QC value; to be used in combo box for selecting QC value to display
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
         /// Placeholder for method for getting the QC value in Name
         /// </summary>
         /// <param name="input">Counts the QC value will be calculated from</param>
         /// <returns>The named QC value</returns>
-        public delegate double GetValue(Rcc rcc, int rowIndex, bool isDsp);
-        /// <summary>
-        /// Name of the QC value; to be used in combo box for selecting QC value to display
-        /// </summary>
-        public string Name { get; set; }
+        public delegate double GetValue(Rcc rcc, int rowIndex, bool isDsp, int threshold);
         /// <summary>
         /// Method for calculating the QC value from the counts
         /// </summary>

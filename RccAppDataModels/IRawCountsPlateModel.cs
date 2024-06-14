@@ -9,10 +9,8 @@ namespace RccAppDataModels
     public interface IRawCountsPlateModel
     {
         string[] PlexQcPropertyList { get; set; }
-        string SelectedQcProperty { get; set; }
-        List<NCounterCore.Rcc> Rccs { get; set; }
 
-        string[][] GetSelectedCellQcData(string selectedProperty, List<NCounterCore.Rcc> rccs);
-        string[][] GetSelectedLaneQcData(List<NCounterCore.Rcc> rccs);
+        string[][] GetSelectedCellQcData(string selectedProperty, int index);
+        string[][] GetSelectedLaneQcData(int index);
     }
 }

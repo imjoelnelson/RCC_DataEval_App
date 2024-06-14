@@ -68,7 +68,9 @@ namespace MainViewWinForms
 
         public static Views.RawCountsPlateViewcs RawCountPlateView(List<NCounterCore.Rcc> rccs)
         {
-            Views.RawCountsPlateViewcs view = new Views.RawCountsPlateViewcs(rccs.Select(x => x.CartridgeID).First());
+            Views.RawCountsPlateViewcs view = new Views.RawCountsPlateViewcs(rccs.Select(x => x.CartridgeID)
+                                                                                 .Distinct()
+                                                                                 .ToList());
             RawCountsPlateModel model = new RawCountsPlateModel(rccs.OrderBy(x => x.LaneID).ToList(), "Hyb POS Control Count", view.Threshold);
             Presenters.RawCountsPlateViewPresenter presenter = new Presenters.RawCountsPlateViewPresenter(view, model);
 

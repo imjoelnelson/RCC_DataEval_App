@@ -11,12 +11,12 @@ namespace MainViewWinForms.Views
         string SelectedQcProperty { get; set; }
         int Threshold { get; set; }
 
+        event EventHandler<SelectedPlateViewEventArgs> CalculateQcMetricForSelectedPlateviewPage;
         event EventHandler<DgvCellClickEventArgs> PlateViewCellClick;
-        event EventHandler ComboBoxSelectionChanged;
 
         void SetQcPropertySelectorComboItems(string[] items);
-        void SetDgv1Values(string[][] mat);
-        void SetDgv2Values(string[][] mat);
+        void SetDgv1Values(string[][] mat, int index);
+        void SetDgv2Values(string[][] mat, int index);
         void ShowThisDialog();
         void CloseThisDialog();
     }

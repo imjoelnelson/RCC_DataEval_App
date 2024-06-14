@@ -11,13 +11,18 @@ namespace RccAppDataModels
     public class RawCountsPlateModel : RccAppDataModels.IRawCountsPlateModel
     {
         public string[] PlexQcPropertyList { get; set; }
-        public string SelectedQcProperty { get; set; }
-        public List<Rcc> Rccs { get; set; }
         private static int Threshold { get; set; }
+        private List<RawCountPlateViewPageItem> PageItems { get; set; }
 
         public RawCountsPlateModel(List<Rcc> rccs, string initialProperty, int threshold)
         {
-            Rccs = rccs;
+            PageItems = new List<RawCountPlateViewPageItem>();
+            List<string> cartIdOrder = rccs.Select(x => x.CartridgeID).Distinct().ToList();
+            for(int i = 0; i < cartIdOrder.Count; i++)
+            {
+                List<Rcc> pageRccs = rccs.Where(x => x.CartridgeID.Equals(cartIdOrder[i])).ToList();
+                PageItems.Add(new RawCountPlateViewPageItem(i, pageRccs, initialProperty));
+            }
             Threshold = threshold;
             if(rccs.All(x => x.ThisRLF.ThisType == RlfType.DSP))
             {
@@ -26,31 +31,39 @@ namespace RccAppDataModels
             else
             {
                 PlexQcPropertyList = AvailableQcMetrics.Where(x => !x.IsDspOnly)
-                                                       .Select(x => x.Name)
-                                                       .ToArray();
+                                                                                 .Select(x => x.Name)
+                                                                                 .ToArray();
             }
-            SelectedQcProperty = initialProperty;
         }
 
-        public string[][] GetSelectedLaneQcData(List<NCounterCore.Rcc> rccs)
+        public string[][] GetSelectedLaneQcData(int index)
         {
-            List<string[]> mat = new List<string[]>();
-            mat.Add(rccs.Select(x => x.PctFovCounted.ToString()).ToArray());
-            mat.Add(rccs.Select(x => x.BindingDensity.ToString()).ToArray());
+            string[][] mat = new string[2][];
+            mat[0] = new string[12];
+            mat[1] = new string[12];
+            for(int i = 0; i < 12; i++)
+            {
+                Rcc temp = PageItems[index].Rccs.Where(x => x.LaneID == i + 1).FirstOrDefault();
+                mat[0][i] = temp != null ? temp.PctFovCounted.ToString() : "-";
+                mat[1][i] = temp != null ? temp.BindingDensity.ToString() : "-";
+            }
 
             return mat.ToArray();
         }
 
-        public string[][] GetSelectedCellQcData(string selectedProperty, List<Rcc> rccs)
+        public string[][] GetSelectedCellQcData(string selectedProperty, int index)
         {
-            PlexQcPropertyItem item = AvailableQcMetrics.Where(x => x.Name == selectedProperty).First();
+            PlexQcPropertyItem item = AvailableQcMetrics
+                .Where(x => x.Name == selectedProperty).First();
             string[][] retMat = new string[8][];
             for (int i = 0; i < 8; i++)
             {
                 string[] row = new string[12];
                 for (int j = 0; j < 12; j++)
                 {
-                    row[j] = item.Callback(rccs[j], i, rccs[j].ThisRLF.ThisType == RlfType.DSP).ToString();
+                    Rcc temp = PageItems[index].Rccs.Where(x => x.LaneID == j + 1).FirstOrDefault();
+                    row[j] = temp != null ? item.Callback(temp, i, 
+                        temp.ThisRLF.ThisType == RlfType.DSP, Threshold).ToString() : "-";
                 }
                 retMat[i] = row;
             }
@@ -58,9 +71,8 @@ namespace RccAppDataModels
             return retMat;
         }
 
-
         #region PlexQcPropertyItem list and callbacks
-        private static PlexQcPropertyItem[] AvailableQcMetrics = new PlexQcPropertyItem[]
+        public static PlexQcPropertyItem[] AvailableQcMetrics = new PlexQcPropertyItem[]
         {
             new PlexQcPropertyItem("Hyb POS Control Count", GetPosCount, false),
             new PlexQcPropertyItem("Hyb NEG Control Count", GetNegCount, false),
@@ -73,9 +85,9 @@ namespace RccAppDataModels
         };
 
         // Callbacks
-        private static double GetPosCount(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetPosCount(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
-            if(isDsp)
+            if (isDsp)
             {
                 var posProbe = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                           && x.Value.TargetName.Equals("hyb-pos", StringComparison.OrdinalIgnoreCase))
@@ -91,7 +103,7 @@ namespace RccAppDataModels
             }
         }
 
-        private static double GetNegCount(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetNegCount(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
             if (isDsp)
             {
@@ -108,19 +120,19 @@ namespace RccAppDataModels
                 return present ? retVal : -1;
             }
 
-            
+
         }
 
-        private static double GetAssayPosGeoMean(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetAssayPosGeoMean(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
             var posProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("P")
                                                         && !x.Value.TargetName.Equals("hyb-pos", StringComparison.OrdinalIgnoreCase));
             var posCounts = posProbes.Count() > 0 ? posProbes.Select(x => rcc.ProbeCounts[x.Key]).ToArray() : new int[0];
-            return posCounts.Length > 0 ? Math.Round(Util.GetGeoMean(posCounts),2) : -1;
+            return posCounts.Length > 0 ? Math.Round(Util.GetGeoMean(posCounts), 2) : -1;
         }
 
-        private static double GetAssayNegGeoMean(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetAssayNegGeoMean(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
             var negProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("N")
@@ -129,10 +141,10 @@ namespace RccAppDataModels
             return negCounts.Length > 0 ? Math.Round(Util.GetGeoMean(negCounts), 2) : -1;
         }
 
-        private static double GetHkGeoMean(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetHkGeoMean(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
             string pat;
-            if(isDsp)
+            if (isDsp)
             {
                 pat = "C";
             }
@@ -146,7 +158,7 @@ namespace RccAppDataModels
             return hkCounts.Length > 0 ? Math.Round(Util.GetGeoMean(hkCounts), 2) : -1;
         }
 
-        private static double GetEndoMax(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetEndoMax(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
             var endoProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("E"));
@@ -154,7 +166,7 @@ namespace RccAppDataModels
             return endoCounts.Length > 0 ? endoCounts.Max() : -1;
         }
 
-        private static double GetEndoMin(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetEndoMin(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
             var endoProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("E"));
@@ -162,12 +174,12 @@ namespace RccAppDataModels
             return endoCounts.Length > 0 ? endoCounts.Min() : -1;
         }
 
-        private static double GetPctAboveThresh(Rcc rcc, int rowIndex, bool isDsp)
+        private static double GetPctAboveThresh(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
             var endoProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("E"));
             var endoCounts = endoProbes.Count() > 0 ? endoProbes.Select(x => rcc.ProbeCounts[x.Key]).ToArray() : new int[0];
-            return endoCounts.Length > 0 ? Math.Round((double)(endoCounts.Where(x => x > Threshold).Count()) / endoCounts.Count(), 2) : -1;
+            return endoCounts.Length > 0 ? Math.Round((double)(endoCounts.Where(x => x > threshold).Count()) / endoCounts.Count(), 2) : -1;
         }
         #endregion
     }

@@ -119,6 +119,9 @@
     <Compile Include="Views\PkcSelectView.Designer.cs">
       <DependentUpon>PkcSelectView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\RawCountPlatePage.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Views\RawCountsPlateViewcs.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,6 +142,7 @@
       <DependentUpon>SampleVsScatterplotView.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ScatterPlotSelectArgs.cs" />
+    <Compile Include="Views\SelectedPlateViewEventArgs.cs" />
     <Compile Include="Views\ViewUtils.cs" />
     <EmbeddedResource Include="Views\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
