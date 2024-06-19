@@ -94,7 +94,14 @@ namespace MainViewWinForms
         /// Triggers presenter to have model build a plate view raw counts table
         /// </summary>
         public event EventHandler<Views.RccSelectEventArgs> BuildPlateViewTable;
+        /// <summary>
+        /// Triggers Presenter to create a SampleVSample Scatter plot MVP triad and open form
+        /// </summary>
         public event EventHandler<Views.RccSelectEventArgs> OpenSampleVSampleScatterDialog;
+        /// <summary>
+        /// Triggers Presenter to create an Associate PKC MVP triad
+        /// </summary>
+        public event EventHandler<Views.RccSelectEventArgs> AssociatePkcsMenuItemClicked;
         #endregion
 
         public MainView()
@@ -640,13 +647,20 @@ namespace MainViewWinForms
             BuildPlateViewTable.Invoke(this, args);
         }
 
-        #endregion
-
         private void sampleVsSampleCorrelationScatterplotToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Views.RccSelectEventArgs args = new Views.RccSelectEventArgs(GetSelectedRows());
             OpenSampleVSampleScatterDialog.Invoke(this, args);
         }
+
+        private void associatePKCsWithRCCsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var args = new Views.RccSelectEventArgs(GetSelectedRows());
+            AssociatePkcsMenuItemClicked?.Invoke(this, args);
+        }
+        #endregion
+
+
     }
 }
 

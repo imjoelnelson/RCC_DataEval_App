@@ -41,6 +41,10 @@ namespace RccAppDataModels
             Pkcs = GetSavedPkcs(PkcRootPath);
         }
 
+        /// <summary>
+        /// Checks for presence and correct folder structure of the App directory in AppData (local)
+        /// </summary>
+        /// <param name="appFolderPath">The path where the app folder should be saved</param>
         private void CheckSetAppDataFolder(string appFolderPath)
         {
             if (!Directory.Exists(appFolderPath))
@@ -78,6 +82,11 @@ namespace RccAppDataModels
             }
         }
 
+        /// <summary>
+        /// Gets paths of the previously save PKCs in the PKC directory in AppData to put into the PKC list in this model
+        /// </summary>
+        /// <param name="pkcPath">Path to the PKC directory</param>
+        /// <returns>A list of paths as strings</returns>
         private Dictionary<string, string> GetSavedPkcs(string pkcPath)
         {
             IEnumerable<string> pkcFilePaths = Directory.EnumerateFiles(pkcPath, "*.pkc", SearchOption.TopDirectoryOnly);
@@ -91,6 +100,12 @@ namespace RccAppDataModels
             }
         }
         
+        /// <summary>
+        /// Created RCC, Rlf, and PKC objects based on the files selected
+        /// </summary>
+        /// <param name="fileNames">Files selected in the main view</param>
+        /// <param name="fileTypeIndex">File type filter index from the OpenFileDialog in the main view</param>
+        /// <param name="thresholds">For any RCC files selected, provides threshold to use for '% above threshold' QC metric calculation</param>
         public void CreateObjectsFromFiles(string[] fileNames, int fileTypeIndex, QcThresholds thresholds)
         {
             List<string> filesToLoad = new List<string>();
@@ -226,6 +241,10 @@ namespace RccAppDataModels
             RccSource.ResetBindings(false);
         }
 
+        /// <summary>
+        /// Adds a PKC file to the directory of saved PKCs in AppData, as well as to the Pkcs list in this main model
+        /// </summary>
+        /// <param name="thisPkcPath"></param>
         public void AddPkc(string thisPkcPath)
         {
             // Attempt to save PKC
@@ -250,6 +269,10 @@ namespace RccAppDataModels
             }
         }
 
+        /// <summary>
+        /// Removes a PKC file from the Pkc directory in AppData (and from the Pkc list in this model if not already removed)
+        /// </summary>
+        /// <param name="pkcPath">Path of the PKC to be removed</param>
         public void RemovePkc(string pkcPath)
         {
             try
@@ -264,6 +287,13 @@ namespace RccAppDataModels
             }
         }
 
+        /// <summary>
+        /// Applies RLF (actually just RLF name and probe translator) to DSP RCCs, based on PKCs selected for the RCCs
+        /// </summary>
+        /// <param name="rccs">RCCs selected in the main form</param>
+        /// <param name="cartridgeID">Cartride ID of the RCCs that are to have the RLF applied</param>
+        /// <param name="rlfName">The name of the RLF to be applied (concatenation of all PKCs selected for the RCCs)</param>
+        /// <param name="translator">The probe name translator for converting DSP_IDs to probe name, codeclass, etc.</param>
         public void ApplyRlfToDspRccs(List<Rcc> rccs, string cartridgeID, string rlfName, Dictionary<string, ProbeItem> translator)
         {
             IEnumerable<Rcc> cartRccs = rccs.Where(x => x.CartridgeID == cartridgeID);
@@ -273,6 +303,48 @@ namespace RccAppDataModels
             }
         }
 
+        /// <summary>
+        /// Returns a list of tuples of DSP cartIDs with any PKCs that are associated for the PKC select view when MainView "Edit Pkc Association" menu item is clicked 
+        /// </summary>
+        /// <param name="ids">Selected row indices from the MainView DGV corresponding to selected RCCs</param>
+        /// <returns>A list of tuples containing cartridge ID and any associated PKCs</returns>
+        public List<Tuple<string, string[]>> GetDspCartIDs(List<int> ids)
+        {
+            // Get selected DSP RCCs
+            var dspRcss = Rccs.Where(x => ids.Contains(x.ID) && x.ThisRLF.ThisType == RlfType.DSP);
+            // Get unique cartridge IDs of the selected RCCs
+            var cartIDs = dspRcss.Count() > 0 ? dspRcss.Select(x => x.CartridgeID).Distinct().ToList() : null;
+            if(cartIDs == null)
+            {
+                return null;
+            }
+            // Get associated PKCs for each cartridge ID
+            List<Tuple<string, string[]>> retVal = new List<Tuple<string, string[]>>();
+            for(int i = 0; i < cartIDs.Count; i++)
+            {
+                // Get RLF name from an RCC from the cartridge with cartID[i], then split by '_' to get PKC names
+                var cartRccs = dspRcss.Where(x => x.CartridgeID.Equals(cartIDs[i]));
+                if(cartRccs.All(x => !x.ThisRLF.Name.Equals("DSP_v1.0")))
+                {
+                    // Split RLF name from one of the cartridge RCCs using '$' to get PKC names
+                    //   (RLF name for RCCs with associated PKCs is concatenation of PKC names in this app)
+                    string[] pkcs = cartRccs.ElementAt(0).ThisRLF.Name.Split('$');
+                    retVal.Add(new Tuple<string, string[]>(cartIDs[i], pkcs));
+                }
+                else
+                {
+                    retVal.Add(null);
+                }
+            }
+            return retVal;
+        }
+
+        /// <summary>
+        /// Builds a string[][] representing raw counts for the probes in the selected RCCs; This output is essentially an array of columns to be converted to array of rows with another function
+        /// </summary>
+        /// <param name="ids">int IDs of the selected RCCs</param>
+        /// <param name="selectedProperties">RCC metadata property rows to display in the header portion of the table</param>
+        /// <returns>Raw count table with metadata header section, QC flag section, and probe count section, formatted as an array of columns</returns>
         public string[][] BuildRawDataTable(List<int> ids, string[] selectedProperties)
         {
             if(ids == null)
@@ -287,17 +359,64 @@ namespace RccAppDataModels
             IEnumerable<Rlf> rlfs = rccs.Select(x => x.ThisRLF);
             int rlfCount = rlfs.Select(x => x.Name).Distinct().Count();
 
-            if (rlfs.Any(x => x.ThisType == RlfType.PlexSet || x.ThisType == RlfType.DSP))
+            // WARNING: UGLY BRANCHING HELL AHEAD; SHOULD REVISIT AND SEE IF REFACTOR COULD HELP OR AT LEAST RELOCATE TO RAWPROBECOUNTTABLE CLASS
+            
+            if (rlfs.Any(x => x.ThisType == RlfType.PlexSet || x.ThisType == RlfType.DSP)) // Sample multiplexed assays
             {
+                // Incompatible Multiplex RCCs selected
                 if((rlfs.Any(x => x.ThisType == RlfType.DSP) && rlfCount > 1)
                     || (rlfs.Any(x => x.ThisType == RlfType.PlexSet) && rlfCount > 1))
                 {
-                    // Triggers error message via presenter as this should be the only condition where this method returns null
-                    return null;
+                    // DSP and PlexSet selected
+                    if(rlfs.Any(x => x.ThisType == RlfType.DSP && rlfs.Any(z => z.ThisType == RlfType.PlexSet)))
+                    {
+                        System.Windows.Forms.MessageBox.Show("PlexSet and DSP RCCs cannot be displayed in the same raw counts table together. Select RCCs with one or the other assay type and try again.",
+                                                             "Incompatible Assay Types",
+                                                             System.Windows.Forms.MessageBoxButtons.OK);
+                        return null;
+                    }
+                    // DSP-only selected but some have no PKC or different collections of PKCs
+                    else if(rlfs.Any(x => x.ThisType == RlfType.DSP))
+                    {
+                        // Some RCCs have no PKCs selected
+                        if(rlfs.Any(x => x.Name.Equals("DSP_v1.0")))
+                        {
+                            System.Windows.Forms.MessageBox.Show("Some RCCs had no PKCs associated and were excluded from the table.",
+                                                                 "Undefined Probes Detected",
+                                                                 System.Windows.Forms.MessageBoxButtons.OK);
+                            rccs.RemoveAll(x => x.ThisRLF.Name.Equals("DSP_v1.0"));
+                            // Build multiplex raw data table
+                            var table = new RawProbeCountsTable(rccs, rccs[0].ThisRLF, selectedProperties, rccs[0].ThisRLF.ThisType == RlfType.DSP);
+                            if (table != null)
+                            {
+                                return table.TableLines;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                        // RCCs with different collections of PKCs
+                        else
+                        {
+                            System.Windows.Forms.MessageBox.Show("DSP RCCs were selected that were associated with different collections of PKCs. These cannot be shown in a table together. Select RCCs only using the same collection of PKCs and try again.",
+                                                                 "Multiple Probe Collections Detected",
+                                                                 System.Windows.Forms.MessageBoxButtons.OK);
+                            return null;
+                        }
+                    }
+                    // PlexSet RCCs with different RLFs selected
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("PlexSet RCCs with different RLFs were selected together. These cannot be shown in the same table. Select RCCs from only one RLF and try again.",
+                                                             "Multiple RLFs Detected",
+                                                             System.Windows.Forms.MessageBoxButtons.OK);
+                        return null;
+                    }
                 }
                 else
                 {
-                    // Build multiplex raw data table or give option for table vs. plate view
+                    // No incompatibility => Build multiplex raw data table
                     var table = new RawProbeCountsTable(rccs, rccs[0].ThisRLF, selectedProperties, rccs[0].ThisRLF.ThisType == RlfType.DSP);
                     if (table != null)
                     {
@@ -309,6 +428,7 @@ namespace RccAppDataModels
                     }
                 }
             }
+            // Non-sample-multiplexed assays only
             else
             {
                 // Single RLF table
@@ -342,7 +462,6 @@ namespace RccAppDataModels
                     List<List<string>> listOfLists = rlfs.Select(x => x.Probes.Select(y => y.Value.ProbeID).ToList()).ToList();
                     var intersection = listOfLists.Skip(1).Aggregate(new HashSet<string>(listOfLists.First()),
                         (h, e) => { h.IntersectWith(e); return h; });
-                    // <<<REPLACE LATER WITH LIST FROM PREFERENCES>>>
                     var table = new RawProbeCountsTable(rccs, rccs.Select(x => x.ThisRLF).Distinct().ToList(), selectedProperties);
                     if (table != null)
                     {
@@ -356,6 +475,11 @@ namespace RccAppDataModels
             }
         }
 
+        /// <summary>
+        /// Converts array of string[] which represent columns to array of string[] which represent rows
+        /// </summary>
+        /// <param name="lines">Array of string[] which represent columns of the table</param>
+        /// <returns>Array of string[] which represent rows of the table</returns>
         public string[][] TransformTable(string[][] lines)
         {
             if(lines.Any(x => x.Length != lines[0].Length))
@@ -375,6 +499,11 @@ namespace RccAppDataModels
             return transformed.Select(x => x.ToArray()).ToArray();
         }
 
+        /// <summary>
+        /// Gets a collection of the RlfTypes (assay types) represented in the selected RCCs; for branching purposes in building the table
+        /// </summary>
+        /// <param name="ids">int IDs of the selected RCCs</param>
+        /// <returns>Collection of RlfTypes represented in the selected RCCs</returns>
         public List<RlfType> GetRlfTypes(List<int> ids)
         {
             if (ids == null) return null;

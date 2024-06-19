@@ -17,6 +17,7 @@ namespace MainViewWinForms.Views
 
         void ShowForm();
         void CloseForm();
+        void ProcessSelectButtonCLicked(string cartridgeID, string[] pkcNames);
         void UpdateCartridgePkcBox(string cartridgeID, string[] pkcNames);
         void UpdateSavedPkcBox(string[] pkcNames);
     }

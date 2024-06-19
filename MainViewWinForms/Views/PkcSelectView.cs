@@ -41,7 +41,32 @@ namespace MainViewWinForms.Views
                 TabControl1.TabPages.Add(page);
             }
         }
-          
+
+        public PkcSelectView(List<Tuple<string, string[]>> cartIDs)
+        {
+            InitializeComponent();
+
+            TabControl1 = new TabControl();
+            TabControl1.Font = new Font("Microsoft Sans Serif", 8F, FontStyle.Regular);
+            TabControl1.ShowToolTips = true;
+            TabControl1.ItemSize = new Size(100, 20);
+            TabControl1.SizeMode = TabSizeMode.Fixed;
+            TabControl1.Dock = DockStyle.Fill;
+            TabControl1.TabPages.Clear();
+            this.panel1.Controls.Add(TabControl1);
+            TabControl1.Focus();
+
+            for (int i = 0; i < cartIDs.Count; i++)
+            {
+                Views.PkcSelectTabPage page = new Views.PkcSelectTabPage(cartIDs[i].Item1);
+                foreach(string s in cartIDs[i].Item2)
+                {
+                    page.listBox2.Items.Add(s);
+                }
+                TabControl1.TabPages.Add(page);
+            }
+        }
+
         public void ShowForm()
         {
             this.ShowDialog();
@@ -51,6 +76,17 @@ namespace MainViewWinForms.Views
         {
             this.Close();
             this.Dispose();
+        }
+
+        /// <summary>
+        /// Method for sending PKCs selected for a Cartridge through presenter to model; can be called from View event or presenter if cartridge from factory method already has PKCs associated
+        /// </summary>
+        /// <param name="cartridgeID"></param>
+        /// <param name="pkcNames"></param>
+        public void ProcessSelectButtonCLicked(string cartridgeID, string[] pkcNames)
+        {
+            var args = new PkcSelectBoxEventArgs(cartridgeID, pkcNames);
+            SelectButtonClicked?.Invoke(this, args);
         }
 
         private void addButton_Click(object sender, EventArgs e)
@@ -83,8 +119,7 @@ namespace MainViewWinForms.Views
                 {
                     names[i] = (string)listBox1.SelectedItems[i];
                 }
-                var args = new PkcSelectBoxEventArgs(TabControl1.SelectedTab.Text, names);
-                SelectButtonClicked.Invoke(sender, args);
+                ProcessSelectButtonCLicked(TabControl1.SelectedTab.Text, names);
             }
         }
 

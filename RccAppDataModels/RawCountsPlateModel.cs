@@ -62,8 +62,9 @@ namespace RccAppDataModels
                 for (int j = 0; j < 12; j++)
                 {
                     Rcc temp = PageItems[index].Rccs.Where(x => x.LaneID == j + 1).FirstOrDefault();
-                    row[j] = temp != null ? item.Callback(temp, i, 
-                        temp.ThisRLF.ThisType == RlfType.DSP, Threshold).ToString() : "-";
+                    string rowVal = temp != null ? item.Callback(temp, i, 
+                          temp.ThisRLF.ThisType == RlfType.DSP, Threshold).ToString() : "-";
+                    row[j] = !rowVal.Equals("-1") ? rowVal : "NA";
                 }
                 retMat[i] = row;
             }
@@ -87,6 +88,10 @@ namespace RccAppDataModels
         // Callbacks
         private static double GetPosCount(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if(rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             if (isDsp)
             {
                 var posProbe = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
@@ -105,6 +110,10 @@ namespace RccAppDataModels
 
         private static double GetNegCount(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if (rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             if (isDsp)
             {
                 var negProbe = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
@@ -125,6 +134,10 @@ namespace RccAppDataModels
 
         private static double GetAssayPosGeoMean(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if (rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             var posProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("P")
                                                         && !x.Value.TargetName.Equals("hyb-pos", StringComparison.OrdinalIgnoreCase));
@@ -134,6 +147,10 @@ namespace RccAppDataModels
 
         private static double GetAssayNegGeoMean(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if (rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             var negProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("N")
                                                         && !x.Value.TargetName.Equals("hyb-neg", StringComparison.OrdinalIgnoreCase));
@@ -143,6 +160,10 @@ namespace RccAppDataModels
 
         private static double GetHkGeoMean(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if (rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             string pat;
             if (isDsp)
             {
@@ -160,6 +181,10 @@ namespace RccAppDataModels
 
         private static double GetEndoMax(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if (rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             var endoProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("E"));
             var endoCounts = endoProbes.Count() > 0 ? endoProbes.Select(x => rcc.ProbeCounts[x.Key]).ToArray() : new int[0];
@@ -168,6 +193,10 @@ namespace RccAppDataModels
 
         private static double GetEndoMin(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if (rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             var endoProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("E"));
             var endoCounts = endoProbes.Count() > 0 ? endoProbes.Select(x => rcc.ProbeCounts[x.Key]).ToArray() : new int[0];
@@ -176,6 +205,10 @@ namespace RccAppDataModels
 
         private static double GetPctAboveThresh(Rcc rcc, int rowIndex, bool isDsp, int threshold)
         {
+            if (rcc.ThisRLF.Probes == null)
+            {
+                return -1;
+            }
             var endoProbes = rcc.ThisRLF.Probes.Where(x => x.Value.PlexRow == rowIndex
                                                         && x.Value.CodeClass.StartsWith("E"));
             var endoCounts = endoProbes.Count() > 0 ? endoProbes.Select(x => rcc.ProbeCounts[x.Key]).ToArray() : new int[0];

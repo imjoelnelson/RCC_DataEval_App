@@ -31,6 +31,7 @@ namespace MainViewWinForms
         event EventHandler<Views.RccSelectEventArgs> DgvSelectionChanged;
         event EventHandler<Views.RccSelectEventArgs> BuildPlateViewTable;
         event EventHandler<Views.RccSelectEventArgs> OpenSampleVSampleScatterDialog;
+        event EventHandler<Views.RccSelectEventArgs> AssociatePkcsMenuItemClicked;
 
         // Methods
         void ShowErrorMessage(string message, string caption);

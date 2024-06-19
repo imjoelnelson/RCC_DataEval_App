@@ -40,6 +40,7 @@ namespace MainViewWinForms
             this.dataAssessmentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.targetCountsTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rawCountsPlateViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferrenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setThresholdsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,7 +52,7 @@ namespace MainViewWinForms
             this.clearButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.associatePKCsWithRCCsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -113,6 +114,8 @@ namespace MainViewWinForms
             // 
             // editToolStripMenuItem
             // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.associatePKCsWithRCCsToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(75, 38);
             this.editToolStripMenuItem.Text = "Edit";
@@ -141,6 +144,13 @@ namespace MainViewWinForms
             this.rawCountsPlateViewToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
             this.rawCountsPlateViewToolStripMenuItem.Text = "Raw Counts Plate View";
             this.rawCountsPlateViewToolStripMenuItem.Click += new System.EventHandler(this.rawCountsPlateViewToolStripMenuItem_Click);
+            // 
+            // sampleVsSampleCorrelationScatterplotToolStripMenuItem
+            // 
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Name = "sampleVsSampleCorrelationScatterplotToolStripMenuItem";
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Text = "Sample vs sample correlation scatterplot";
+            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Click += new System.EventHandler(this.sampleVsSampleCorrelationScatterplotToolStripMenuItem_Click);
             // 
             // preferrenceToolStripMenuItem
             // 
@@ -246,12 +256,13 @@ namespace MainViewWinForms
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 52);
             // 
-            // sampleVsSampleCorrelationScatterplotToolStripMenuItem
+            // associatePKCsWithRCCsToolStripMenuItem
             // 
-            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Name = "sampleVsSampleCorrelationScatterplotToolStripMenuItem";
-            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
-            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Text = "Sample vs sample correlation scatterplot";
-            this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Click += new System.EventHandler(this.sampleVsSampleCorrelationScatterplotToolStripMenuItem_Click);
+            this.associatePKCsWithRCCsToolStripMenuItem.Name = "associatePKCsWithRCCsToolStripMenuItem";
+            this.associatePKCsWithRCCsToolStripMenuItem.Size = new System.Drawing.Size(374, 44);
+            this.associatePKCsWithRCCsToolStripMenuItem.Text = "Edit PKC Associations";
+            this.associatePKCsWithRCCsToolStripMenuItem.ToolTipText = "Edit PKC Associations";
+            this.associatePKCsWithRCCsToolStripMenuItem.Click += new System.EventHandler(this.associatePKCsWithRCCsToolStripMenuItem_Click);
             // 
             // MainView
             // 
@@ -298,5 +309,6 @@ namespace MainViewWinForms
         private System.Windows.Forms.ToolStripMenuItem rawCountTablePreferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rawCountsPlateViewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sampleVsSampleCorrelationScatterplotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem associatePKCsWithRCCsToolStripMenuItem;
     }
 }

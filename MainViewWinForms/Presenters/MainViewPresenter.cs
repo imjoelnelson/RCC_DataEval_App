@@ -39,6 +39,7 @@ namespace MainViewWinForms
             MainView.DgvSelectionChanged += new EventHandler<Views.RccSelectEventArgs>(View_RccSelectionChanged);
             MainView.BuildPlateViewTable += new EventHandler<Views.RccSelectEventArgs>(View_BuildPlateViewTable);
             MainView.OpenSampleVSampleScatterDialog += new EventHandler<Views.RccSelectEventArgs>(View_OpenSampleVSampleScatterDialog);
+            MainView.AssociatePkcsMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_AssociatedPkcsMenuItemClicked);
             // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
@@ -196,7 +197,17 @@ namespace MainViewWinForms
             IEnumerable<Rcc> dspRccs = MainModel.Rccs.Where(x => x.ThisRLF.ThisType == RlfType.DSP);
             List<string> cartIds = dspRccs.Count() > 0 ? dspRccs.Select(x => x.CartridgeID).Distinct().ToList()
                                                        : new List<string>();
-            Views.IPkcSelectView view = cartIds.Count > 0 ? MVPFactory.PkcView(cartIds, MainModel.Pkcs) : null;
+            if(cartIds.Count < 1)
+            {
+                return;
+            }
+            List<Tuple<string, string[]>> cartPkcs = new List<Tuple<string, string[]>>(cartIds.Count);
+            for(int i = 0; i < cartIds.Count; i++)
+            {
+                cartPkcs.Add(new Tuple<string, string[]>(cartIds[i], null));
+            }
+            // LOOP TO CHECK IF RLF != "DSP_v1.0" in which case split RLF name to provide list of already associated PKCs
+            Views.IPkcSelectView view = cartIds.Count > 0 ? MVPFactory.PkcView(cartPkcs, MainModel.Pkcs) : null;
             if(view != null)
             {
                 view.ShowForm();
@@ -242,19 +253,35 @@ namespace MainViewWinForms
 
         private void View_BuildPlateViewTable(object sender, Views.RccSelectEventArgs e)
         {
-            if (MainView.SelectedRlfTypes.Contains(RlfType.DSP) || MainView.SelectedRlfTypes.Contains(RlfType.PlexSet))
+            // Check if selected 
+            if ((MainView.SelectedRlfTypes.Contains(RlfType.DSP) || MainView.SelectedRlfTypes.Contains(RlfType.PlexSet)) 
+                && MainView.SelectedRlfTypes.Count > 1)
             {
-                if (MainView.SelectedRlfTypes.Count > 1)
+                if(MainView.SelectedRlfTypes.Contains(RlfType.DSP) && MainView.SelectedRlfTypes.Contains(RlfType.PlexSet))
                 {
-                    string message = "Selected RCCs include sample-multiplexed (DSP and/or PlexSet) and non-multiplexed assays, which are incompatible with each other. Select only sample-multiplexed or non-multiplexed assays and try again.";
-                    string caption = "Warning";
+                    string message = "The selected RCCs are from both DSP and PlexSet RLFs which cannot be displayed in the same figure. Select RCCs from one or the other RLF and then try again.";
+                    string caption = "Incompatible RLFs";
                     MainView.ShowErrorMessage(message, caption);
                     return;
                 }
+                if(MainView.SelectedRlfTypes.Any(x => x != RlfType.DSP && x != RlfType.PlexSet))
+                {
+                    string message = "Only Sample multiplexed RCCs (DSP readout and PlexSet) can be displayed in PlateView. Selected RCCs which are not sample multiplexed will be excluded in the figure.";
+                    string caption = "Non-Sample-Multiplexed RCCs Detected";
+                    MainView.ShowErrorMessage(message, caption);
+                }
             }
-
-            Views.IRawCountsPlateView view = MVPFactory.RawCountPlateView(MainModel.Rccs
-                .Where(x => e.IDs.Contains(x.ID)).ToList());
+            // Check RCCs to ensure PKCs are associated
+            List<Rcc> rccs = MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList();
+            if(rccs.Select(x => x.ThisRLF).Distinct().Any(y => y.Name == "DSP_v1.0"))
+            {
+                string message = "At least one cartridge's RCCs do not have PKCs selected. QC values based on probe counts will not be displayed for this cartridge's RCCs. To see these QC metrics in PlateView, Edit PKCs via the 'Edit' menu at the top of the main window and try again.";
+                string caption = "Some PKCs Not Loaded";
+                MainView.ShowErrorMessage(message, caption);
+            }
+            // Create plate view triad with RCCs that have PKCs associated
+            Views.IRawCountsPlateView view = MVPFactory.RawCountPlateView(rccs.Where(x => x.ThisRLF.ThisType == RlfType.DSP 
+                                                                                       || x.ThisRLF.ThisType == RlfType.PlexSet).ToList());
             if(view != null)
             {
                 view.ShowThisDialog();
@@ -268,6 +295,17 @@ namespace MainViewWinForms
             if(view != null)
             {
                 view.ShowThisDialog();
+            }
+        }
+
+        private void View_AssociatedPkcsMenuItemClicked(object sender, Views.RccSelectEventArgs e)
+        {
+            // Call Model method, passing selected IDs
+            List<Tuple<string, string[]>> cartsAndPkcs = MainModel.GetDspCartIDs(e.IDs);
+            Views.PkcSelectView view = MVPFactory.PkcView(cartsAndPkcs, MainModel.Pkcs);
+            if(view != null)
+            {
+                view.ShowDialog();
             }
         }
     }

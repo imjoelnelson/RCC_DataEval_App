@@ -40,10 +40,18 @@ namespace MainViewWinForms
         /// <param name="cartridgeIDs">The IDs of cartridges with GeoMx readout RCCs that need PKCs selected</param>
         /// <param name="savedPkcs">PKCs already imported and saved in appdata</param>
         /// <returns>PKC selection dialog</returns>
-        public static Views.PkcSelectView PkcView(List<string> cartridgeIDs, Dictionary<string, string> savedPkcs)
+        public static Views.PkcSelectView PkcView(List<Tuple<string, string[]>> cartridgeIDs, Dictionary<string, string> savedPkcs)
         {
-            Views.PkcSelectView view = new Views.PkcSelectView(cartridgeIDs);
-            PkcSelectModel model = new PkcSelectModel(cartridgeIDs, savedPkcs);
+            Views.PkcSelectView view;
+            if (cartridgeIDs.Any(x => x.Item2 != null))
+            {
+                view = new Views.PkcSelectView(cartridgeIDs);
+            }
+            else
+            {
+                view = new Views.PkcSelectView(cartridgeIDs.Select(x => x.Item1).ToList());
+            }
+            PkcSelectModel model = new PkcSelectModel(cartridgeIDs.Select(x => x.Item1).ToList(), savedPkcs);
             _ = new Presenters.PkcSelectPresenter(view, model, cartridgeIDs);
             return view;
         }

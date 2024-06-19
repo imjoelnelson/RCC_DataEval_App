@@ -17,12 +17,22 @@ namespace MainViewWinForms.Presenters
         private IPkcSelectModel Model { get; set; }
 
 
-        public PkcSelectPresenter(Views.IPkcSelectView view, IPkcSelectModel model, List<string> cartIDs)
+        public PkcSelectPresenter(Views.IPkcSelectView view, IPkcSelectModel model, List<Tuple<string, string[]>> cartridgeIDs)
         {
             View = view;
             Model = model;
             view.UpdateSavedPkcBox(Model.SavedPkcs.Keys.ToArray());
 
+            // If RCC from cartridge already have PKCs associated (i.e. PKC selection is being edited; t.item2 != null) then send SelectButtonClicked event through view
+            foreach(Tuple<string, string[]> t in cartridgeIDs)
+            {
+                if (t.Item2 != null)
+                {
+                    view.ProcessSelectButtonCLicked(t.Item1, t.Item2);
+                }
+            }
+
+            // Event wiring
             View.AddButtonCicked += new EventHandler(View_AddButtonClicked);
             View.RemoveButtonClicked += new EventHandler<Views.PkcAddRemoveArgs>(View_RemoveButtonClicked);
             View.NextButtonClicked += new EventHandler(View_NextButtonClicked);
@@ -73,26 +83,27 @@ namespace MainViewWinForms.Presenters
 
         private void View_NextButtonClicked(object sender, EventArgs e)
         {
-            if(Model.CartridgePkcs.Any(x => x.PkcReaders.Count > 0)) // At least one cartridge had one or more PKCs selected
+            if (Model.CartridgePkcs.Any(x => x.PkcReaders.Count < 1)) // At least one cartridge had 0 PKCs selected
             {
-                foreach (CartridgePkcSelectItem c in Model.CartridgePkcs)
+                var result = MessageBox.Show("PKCs were not selected for one or more of the tabbed cartridges. Probes for the RCCs in this (these) cartridge(s) will not be defined and count data cannot be displayed for it. Do you want to return to the PKC selection dialog to set PKCs for the cartridge(s) in question?",
+                                              "Warning: No PKCs Selected",
+                                              MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
                 {
-                    if (c.Collector != null)
-                    {
-                        if (c.Collector.DspTranslator != null)
-                        {
-                            Tuple<string, string, Dictionary<string, ProbeItem>> cartTranslator = Tuple.Create(c.CartridgeID, c.Collector.Name, c.Collector.DspTranslator);
-                            PresenterHub.MessageHub.Publish<TranslatorSendMessage>(new TranslatorSendMessage(this, cartTranslator));
-                        }
-                    }
+                    return;
                 }
             }
-            else
+
+            foreach (CartridgePkcSelectItem c in Model.CartridgePkcs)
             {
-                MessageBox.Show("Selecct PKCs for at least one of the tabbed cartridges before continuing. To select PKCs, highlight one ore more PKCs in the 'Available' box and click the 'Select >>' button to move it to a cartridge's 'Selected' box.",
-                                "No PKCs Selected",
-                                MessageBoxButtons.OK);
-                return;
+                if (c.Collector != null)
+                {
+                    if (c.Collector.DspTranslator != null)
+                    {
+                        Tuple<string, string, Dictionary<string, ProbeItem>> cartTranslator = Tuple.Create(c.CartridgeID, c.Collector.Name, c.Collector.DspTranslator);
+                        PresenterHub.MessageHub.Publish<TranslatorSendMessage>(new TranslatorSendMessage(this, cartTranslator));
+                    }
+                }
             }
             
             View.CloseForm();

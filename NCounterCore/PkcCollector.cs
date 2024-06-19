@@ -38,7 +38,7 @@ namespace NCounterCore
                     }
                 }
                 DspTranslator = merged;
-                Name = string.Join("_", readers.Select(x => x.Name));
+                Name = string.Join("$", readers.Select(x => x.Name));
             }
             else if (readers.Count() > 0)
             {
