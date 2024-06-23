@@ -78,6 +78,7 @@
     <Compile Include="SampleVsScatterplotModel.cs" />
     <Compile Include="ScatterChartDto.cs" />
     <Compile Include="ScatterSelectItem.cs" />
+    <Compile Include="WellQcSummaryItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MessageCenter\MessageCenter.csproj">

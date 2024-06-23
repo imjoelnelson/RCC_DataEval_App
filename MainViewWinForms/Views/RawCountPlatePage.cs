@@ -16,14 +16,15 @@ namespace MainViewWinForms.Views
         public DBDataGridView LaneDgv { get; set; }
         public DBDataGridView WellDgv { get; set; }
 
-        public event EventHandler<DgvCellClickEventArgs> PlateViewCellClick;
-        public event EventHandler<DgvCellClickEventArgs> PlateViewCellTooTipTextNeeded;
+        public event EventHandler<SelectedPlateViewEventArgs> ExportQcData;
+        public event EventHandler<SelectedPlateViewEventArgs> ViewAsChart;
 
         public RawCountPlatePage(string cartridgeID, int index)
         {
             this.Text = cartridgeID;
             PageIndex = index;
             this.AutoScroll = true;
+            this.MouseClick += new MouseEventHandler(This_MouseClick);
 
             // Create Lane Dgv label
             Label label1 = new Label();
@@ -68,8 +69,6 @@ namespace MainViewWinForms.Views
             WellDgv.RowHeadersWidth = 100;
             WellDgv.Height = 8 * WellDgv.RowTemplate.Height + WellDgv.ColumnHeadersHeight;
             WellDgv.Width = LaneDgv.Width;
-            WellDgv.CellContentClick += new DataGridViewCellEventHandler(WellDgv_CellContentClick);
-            WellDgv.CellToolTipTextNeeded += new DataGridViewCellToolTipTextNeededEventHandler(WellDgv_CellToolTipTextNeeded);
             for(int i = 0; i < 12; i++)
             {
                 DataGridViewTextBoxColumn col = new DataGridViewTextBoxColumn();
@@ -82,13 +81,27 @@ namespace MainViewWinForms.Views
             this.Controls.Add(WellDgv);
         }
 
-        private void WellDgv_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
+        private void This_MouseClick(object sender, MouseEventArgs e)
         {
-            // Get row and column and send event
+            if(e.Button == MouseButtons.Right)
+            {
+                MenuItem item = new MenuItem("Export QC Data to CSV", ExportQcTable);
+                MenuItem item2 = new MenuItem("View Data As A Chart", ViewAsAChart);
+                ContextMenu menu = new ContextMenu(new MenuItem[] { item, item2 });
+                menu.Show(LaneDgv, new System.Drawing.Point(e.X, e.Y));
+            }
         }
-        private void WellDgv_CellContentClick(object sender, DataGridViewCellEventArgs e)
+
+        private void ExportQcTable(object sender, EventArgs e)
         {
-            // Function to create csv
+            var args = new SelectedPlateViewEventArgs(this.PageIndex, -1, -1); // -1 == placeholder
+            ExportQcData?.Invoke(this, args);
+        }
+
+        private void ViewAsAChart(object sender, EventArgs e)
+        {
+            var args = new SelectedPlateViewEventArgs(this.PageIndex, -1, -1); // -1 == placeholder
+            ViewAsChart?.Invoke(this, args);
         }
     }
 }

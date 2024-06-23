@@ -119,6 +119,12 @@
     <Compile Include="Views\PkcSelectView.Designer.cs">
       <DependentUpon>PkcSelectView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\QcDataPopUpView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\QcDataPopUpView.Designer.cs">
+      <DependentUpon>QcDataPopUpView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\RawCountPlatePage.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -168,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\PkcSelectView.resx">
       <DependentUpon>PkcSelectView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\QcDataPopUpView.resx">
+      <DependentUpon>QcDataPopUpView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\RawCountsPlateViewcs.resx">
       <DependentUpon>RawCountsPlateViewcs.cs</DependentUpon>

@@ -9,9 +9,13 @@ namespace MainViewWinForms.Views
     public class SelectedPlateViewEventArgs : EventArgs
     {
         public int SelectedIndex { get; set; }
-        public SelectedPlateViewEventArgs(int selectedIndex)
+        public int RowIndex { get; set; }
+        public int ColumnIndex { get; set; }
+        public SelectedPlateViewEventArgs(int selectedIndex, int rowIndex, int columnIndex)
         {
             SelectedIndex = selectedIndex;
+            RowIndex = rowIndex;
+            ColumnIndex = columnIndex;
         }
     }
 }

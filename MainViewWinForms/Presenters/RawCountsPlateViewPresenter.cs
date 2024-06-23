@@ -20,6 +20,8 @@ namespace MainViewWinForms.Presenters
             View.SetQcPropertySelectorComboItems(model.PlexQcPropertyList);
 
             view.CalculateQcMetricForSelectedPlateviewPage += new EventHandler<Views.SelectedPlateViewEventArgs>(View_CalculateQcMetricForSelectedPlateviewPage);
+            view.ExportPlateViewTable += new EventHandler<Views.SelectedPlateViewEventArgs>(View_ExportPlateViewTable);
+            view.ShowDataAsChart += new EventHandler<Views.SelectedPlateViewEventArgs>(View_ShowDataAsChart);
 
             string[][] mat0 = Model.GetSelectedLaneQcData(0);
             string[][] mat1 = Model.GetSelectedCellQcData(View.SelectedQcProperty, 0);
@@ -33,6 +35,17 @@ namespace MainViewWinForms.Presenters
             string[][] mat1 = Model.GetSelectedCellQcData(View.SelectedQcProperty, e.SelectedIndex);
             View.SetDgv1Values(mat0, e.SelectedIndex);
             View.SetDgv2Values(mat1, e.SelectedIndex);
+        }
+
+        private void View_ExportPlateViewTable(object sender, Views.SelectedPlateViewEventArgs e)
+        {
+            Model.ExportQcData(e.SelectedIndex);
+        }
+
+        private void View_ShowDataAsChart(object sender, Views.SelectedPlateViewEventArgs e)
+        {
+            double[][] chartData = Model.GetDataForChart(e.SelectedIndex, View.SelectedQcProperty);
+            View.CreatePopupChart(chartData);
         }
     }
 }

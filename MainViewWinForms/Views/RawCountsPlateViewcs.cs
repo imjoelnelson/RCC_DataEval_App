@@ -29,7 +29,9 @@ namespace MainViewWinForms.Views
         private List<RawCountPlatePage> Pages { get; set; }
 
         public event EventHandler<SelectedPlateViewEventArgs> CalculateQcMetricForSelectedPlateviewPage;
-        public event EventHandler<DgvCellClickEventArgs> PlateViewCellClick;
+        public event EventHandler<SelectedPlateViewEventArgs> ExportPlateViewTable;
+        public event EventHandler<SelectedPlateViewEventArgs> ShowDataAsChart;
+
         public RawCountsPlateViewcs(List<string> cartridgeIDs)
         {
             InitializeComponent();
@@ -40,6 +42,8 @@ namespace MainViewWinForms.Views
             {
                 var temp = new RawCountPlatePage(cartridgeIDs[i], i);
                 plateTabControl.TabPages.Add(temp);
+                temp.ExportQcData += new EventHandler<SelectedPlateViewEventArgs>(Page_ExportQcData);
+                temp.ViewAsChart += new EventHandler<SelectedPlateViewEventArgs>(Page_ViewAsChart);
                 Pages.Add(temp); // For holding an easier reference than the object boxed as a TabPage
             }
 
@@ -60,7 +64,6 @@ namespace MainViewWinForms.Views
             // Events
             qcSelectorCombo.SelectedIndexChanged += new EventHandler(qcSelectorCombo_SelectedIndexChanged);
             plateTabControl.SelectedIndexChanged += new EventHandler(plateTabControl_SelectedIndexChanged);
-
             // Combobox items and selected index as well as dgv1 & 2 data set by presenter after View created
         }
 
@@ -101,6 +104,12 @@ namespace MainViewWinForms.Views
             }
         }
 
+        public void CreatePopupChart(double[][] data)
+        {
+            var popup = new QcDataPopUpView(data, SelectedQcProperty);
+            popup.ShowDialog();
+        }
+
         public void ShowThisDialog()
         {
             this.WindowState = FormWindowState.Maximized;
@@ -115,14 +124,26 @@ namespace MainViewWinForms.Views
         private void qcSelectorCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedQcProperty = (string)qcSelectorCombo.SelectedItem;
-            SelectedPlateViewEventArgs args = new SelectedPlateViewEventArgs(plateTabControl.SelectedIndex);
+            SelectedPlateViewEventArgs args = new SelectedPlateViewEventArgs(plateTabControl.SelectedIndex, -1, -1); // -1 == placeholder
             CalculateQcMetricForSelectedPlateviewPage?.Invoke(this, args);
         }
 
         private void plateTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectedPlateViewEventArgs args = new SelectedPlateViewEventArgs(plateTabControl.SelectedIndex);
+            SelectedPlateViewEventArgs args = new SelectedPlateViewEventArgs(plateTabControl.SelectedIndex, -1, -1); // -1 == placeholder
             CalculateQcMetricForSelectedPlateviewPage?.Invoke(this, args);
+        }
+
+        private void Page_ExportQcData(object sender, SelectedPlateViewEventArgs e)
+        {
+            // pass event directly to presenter
+            ExportPlateViewTable?.Invoke(sender, e);
+        }
+
+        private void Page_ViewAsChart(object sender, SelectedPlateViewEventArgs e)
+        {
+            // pass event directly to presenter
+            ShowDataAsChart?.Invoke(sender, e);
         }
     }
 }

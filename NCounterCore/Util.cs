@@ -76,5 +76,49 @@ namespace NCounterCore
         {
             return input > 0 ? Math.Log(input, 2) : 0;
         }
+
+        /// <summary>
+        /// Opens the saved CSV after being saved by SaveTable(string[][])
+        /// </summary>
+        /// <param name="path">Path in temp folder where the file is saved</param>
+        /// <param name="maxDelay">Amount of time to check to see if file has been saved at path before giving up</param>
+        public static void OpenFileAfterSaved(string path, int maxDelay)
+        {
+            // Ask if user wants to open file
+            string message = $"Would you like to open {Path.GetFileName(path)} now?";
+            string cap = "File Saved";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            DialogResult result = MessageBox.Show(message, cap, buttons);
+            // Open file if 'yes'
+            if (result == DialogResult.Yes)
+            {
+                int sleepAmount = 1000; // Delay to give time for file to be saved before trying to open
+                int sleepStart = 0;
+                int maxSleep = maxDelay;
+                while (true)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(path);
+                        break;
+                    }
+                    catch (Exception er)
+                    {
+                        if (sleepStart <= maxSleep)
+                        {
+                            System.Threading.Thread.Sleep(sleepAmount);
+                            sleepStart += sleepAmount;
+                        }
+                        else
+                        {
+                            MessageBox.Show($"The file could not be opened due to an exception:\r\n\r\n{er.Message}\r\n\r\n{er.StackTrace}",
+                                            "File Open Error",
+                                            MessageBoxButtons.OK);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

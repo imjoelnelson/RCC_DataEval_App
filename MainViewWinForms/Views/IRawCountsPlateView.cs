@@ -12,11 +12,13 @@ namespace MainViewWinForms.Views
         int Threshold { get; set; }
 
         event EventHandler<SelectedPlateViewEventArgs> CalculateQcMetricForSelectedPlateviewPage;
-        event EventHandler<DgvCellClickEventArgs> PlateViewCellClick;
+        event EventHandler<SelectedPlateViewEventArgs> ExportPlateViewTable;
+        event EventHandler<SelectedPlateViewEventArgs> ShowDataAsChart;
 
         void SetQcPropertySelectorComboItems(string[] items);
         void SetDgv1Values(string[][] mat, int index);
         void SetDgv2Values(string[][] mat, int index);
+        void CreatePopupChart(double[][] data);
         void ShowThisDialog();
         void CloseThisDialog();
     }

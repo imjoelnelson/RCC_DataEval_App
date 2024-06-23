@@ -37,7 +37,7 @@ namespace NCounterCore
         /// <summary>
         /// miRNA-specific; Pulled from data line after '|'; multiplied by ERCC POS_A count gives ligation background correction factor
         /// </summary>
-        public double CorrectionCoefficient { get; private set; }
+        public double CorrectionCoefficient { get; set; }
 
         // ********  GeoMx or PlexSet-specific  *********
         /// <summary>

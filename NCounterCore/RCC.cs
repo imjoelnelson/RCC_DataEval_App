@@ -727,7 +727,7 @@ namespace NCounterCore
                     string[] bits = lines[i].Split(',');
                     if (bits.Length > 3)
                     {
-                        if (bits[0].EndsWith("ous1"))
+                        if ((type == RlfType.miRNA && bits[0].EndsWith("ous1")) || (type == RlfType.miRGE && bits[0].EndsWith("ous2")))
                         {
                             string name = bits[1].Split('|')[0];
                             int val = Convert.ToInt32(Util.SafeParseInt(bits[3]) - (ThisRLF.Probes[name].CorrectionCoefficient * posAVal));
@@ -801,26 +801,61 @@ namespace NCounterCore
         {
             var item1 = new Dictionary<string, ProbeItem>(lines.Count);
             var item2 = new Dictionary<string, int>(lines.Count);
-            for (int i = 0; i < lines.Count; i++)
+            if (type == RlfType.miRGE || type == RlfType.miRNA)
             {
-                string[] bits = lines[i].Split(',');
-                if (bits.Length > 3)
+                // Get POS_A count for ligation background correction
+                int posACount = GetPosAVal(lines);
+                // Loop through lines in the CodeSummary section
+                for(int i = 0; i < lines.Count; i++)
                 {
-                    ProbeItem item = new ProbeItem(bits[0], bits[1], bits[2], ThisRLF.ThisType);
-                    if (type != RlfType.PlexSet)
+                    // Split line into fields
+                    string[] bits = lines[i].Split(',');
+                    if (bits.Length > 3)
                     {
-                        item1.Add(item.TargetName, item);
-                        item2.Add(item.TargetName, Util.SafeParseInt(bits[3]));
+                        // For miRNA targets multiply correction coefficient by POS_A count and subtract from target count
+                        if ((type == RlfType.miRNA && bits[0].EndsWith("ous1")) || (type == RlfType.miRGE && bits[0].EndsWith("ous2")))
+                        {
+                            ProbeItem item = new ProbeItem(bits[0], bits[1].Split('|')[0], bits[2], ThisRLF.ThisType);
+                            item.CorrectionCoefficient = double.Parse(bits[1].Split('|')[1]);
+                            item1.Add(item.TargetName, item);
+                            item2.Add(item.TargetName, Convert.ToInt32(Util.SafeParseInt(bits[3]) - (posACount * item.CorrectionCoefficient)));
+                        }
+                        // For all other targets (hyb controls, mRNA housekeepers) get unadjusted raw count
+                        else
+                        {
+                            ProbeItem item = new ProbeItem(bits[0], bits[1], bits[2], ThisRLF.ThisType);
+                            item1.Add(item.TargetName, item);
+                            item2.Add(item.TargetName, Util.SafeParseInt(bits[3]));
+                        }
                     }
-                    else
+                }
+            }
+            else
+            {
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    // Split line into fields
+                    string[] bits = lines[i].Split(',');
+                    if (bits.Length > 3)
                     {
-                        item1.Add($"{item.TargetName}_{item.PlexRow}", item);
-                        item2.Add($"{item.TargetName}_{item.PlexRow}", Util.SafeParseInt(bits[3]));
+                        ProbeItem item = new ProbeItem(bits[0], bits[1], bits[2], ThisRLF.ThisType);
+                        // For PlexSet assays
+                        if (type != RlfType.PlexSet)
+                        {
+                            item1.Add(item.TargetName, item);
+                            item2.Add(item.TargetName, Util.SafeParseInt(bits[3]));
+                        }
+                        // All other assays
+                        else
+                        {
+                            item1.Add($"{item.TargetName}_{item.PlexRow}", item);
+                            item2.Add($"{item.TargetName}_{item.PlexRow}", Util.SafeParseInt(bits[3]));
+                        }
                     }
                 }
             }
 
-            return Tuple.Create(item1, item2);
+            return Tuple.Create(item1, item2); // Item1 = Probes list from RLF; Item2 = Named gene count list from RCC
         }
 
         /// <summary>

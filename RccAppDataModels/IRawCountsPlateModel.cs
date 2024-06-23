@@ -10,7 +10,9 @@ namespace RccAppDataModels
     {
         string[] PlexQcPropertyList { get; set; }
 
-        string[][] GetSelectedCellQcData(string selectedProperty, int index);
-        string[][] GetSelectedLaneQcData(int index);
+        string[][] GetSelectedCellQcData(string selectedProperty, int pageIndex);
+        string[][] GetSelectedLaneQcData(int pageIndex);
+        double[][] GetDataForChart(int pageIndex, string selectedProperty);
+        void ExportQcData(int selectedIndex);
     }
 }
