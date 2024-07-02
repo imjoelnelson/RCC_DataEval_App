@@ -109,5 +109,14 @@ namespace MainViewWinForms
 
             return view;
         }
+
+        public static Views.BinnedCountsView CountBinsView(List<NCounterCore.Rcc> rccs, int[] cutoffs)
+        {
+            Views.BinnedCountsView view = new Views.BinnedCountsView();
+            RccAppDataModels.BinnedCountsModel model = new BinnedCountsModel(rccs, cutoffs);
+            _ = new Presenters.BinnedCountsPresenter(view, model);
+
+            return view;
+        }
     }
 }

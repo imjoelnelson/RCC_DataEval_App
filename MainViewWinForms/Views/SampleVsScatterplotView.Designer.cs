@@ -16,6 +16,10 @@ namespace MainViewWinForms.Views
         {
             if (disposing && (components != null))
             {
+                foreach(System.Windows.Forms.Control c in this.panel2.Controls)
+                {
+                    c.Dispose();
+                }
                 components.Dispose();
             }
             base.Dispose(disposing);

@@ -35,6 +35,7 @@ namespace MainViewWinForms.Views
             this.Controls.Add(label1);
             // Create Lane Dgv
             LaneDgv = new DBDataGridView(false);
+            LaneDgv.MouseClick += new MouseEventHandler(This_MouseClick);
             LaneDgv.Location = new System.Drawing.Point(0, 36);
             LaneDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             LaneDgv.RowHeadersVisible = true;
@@ -62,6 +63,7 @@ namespace MainViewWinForms.Views
             this.Controls.Add(label2);
             // Create Well Dgv
             WellDgv = new DBDataGridView(false);
+            WellDgv.MouseClick += new MouseEventHandler(This_MouseClick);
             WellDgv.Location = new System.Drawing.Point(LaneDgv.Location.X,
                 label2.Location.Y + label2.Height);
             WellDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -88,7 +90,7 @@ namespace MainViewWinForms.Views
                 MenuItem item = new MenuItem("Export QC Data to CSV", ExportQcTable);
                 MenuItem item2 = new MenuItem("View Data As A Chart", ViewAsAChart);
                 ContextMenu menu = new ContextMenu(new MenuItem[] { item, item2 });
-                menu.Show(LaneDgv, new System.Drawing.Point(e.X, e.Y));
+                menu.Show((Control)sender, new System.Drawing.Point(e.X, e.Y));
             }
         }
 

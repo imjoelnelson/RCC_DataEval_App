@@ -102,6 +102,10 @@ namespace MainViewWinForms
         /// Triggers Presenter to create an Associate PKC MVP triad
         /// </summary>
         public event EventHandler<Views.RccSelectEventArgs> AssociatePkcsMenuItemClicked;
+        /// <summary>
+        /// Triggers Presenter to launch a new Count Bins Stacked Bar Chart form
+        /// </summary>
+        public event EventHandler<Views.RccSelectEventArgs> CountBinsMenuItemClicked;
         #endregion
 
         public MainView()
@@ -119,6 +123,7 @@ namespace MainViewWinForms
         {
             MessageBox.Show(message, caption, MessageBoxButtons.OK);
         }
+
         /// <summary>
         /// Method for buidling the view's datagridview control
         /// </summary>
@@ -614,9 +619,14 @@ namespace MainViewWinForms
             var args = new Views.RccSelectEventArgs(GetSelectedRows());
             AssociatePkcsMenuItemClicked?.Invoke(this, args);
         }
+
+        private void geneCountBinsStackedBarChartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var args = new Views.RccSelectEventArgs(GetSelectedRows());
+            CountBinsMenuItemClicked?.Invoke(this, args);
+        }
+
         #endregion
-
-
     }
 }
 

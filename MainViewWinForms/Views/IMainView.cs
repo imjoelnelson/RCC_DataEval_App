@@ -32,6 +32,7 @@ namespace MainViewWinForms
         event EventHandler<Views.RccSelectEventArgs> BuildPlateViewTable;
         event EventHandler<Views.RccSelectEventArgs> OpenSampleVSampleScatterDialog;
         event EventHandler<Views.RccSelectEventArgs> AssociatePkcsMenuItemClicked;
+        event EventHandler<Views.RccSelectEventArgs> CountBinsMenuItemClicked;
 
         // Methods
         void ShowErrorMessage(string message, string caption);

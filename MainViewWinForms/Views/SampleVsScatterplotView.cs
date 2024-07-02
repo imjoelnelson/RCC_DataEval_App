@@ -146,7 +146,14 @@ namespace MainViewWinForms.Views
             chart.Series.Add(series);
             chart.Series.Add(series1);
 
-            panel2.Controls.Clear(); // Panel instantiated in form load event handler
+            panel2.Controls.Clear();
+            foreach(Control c in panel2.Controls)
+            {
+                if(c != null)
+                {
+                    c.Dispose();
+                }
+            }
             panel2.Controls.Add(chart);
             if(!this.Controls.Contains(panel2))
             {

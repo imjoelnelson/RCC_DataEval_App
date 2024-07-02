@@ -40,6 +40,7 @@ namespace MainViewWinForms
             MainView.BuildPlateViewTable += new EventHandler<Views.RccSelectEventArgs>(View_BuildPlateViewTable);
             MainView.OpenSampleVSampleScatterDialog += new EventHandler<Views.RccSelectEventArgs>(View_OpenSampleVSampleScatterDialog);
             MainView.AssociatePkcsMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_AssociatedPkcsMenuItemClicked);
+            MainView.CountBinsMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_CountBinsMenuItemClicked);
             // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
@@ -307,6 +308,13 @@ namespace MainViewWinForms
             {
                 view.ShowDialog();
             }
+        }
+
+        private void View_CountBinsMenuItemClicked(object sender, Views.RccSelectEventArgs e)
+        {
+            List<Rcc> rccs = MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList();
+            Views.BinnedCountsView view = MVPFactory.CountBinsView(rccs, new int[] { 0, 20, 50, 100, 500, 150000 });
+            view.ShowDialog();
         }
     }
 }

@@ -67,10 +67,18 @@
     </Compile>
     <Compile Include="DgvFromProperties.cs" />
     <Compile Include="FilesLoadingEventArgs.cs" />
+    <Compile Include="Presenters\BinnedCountsPresenter.cs" />
     <Compile Include="Presenters\RawCountsPlateViewPresenter.cs" />
     <Compile Include="Presenters\RccPropertyConfigPresenter.cs" />
     <Compile Include="Presenters\SampleVsScatterplotPresenter.cs" />
+    <Compile Include="Views\BinnedCountsView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\BinnedCountsView.Designer.cs">
+      <DependentUpon>BinnedCountsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\DgvCellClickEventArgs.cs" />
+    <Compile Include="Views\IBinnedCountsView.cs" />
     <Compile Include="Views\IMainView.cs" />
     <Compile Include="Views\IPasswordEnterView.cs" />
     <Compile Include="Views\IPkcSelectView.cs" />
@@ -150,6 +158,9 @@
     <Compile Include="Views\ScatterPlotSelectArgs.cs" />
     <Compile Include="Views\SelectedPlateViewEventArgs.cs" />
     <Compile Include="Views\ViewUtils.cs" />
+    <EmbeddedResource Include="Views\BinnedCountsView.resx">
+      <DependentUpon>BinnedCountsView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>

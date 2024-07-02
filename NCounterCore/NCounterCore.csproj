@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenNormCalculation.cs" />
     <Compile Include="IPkcReader.cs" />
     <Compile Include="PkcCollector.cs" />
     <Compile Include="PkcReader.cs" />
