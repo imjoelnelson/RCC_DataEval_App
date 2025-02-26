@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="GenNormCalculation.cs" />
     <Compile Include="IPkcReader.cs" />
+    <Compile Include="PcaForQc.cs" />
     <Compile Include="PkcCollector.cs" />
     <Compile Include="PkcReader.cs" />
     <Compile Include="ProbeItem.cs" />

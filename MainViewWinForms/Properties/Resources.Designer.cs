@@ -63,6 +63,16 @@ namespace MainViewWinForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _211751_gear_icon {
+            get {
+                object obj = ResourceManager.GetObject("_211751_gear_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap InfoIcon {
             get {
                 object obj = ResourceManager.GetObject("InfoIcon", resourceCulture);

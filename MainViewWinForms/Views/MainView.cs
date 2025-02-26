@@ -106,6 +106,10 @@ namespace MainViewWinForms
         /// Triggers Presenter to launch a new Count Bins Stacked Bar Chart form
         /// </summary>
         public event EventHandler<Views.RccSelectEventArgs> CountBinsMenuItemClicked;
+        /// <summary>
+        /// Triggers Presenter to launch PCA Overview Form with selected RCCs
+        /// </summary>
+        public event EventHandler<Views.RccSelectEventArgs> PcaOverviewMenuItemClicked;
         #endregion
 
         public MainView()
@@ -139,6 +143,7 @@ namespace MainViewWinForms
             Dgv.BackgroundColor = SystemColors.Window;
             Dgv.DataSource = source;
             Dgv.ScrollBars = ScrollBars.None;
+            Dgv.EditMode = DataGridViewEditMode.EditProgrammatically;
             Dgv.Click += new EventHandler(Dgv_Click);
             Dgv.SelectionChanged += new EventHandler(Dgv_SelectionChanged);
 
@@ -233,6 +238,7 @@ namespace MainViewWinForms
             }
 
             DgvSortGlyphHandling(SortList);
+            Dgv.Focus();
         }
 
         /// <summary>
@@ -336,6 +342,10 @@ namespace MainViewWinForms
                             MessageBox.Show($"{er.Message}\r\n\r\n{er.StackTrace}", "Table Error", MessageBoxButtons.OK);
                         }
                         path = sfd.FileName;
+                    }
+                    else
+                    {
+                        return;
                     }
                 }
 
@@ -441,6 +451,7 @@ namespace MainViewWinForms
         {
             RccListCleared.Invoke(this, EventArgs.Empty);
         }
+
 
         private void Dgv_Click(object sender, EventArgs e)
         {
@@ -624,6 +635,12 @@ namespace MainViewWinForms
         {
             var args = new Views.RccSelectEventArgs(GetSelectedRows());
             CountBinsMenuItemClicked?.Invoke(this, args);
+        }
+
+        private void pCAOverviewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var args = new Views.RccSelectEventArgs(GetSelectedRows());
+            PcaOverviewMenuItemClicked?.Invoke(this, args);
         }
 
         #endregion

@@ -41,6 +41,7 @@ namespace MainViewWinForms
             MainView.OpenSampleVSampleScatterDialog += new EventHandler<Views.RccSelectEventArgs>(View_OpenSampleVSampleScatterDialog);
             MainView.AssociatePkcsMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_AssociatedPkcsMenuItemClicked);
             MainView.CountBinsMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_CountBinsMenuItemClicked);
+            MainView.PcaOverviewMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_PcaOverviewMenuItemClicked);
             // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
@@ -232,7 +233,7 @@ namespace MainViewWinForms
             string[][] lines = MainModel.BuildRawDataTable(e.IDs, rccProperties);
             if(lines != null)
             {
-                string[][] transformed = MainModel.TransformTable(lines);
+                string[][] transformed = Util.TransformTable(lines);
                 MainView.SaveTable(transformed);
             }
         }
@@ -315,6 +316,13 @@ namespace MainViewWinForms
             List<Rcc> rccs = MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList();
             Views.BinnedCountsView view = MVPFactory.CountBinsView(rccs, new int[] { 0, 20, 50, 100, 500, 150000 });
             view.ShowDialog();
+        }
+
+        private void View_PcaOverviewMenuItemClicked(object sender, Views.RccSelectEventArgs e)
+        {
+            List<Rcc> rccs = MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList();
+            Views.PcaQcView view = MVPFactory.ThisPcaQcView(rccs);
+            view.ShowForm();
         }
     }
 }

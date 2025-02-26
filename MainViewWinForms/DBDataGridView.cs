@@ -16,7 +16,7 @@ namespace MainViewWinForms
             AllowUserToOrderColumns = false;
             ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
-            EditMode = DataGridViewEditMode.EditOnEnter;
+            EditMode = DataGridViewEditMode.EditOnKeystrokeOrF2;
             AllowUserToResizeColumns = false;
             AllowUserToResizeRows = false;
             ColumnHeadersVisible = true;

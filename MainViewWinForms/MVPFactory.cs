@@ -118,5 +118,14 @@ namespace MainViewWinForms
 
             return view;
         }
+
+        public static Views.PcaQcView ThisPcaQcView(List<NCounterCore.Rcc> rccs)
+        {
+            Views.PcaQcView view = new Views.PcaQcView();
+            PcaQcModel model = new PcaQcModel(rccs);
+            _ = new Presenters.PcaQcPresenter(view, model);
+
+            return view;
+        }
     }
 }

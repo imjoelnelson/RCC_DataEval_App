@@ -476,30 +476,6 @@ namespace RccAppDataModels
         }
 
         /// <summary>
-        /// Converts array of string[] which represent columns to array of string[] which represent rows
-        /// </summary>
-        /// <param name="lines">Array of string[] which represent columns of the table</param>
-        /// <returns>Array of string[] which represent rows of the table</returns>
-        public string[][] TransformTable(string[][] lines)
-        {
-            if(lines.Any(x => x.Length != lines[0].Length))
-            {
-                throw new Exception("TransformTable cannot operate on jagged array");
-            }
-            List<List<string>> transformed = new List<List<string>>(lines[0].Length);
-            for(int r = 0; r < lines[0].Length; r++)
-            {
-                List<string> temp = new List<string>(lines.Length);
-                for(int c = 0; c < lines.Length; c++)
-                {
-                    temp.Add(lines[c][r]);
-                }
-                transformed.Add(temp);
-            }
-            return transformed.Select(x => x.ToArray()).ToArray();
-        }
-
-        /// <summary>
         /// Gets a collection of the RlfTypes (assay types) represented in the selected RCCs; for branching purposes in building the table
         /// </summary>
         /// <param name="ids">int IDs of the selected RCCs</param>

@@ -42,6 +42,8 @@ namespace MainViewWinForms
             this.targetCountsTableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rawCountsPlateViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sampleVsSampleCorrelationScatterplotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.geneCountBinsStackedBarChartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferrenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setThresholdsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cSVCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,8 +55,7 @@ namespace MainViewWinForms
             this.clearButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.geneCountBinsStackedBarChartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pCAOverviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -137,7 +138,8 @@ namespace MainViewWinForms
             this.targetCountsTableToolStripMenuItem,
             this.rawCountsPlateViewToolStripMenuItem,
             this.sampleVsSampleCorrelationScatterplotToolStripMenuItem,
-            this.geneCountBinsStackedBarChartToolStripMenuItem});
+            this.geneCountBinsStackedBarChartToolStripMenuItem,
+            this.pCAOverviewToolStripMenuItem});
             this.dataAssessmentToolStripMenuItem.Name = "dataAssessmentToolStripMenuItem";
             this.dataAssessmentToolStripMenuItem.Size = new System.Drawing.Size(145, 38);
             this.dataAssessmentToolStripMenuItem.Text = "Evaluation";
@@ -163,6 +165,19 @@ namespace MainViewWinForms
             this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
             this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Text = "Sample vs sample correlation scatterplot";
             this.sampleVsSampleCorrelationScatterplotToolStripMenuItem.Click += new System.EventHandler(this.sampleVsSampleCorrelationScatterplotToolStripMenuItem_Click);
+            // 
+            // geneCountBinsStackedBarChartToolStripMenuItem
+            // 
+            this.geneCountBinsStackedBarChartToolStripMenuItem.Name = "geneCountBinsStackedBarChartToolStripMenuItem";
+            this.geneCountBinsStackedBarChartToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
+            this.geneCountBinsStackedBarChartToolStripMenuItem.Text = "Count Ranges Bar Chart";
+            this.geneCountBinsStackedBarChartToolStripMenuItem.Click += new System.EventHandler(this.geneCountBinsStackedBarChartToolStripMenuItem_Click);
+            // 
+            // analysisToolStripMenuItem
+            // 
+            this.analysisToolStripMenuItem.Name = "analysisToolStripMenuItem";
+            this.analysisToolStripMenuItem.Size = new System.Drawing.Size(120, 38);
+            this.analysisToolStripMenuItem.Text = "Analysis";
             // 
             // preferrenceToolStripMenuItem
             // 
@@ -268,18 +283,12 @@ namespace MainViewWinForms
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 52);
             // 
-            // analysisToolStripMenuItem
+            // pCAOverviewToolStripMenuItem
             // 
-            this.analysisToolStripMenuItem.Name = "analysisToolStripMenuItem";
-            this.analysisToolStripMenuItem.Size = new System.Drawing.Size(120, 38);
-            this.analysisToolStripMenuItem.Text = "Analysis";
-            // 
-            // geneCountBinsStackedBarChartToolStripMenuItem
-            // 
-            this.geneCountBinsStackedBarChartToolStripMenuItem.Name = "geneCountBinsStackedBarChartToolStripMenuItem";
-            this.geneCountBinsStackedBarChartToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
-            this.geneCountBinsStackedBarChartToolStripMenuItem.Text = "Gene Count Bins Stacked Bar Chart";
-            this.geneCountBinsStackedBarChartToolStripMenuItem.Click += new System.EventHandler(this.geneCountBinsStackedBarChartToolStripMenuItem_Click);
+            this.pCAOverviewToolStripMenuItem.Name = "pCAOverviewToolStripMenuItem";
+            this.pCAOverviewToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
+            this.pCAOverviewToolStripMenuItem.Text = "PCA Overview";
+            this.pCAOverviewToolStripMenuItem.Click += new System.EventHandler(this.pCAOverviewToolStripMenuItem_Click);
             // 
             // MainView
             // 
@@ -329,5 +338,6 @@ namespace MainViewWinForms
         private System.Windows.Forms.ToolStripMenuItem associatePKCsWithRCCsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem geneCountBinsStackedBarChartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem analysisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pCAOverviewToolStripMenuItem;
     }
 }

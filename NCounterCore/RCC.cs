@@ -497,6 +497,7 @@ namespace NCounterCore
         /// <param name="rlfs">List of already loaded RLFs in the Model being loaded into</param>
         public Rcc(string filePath, int id, Dictionary<string, Rlf> rlfs, QcThresholds thresholds)
         {
+            ID = id;
             // Read in data
             FileName = Path.GetFileNameWithoutExtension(filePath);
             List<string> lines = new List<string>();

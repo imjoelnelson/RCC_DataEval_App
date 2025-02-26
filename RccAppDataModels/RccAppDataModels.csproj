@@ -59,6 +59,7 @@
     <Compile Include="GuiCursor.cs" />
     <Compile Include="IBinnedCountsModel.cs" />
     <Compile Include="IDataModel.cs" />
+    <Compile Include="IPcaQcModel.cs" />
     <Compile Include="IPkcSelectModel.cs" />
     <Compile Include="IRawCountsPlateModel.cs" />
     <Compile Include="ISampleVsScatterplotModel.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="ModelPkcAddRemoveArgs.cs" />
     <Compile Include="ModelPkcSelectBoxArgs.cs" />
     <Compile Include="NormalizationGroup.cs" />
+    <Compile Include="PcaQcModel.cs" />
     <Compile Include="PkcSelectModel.cs" />
     <Compile Include="PlexQcPropertyItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

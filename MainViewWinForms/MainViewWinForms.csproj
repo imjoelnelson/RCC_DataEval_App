@@ -68,6 +68,7 @@
     <Compile Include="DgvFromProperties.cs" />
     <Compile Include="FilesLoadingEventArgs.cs" />
     <Compile Include="Presenters\BinnedCountsPresenter.cs" />
+    <Compile Include="Presenters\PcaQcPresenter.cs" />
     <Compile Include="Presenters\RawCountsPlateViewPresenter.cs" />
     <Compile Include="Presenters\RccPropertyConfigPresenter.cs" />
     <Compile Include="Presenters\SampleVsScatterplotPresenter.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Views\IBinnedCountsView.cs" />
     <Compile Include="Views\IMainView.cs" />
     <Compile Include="Views\IPasswordEnterView.cs" />
+    <Compile Include="Views\IPcaQcView.cs" />
     <Compile Include="Views\IPkcSelectView.cs" />
     <Compile Include="Views\IRawCountsPlateView.cs" />
     <Compile Include="Views\IRccPropertyConfigView.cs" />
@@ -116,6 +118,12 @@
       <DependentUpon>ThresholdSetFormcs.cs</DependentUpon>
     </Compile>
     <Compile Include="Presenters\PkcSelectPresenter.cs" />
+    <Compile Include="Views\PcaQcView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\PcaQcView.Designer.cs">
+      <DependentUpon>PcaQcView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\PkcAddRemoveArgs.cs" />
     <Compile Include="Views\PkcSelectBoxEventArgs.cs" />
     <Compile Include="Views\PkcSelectTabPage.cs">
@@ -157,6 +165,12 @@
     </Compile>
     <Compile Include="Views\ScatterPlotSelectArgs.cs" />
     <Compile Include="Views\SelectedPlateViewEventArgs.cs" />
+    <Compile Include="Views\SelectHKsView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\SelectHKsView.Designer.cs">
+      <DependentUpon>SelectHKsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\ViewUtils.cs" />
     <EmbeddedResource Include="Views\BinnedCountsView.resx">
       <DependentUpon>BinnedCountsView.cs</DependentUpon>
@@ -183,6 +197,9 @@
     <EmbeddedResource Include="Views\DialogsWithouMVP\ThresholdSetFormcs.resx">
       <DependentUpon>ThresholdSetFormcs.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\PcaQcView.resx">
+      <DependentUpon>PcaQcView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\PkcSelectView.resx">
       <DependentUpon>PkcSelectView.cs</DependentUpon>
     </EmbeddedResource>
@@ -197,6 +214,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\SampleVsScatterplotView.resx">
       <DependentUpon>SampleVsScatterplotView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\SelectHKsView.resx">
+      <DependentUpon>SelectHKsView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -231,6 +251,7 @@
   <ItemGroup>
     <None Include="Resources\password-lock-icon-free-vector.jpg" />
     <None Include="Resources\green-arrow.jpg" />
+    <Content Include="Resources\211751_gear_icon.png" />
     <Content Include="Resources\remove-icon-png-7116.png" />
     <Content Include="TextFile1.txt" />
   </ItemGroup>

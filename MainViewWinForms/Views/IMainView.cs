@@ -33,6 +33,7 @@ namespace MainViewWinForms
         event EventHandler<Views.RccSelectEventArgs> OpenSampleVSampleScatterDialog;
         event EventHandler<Views.RccSelectEventArgs> AssociatePkcsMenuItemClicked;
         event EventHandler<Views.RccSelectEventArgs> CountBinsMenuItemClicked;
+        event EventHandler<Views.RccSelectEventArgs> PcaOverviewMenuItemClicked;
 
         // Methods
         void ShowErrorMessage(string message, string caption);
