@@ -127,5 +127,16 @@ namespace MainViewWinForms
 
             return view;
         }
+
+        public static Views.SelectHKsView ThisSelectHKsView(List<NCounterCore.Rcc> rccs)
+        {
+            Views.SelectHKsView view = new Views.SelectHKsView();
+            int[] props = new int[] { Properties.Settings.Default.SelectHksMinCount,
+                                      Properties.Settings.Default.SelectHksMinAvgCount };
+            SelectHKsModel model = new SelectHKsModel(rccs, props);
+            _ = new Presenters.SelectHKsPresenter(view, model);
+
+            return view;
+        }
     }
 }

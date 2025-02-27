@@ -63,6 +63,7 @@
     <Compile Include="IPkcSelectModel.cs" />
     <Compile Include="IRawCountsPlateModel.cs" />
     <Compile Include="ISampleVsScatterplotModel.cs" />
+    <Compile Include="ISelectHKsModel.cs" />
     <Compile Include="LockPic.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -83,6 +84,7 @@
     <Compile Include="SampleVsScatterplotModel.cs" />
     <Compile Include="ScatterChartDto.cs" />
     <Compile Include="ScatterSelectItem.cs" />
+    <Compile Include="SelectHKsModel.cs" />
     <Compile Include="WellQcSummaryItem.cs" />
   </ItemGroup>
   <ItemGroup>

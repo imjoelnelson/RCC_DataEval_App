@@ -142,7 +142,7 @@ namespace RccAppDataModels
             double avgGeo = geomeans.Select(x => x.Item2).Average();
             // Get return value
             Dictionary<int, double> retVal = geomeans.ToDictionary(x => x.Item1, x => avgGeo / x.Item2);
-            return new Tuple<Dictionary<int, double>, List<string>>(retVal, genNorm.HousekeeperList.Where(x => x.Item2).Select(x => x.Item1).ToList());
+            return new Tuple<Dictionary<int, double>, List<string>>(retVal, genNorm.HousekeeperList.Where(x => x.Item3).Select(x => x.Item1).ToList());
         }
 
         public static Dictionary<int, double> GetTop100GeoMean(List<Rcc> rccs, object arg)

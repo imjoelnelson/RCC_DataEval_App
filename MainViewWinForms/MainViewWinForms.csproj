@@ -72,6 +72,8 @@
     <Compile Include="Presenters\RawCountsPlateViewPresenter.cs" />
     <Compile Include="Presenters\RccPropertyConfigPresenter.cs" />
     <Compile Include="Presenters\SampleVsScatterplotPresenter.cs" />
+    <Compile Include="Presenters\SelectHKsPresenter.cs" />
+    <Compile Include="Views\ISelectHKsView.cs" />
     <Compile Include="Views\BinnedCountsView.cs">
       <SubType>Form</SubType>
     </Compile>

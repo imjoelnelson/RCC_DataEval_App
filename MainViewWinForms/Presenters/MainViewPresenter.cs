@@ -42,6 +42,7 @@ namespace MainViewWinForms
             MainView.AssociatePkcsMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_AssociatedPkcsMenuItemClicked);
             MainView.CountBinsMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_CountBinsMenuItemClicked);
             MainView.PcaOverviewMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_PcaOverviewMenuItemClicked);
+            MainView.EvaluateHousekeepersMenuItemClicked += new EventHandler<Views.RccSelectEventArgs>(View_EvaluateHousekeepersMenuItemClicked);
             // Model events
             MainModel.RccListChanged += new EventHandler(Model_RccListChanged);
             MainModel.AppFolderCreationFailed += new EventHandler(Model_AppFolderFailed);
@@ -322,6 +323,13 @@ namespace MainViewWinForms
         {
             List<Rcc> rccs = MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList();
             Views.PcaQcView view = MVPFactory.ThisPcaQcView(rccs);
+            view.ShowForm();
+        }
+
+        private void View_EvaluateHousekeepersMenuItemClicked(object sender, Views.RccSelectEventArgs e)
+        {
+            List<Rcc> rccs = MainModel.Rccs.Where(x => e.IDs.Contains(x.ID)).ToList();
+            Views.SelectHKsView view = MVPFactory.ThisSelectHKsView(rccs);
             view.ShowForm();
         }
     }

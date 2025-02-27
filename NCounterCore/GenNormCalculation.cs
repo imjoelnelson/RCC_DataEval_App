@@ -11,7 +11,7 @@ namespace NCounterCore
         /// <summary>
         /// List of all included hks as Tuple of item1 = string indicating the gene name and item2 = boolean indicating whether HK is included (true) or discarded (false)
         /// </summary>
-        public Tuple<string, bool>[] HousekeeperList { get; set; }
+        public Tuple<string, double?, bool>[] HousekeeperList { get; set; }
 
         /// <summary>
         /// Array of HKs in order removed (most stable == last) as a tuple including name and Norm Factor Variation w/ vs w/o (Item3); 
@@ -104,7 +104,7 @@ namespace NCounterCore
             var min = Rank.Select(x => x.Item2).Min();
             var ind2 = Rank.Select((x, i) => x.Item2.Equals(min) ? i : -1).Max();
             // Retained == true for all HKs with an index greater than ind2 (i.e. the inflection point of the Order Removed vs. Norm Factor Variation Plot)
-            HousekeeperList = Rank.Select((x, i) => i > ind2 ? Tuple.Create(x.Item1, true) : Tuple.Create(x.Item1, false)).ToArray();
+            HousekeeperList = Rank.Select((x, i) => i > ind2 ? Tuple.Create(x.Item1, x.Item2, true) : Tuple.Create(x.Item1, x.Item2, false)).ToArray();
         }
 
         /// <summary>

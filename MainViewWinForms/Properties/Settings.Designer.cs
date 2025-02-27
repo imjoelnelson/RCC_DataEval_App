@@ -107,5 +107,41 @@ namespace MainViewWinForms.Properties {
                 this["CountThreshold"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int MinHKs {
+            get {
+                return ((int)(this["MinHKs"]));
+            }
+            set {
+                this["MinHKs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int SelectHksMinCount {
+            get {
+                return ((int)(this["SelectHksMinCount"]));
+            }
+            set {
+                this["SelectHksMinCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int SelectHksMinAvgCount {
+            get {
+                return ((int)(this["SelectHksMinAvgCount"]));
+            }
+            set {
+                this["SelectHksMinAvgCount"] = value;
+            }
+        }
     }
 }

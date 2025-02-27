@@ -110,6 +110,10 @@ namespace MainViewWinForms
         /// Triggers Presenter to launch PCA Overview Form with selected RCCs
         /// </summary>
         public event EventHandler<Views.RccSelectEventArgs> PcaOverviewMenuItemClicked;
+        /// <summary>
+        /// Triggers Presenter to launch SelectHKs form with selected RCCs
+        /// </summary>
+        public event EventHandler<Views.RccSelectEventArgs> EvaluateHousekeepersMenuItemClicked;
         #endregion
 
         public MainView()
@@ -643,7 +647,15 @@ namespace MainViewWinForms
             PcaOverviewMenuItemClicked?.Invoke(this, args);
         }
 
+        private void identifyIdealHousekeepersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var args = new Views.RccSelectEventArgs(GetSelectedRows());
+            EvaluateHousekeepersMenuItemClicked?.Invoke(this, args);
+        }
+
         #endregion
+
+        
     }
 }
 

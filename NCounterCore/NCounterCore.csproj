@@ -60,6 +60,7 @@
     <Compile Include="PkcCollector.cs" />
     <Compile Include="PkcReader.cs" />
     <Compile Include="ProbeItem.cs" />
+    <Compile Include="ProbeItemEqualityComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QcThresholds.cs" />
     <Compile Include="QueryableExtensions.cs" />

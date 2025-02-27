@@ -43,6 +43,7 @@ namespace MainViewWinForms
             this.rawCountsPlateViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sampleVsSampleCorrelationScatterplotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.geneCountBinsStackedBarChartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pCAOverviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferrenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setThresholdsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -55,7 +56,7 @@ namespace MainViewWinForms
             this.clearButton = new System.Windows.Forms.ToolStripButton();
             this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.pCAOverviewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.identifyIdealHousekeepersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -139,6 +140,7 @@ namespace MainViewWinForms
             this.rawCountsPlateViewToolStripMenuItem,
             this.sampleVsSampleCorrelationScatterplotToolStripMenuItem,
             this.geneCountBinsStackedBarChartToolStripMenuItem,
+            this.identifyIdealHousekeepersToolStripMenuItem,
             this.pCAOverviewToolStripMenuItem});
             this.dataAssessmentToolStripMenuItem.Name = "dataAssessmentToolStripMenuItem";
             this.dataAssessmentToolStripMenuItem.Size = new System.Drawing.Size(145, 38);
@@ -172,6 +174,13 @@ namespace MainViewWinForms
             this.geneCountBinsStackedBarChartToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
             this.geneCountBinsStackedBarChartToolStripMenuItem.Text = "Count Ranges Bar Chart";
             this.geneCountBinsStackedBarChartToolStripMenuItem.Click += new System.EventHandler(this.geneCountBinsStackedBarChartToolStripMenuItem_Click);
+            // 
+            // pCAOverviewToolStripMenuItem
+            // 
+            this.pCAOverviewToolStripMenuItem.Name = "pCAOverviewToolStripMenuItem";
+            this.pCAOverviewToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
+            this.pCAOverviewToolStripMenuItem.Text = "PCA Overview";
+            this.pCAOverviewToolStripMenuItem.Click += new System.EventHandler(this.pCAOverviewToolStripMenuItem_Click);
             // 
             // analysisToolStripMenuItem
             // 
@@ -283,12 +292,12 @@ namespace MainViewWinForms
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 52);
             // 
-            // pCAOverviewToolStripMenuItem
+            // identifyIdealHousekeepersToolStripMenuItem
             // 
-            this.pCAOverviewToolStripMenuItem.Name = "pCAOverviewToolStripMenuItem";
-            this.pCAOverviewToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
-            this.pCAOverviewToolStripMenuItem.Text = "PCA Overview";
-            this.pCAOverviewToolStripMenuItem.Click += new System.EventHandler(this.pCAOverviewToolStripMenuItem_Click);
+            this.identifyIdealHousekeepersToolStripMenuItem.Name = "identifyIdealHousekeepersToolStripMenuItem";
+            this.identifyIdealHousekeepersToolStripMenuItem.Size = new System.Drawing.Size(580, 44);
+            this.identifyIdealHousekeepersToolStripMenuItem.Text = "Evaluate Housekeepers";
+            this.identifyIdealHousekeepersToolStripMenuItem.Click += new System.EventHandler(this.identifyIdealHousekeepersToolStripMenuItem_Click);
             // 
             // MainView
             // 
@@ -339,5 +348,6 @@ namespace MainViewWinForms
         private System.Windows.Forms.ToolStripMenuItem geneCountBinsStackedBarChartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem analysisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pCAOverviewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem identifyIdealHousekeepersToolStripMenuItem;
     }
 }
