@@ -154,11 +154,6 @@ namespace MainViewWinForms
 
         private void View_SortingColumns(object sender, EventArgs e)
         {
-            foreach(KeyValuePair<string, bool> t in MainView.SortList)
-            {
-                Console.WriteLine($"{t.Key},{t.Value.ToString()}");
-            }
-            Console.Write("\r\n\r\n");
             MainModel.SortTable(MainView.SortList);
             MainView.DgvSourceChanged(MainModel.Rccs.Count);
         }
@@ -219,7 +214,7 @@ namespace MainViewWinForms
 
         private void View_BuildRawCountsTable(object sender, Views.RccSelectEventArgs e)
         {
-            if(MainView.SelectedRlfTypes.Contains(RlfType.DSP) || MainView.SelectedRlfTypes.Contains(RlfType.PlexSet))
+            if(MainView.SelectedRlfTypes.Contains("Dsp") || MainView.SelectedRlfTypes.Contains("PlexSet"))
             {
                 if(MainView.SelectedRlfTypes.Count > 1)
                 {
@@ -250,24 +245,24 @@ namespace MainViewWinForms
 
         private void View_RccSelectionChanged(object sender, Views.RccSelectEventArgs e)
         {
-            List<RlfType> rlfTypes = MainModel.GetRlfTypes(e.IDs);
+            List<string> rlfTypes = MainModel.GetRlfTypes(e.IDs);
             MainView.UpdateTypesPresent(rlfTypes);
         }
 
         private void View_BuildPlateViewTable(object sender, Views.RccSelectEventArgs e)
         {
             // Check if selected 
-            if ((MainView.SelectedRlfTypes.Contains(RlfType.DSP) || MainView.SelectedRlfTypes.Contains(RlfType.PlexSet)) 
+            if ((MainView.SelectedRlfTypes.Contains("Dsp") || MainView.SelectedRlfTypes.Contains("PlexSet")) 
                 && MainView.SelectedRlfTypes.Count > 1)
             {
-                if(MainView.SelectedRlfTypes.Contains(RlfType.DSP) && MainView.SelectedRlfTypes.Contains(RlfType.PlexSet))
+                if(MainView.SelectedRlfTypes.Contains("Dsp") && MainView.SelectedRlfTypes.Contains("PlexSet"))
                 {
                     string message = "The selected RCCs are from both DSP and PlexSet RLFs which cannot be displayed in the same figure. Select RCCs from one or the other RLF and then try again.";
                     string caption = "Incompatible RLFs";
                     MainView.ShowErrorMessage(message, caption);
                     return;
                 }
-                if(MainView.SelectedRlfTypes.Any(x => x != RlfType.DSP && x != RlfType.PlexSet))
+                if(MainView.SelectedRlfTypes.Any(x => x != "Dsp" && x != "PlexSet"))
                 {
                     string message = "Only Sample multiplexed RCCs (DSP readout and PlexSet) can be displayed in PlateView. Selected RCCs which are not sample multiplexed will be excluded in the figure.";
                     string caption = "Non-Sample-Multiplexed RCCs Detected";

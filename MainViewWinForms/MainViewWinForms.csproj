@@ -68,11 +68,19 @@
     <Compile Include="DgvFromProperties.cs" />
     <Compile Include="FilesLoadingEventArgs.cs" />
     <Compile Include="Presenters\BinnedCountsPresenter.cs" />
+    <Compile Include="Presenters\GeNormPreFilterSettingsPresenter.cs" />
     <Compile Include="Presenters\PcaQcPresenter.cs" />
     <Compile Include="Presenters\RawCountsPlateViewPresenter.cs" />
     <Compile Include="Presenters\RccPropertyConfigPresenter.cs" />
     <Compile Include="Presenters\SampleVsScatterplotPresenter.cs" />
     <Compile Include="Presenters\SelectHKsPresenter.cs" />
+    <Compile Include="Views\GeNormPreFilterSettingsView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\GeNormPreFilterSettingsView.Designer.cs">
+      <DependentUpon>GeNormPreFilterSettingsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\IGenormPreFilterSettingsView.cs" />
     <Compile Include="Views\ISelectHKsView.cs" />
     <Compile Include="Views\BinnedCountsView.cs">
       <SubType>Form</SubType>
@@ -176,6 +184,9 @@
     <Compile Include="Views\ViewUtils.cs" />
     <EmbeddedResource Include="Views\BinnedCountsView.resx">
       <DependentUpon>BinnedCountsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\GeNormPreFilterSettingsView.resx">
+      <DependentUpon>GeNormPreFilterSettingsView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>

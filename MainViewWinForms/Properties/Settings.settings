@@ -26,11 +26,17 @@
     <Setting Name="MinHKs" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
-    <Setting Name="SelectHksMinCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">20</Value>
+    <Setting Name="GeNormPreFilterCountThreshold" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">25</Value>
     </Setting>
-    <Setting Name="SelectHksMinAvgCount" Type="System.Int32" Scope="User">
+    <Setting Name="GeNormPreFilterAvgCountThreshold" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="GeNormPreFilterUseCountThreshold" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="GeNormPreFilterUseAvgCountThreshold" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>

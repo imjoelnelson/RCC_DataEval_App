@@ -40,4 +40,8 @@ namespace MessageCenter
     {
         public TranslatorSendMessage(object sender, Tuple<string, string, Dictionary<string, NCounterCore.ProbeItem>> content) : base(sender, content) { }
     }
+    public class GeNormPreFilterSettingsClosedMessage : ITinyMessage
+    {
+        public object Sender { get; private set; }
+    }
 }

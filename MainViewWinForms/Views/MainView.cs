@@ -33,7 +33,7 @@ namespace MainViewWinForms
         /// <summary>
         /// List of RlfTypes among selected RCCs
         /// </summary>
-        public List<RlfType> SelectedRlfTypes { get; set; }
+        public List<string> SelectedRlfTypes { get; set; }
         /// <summary>
         /// Main display control for this form
         /// </summary>
@@ -147,7 +147,7 @@ namespace MainViewWinForms
             Dgv.BackgroundColor = SystemColors.Window;
             Dgv.DataSource = source;
             Dgv.ScrollBars = ScrollBars.None;
-            Dgv.EditMode = DataGridViewEditMode.EditProgrammatically;
+            Dgv.EditMode = DataGridViewEditMode.EditOnEnter;
             Dgv.Click += new EventHandler(Dgv_Click);
             Dgv.SelectionChanged += new EventHandler(Dgv_SelectionChanged);
 
@@ -287,18 +287,24 @@ namespace MainViewWinForms
         /// <param name="sortList">Dictionary indicating columns selected and bool for whether ascending</param>
         public void DgvSortGlyphHandling(Dictionary<string, bool> sortList)
         {
+            List<string> colNames = new List<string>(sortList.Count);
             // Clear previous sort glyphs
             foreach(DataGridViewColumn col in Dgv.Columns)
             {
                 col.HeaderCell.SortGlyphDirection = SortOrder.None;
+                colNames.Add(col.Name);
             }
+
             // Add sorty glyph for each column being sorted on
-            foreach(KeyValuePair<string, bool> p in sortList)
+            foreach (KeyValuePair<string, bool> p in sortList)
             {
-                Dgv.Columns[p.Key].HeaderCell.SortGlyphDirection = p.Value ? SortOrder.Ascending : SortOrder.Descending;
+                if(colNames.Contains(p.Key))
+                {
+                    Dgv.Columns[p.Key].HeaderCell.SortGlyphDirection = p.Value ? SortOrder.Ascending : SortOrder.Descending;
+                }
             }
         }
-
+        
         /// <summary>
         /// Only needed if app has to close due to app folder not being able to be created
         /// </summary>
@@ -361,10 +367,10 @@ namespace MainViewWinForms
         /// Sets eval and analysis options available based on types present in selected RCCs
         /// </summary>
         /// <param name="types">The list of types present in the RCCs selected in the main Dgv</param>
-        public void UpdateTypesPresent(List<RlfType> types)
+        public void UpdateTypesPresent(List<string> types)
         {
             SelectedRlfTypes = types;
-            if(types.Contains(RlfType.DSP) || types.Contains(RlfType.PlexSet))
+            if(types.Contains("Dsp") || types.Contains("PlexSet"))
             {
                 rawCountsPlateViewToolStripMenuItem.Enabled = true;
             }
@@ -387,7 +393,7 @@ namespace MainViewWinForms
                 selectedIDs = new List<int>(selectedRows.Count);
                 for (int i = 0; i < selectedRows.Count; i++)
                 {
-                    var temp = (Rcc)Dgv.Rows[selectedRows[i]].DataBoundItem;
+                    var temp = (NCounterCore.Rcc)Dgv.Rows[selectedRows[i]].DataBoundItem;
                     selectedIDs.Add(temp.ID);
                 }
             }
@@ -396,7 +402,7 @@ namespace MainViewWinForms
                 selectedIDs = new List<int>(Dgv.Rows.Count);
                 for (int i = 0; i < Dgv.Rows.Count; i++)
                 {
-                    var temp = (Rcc)Dgv.Rows[i].DataBoundItem;
+                    var temp = (NCounterCore.Rcc)Dgv.Rows[i].DataBoundItem;
                 }
             }
             return selectedIDs;
@@ -654,8 +660,6 @@ namespace MainViewWinForms
         }
 
         #endregion
-
-        
     }
 }
 

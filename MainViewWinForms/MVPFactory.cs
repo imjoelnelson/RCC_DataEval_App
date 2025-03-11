@@ -131,10 +131,18 @@ namespace MainViewWinForms
         public static Views.SelectHKsView ThisSelectHKsView(List<NCounterCore.Rcc> rccs)
         {
             Views.SelectHKsView view = new Views.SelectHKsView();
-            int[] props = new int[] { Properties.Settings.Default.SelectHksMinCount,
-                                      Properties.Settings.Default.SelectHksMinAvgCount };
-            SelectHKsModel model = new SelectHKsModel(rccs, props);
+            int[] props = new int[] { Properties.Settings.Default.GeNormPreFilterCountThreshold,
+                                      Properties.Settings.Default.GeNormPreFilterAvgCountThreshold };
+            SelectHKsModel model = new SelectHKsModel(rccs);
             _ = new Presenters.SelectHKsPresenter(view, model);
+
+            return view;
+        }
+
+        public static Views.GeNormPreFilterSettingsView ThisGeNormPreFilterSettingsView()
+        {
+            Views.GeNormPreFilterSettingsView view = new Views.GeNormPreFilterSettingsView();
+            _ = new Presenters.GeNormPreFilterSettingsPresenter(view);
 
             return view;
         }

@@ -15,7 +15,7 @@ namespace MainViewWinForms
         MainViewPresenter Presenter { get; set; }
         List<string> SelectedProperties { get; set; }
         Dictionary<string, bool> SortList { get; set; }
-        List<RlfType> SelectedRlfTypes { get; set; }
+        List<string> SelectedRlfTypes { get; set; }
 
         // Events
         event EventHandler FilesLoading;
@@ -45,6 +45,6 @@ namespace MainViewWinForms
         void ShowSelectColumnsDialog(List<Tuple<string, string>> columns, List<string> selectedProperties);
         void FormClose();
         void SaveTable(string[][] tableLines);
-        void UpdateTypesPresent(List<RlfType> types);
+        void UpdateTypesPresent(List<string> types);
     }
 }

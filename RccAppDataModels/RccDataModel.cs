@@ -227,6 +227,7 @@ namespace RccAppDataModels
         /// <param name="sortList">Provides columns to be sorted on as well as indication of whether ascending or descending</param>
         public void SortTable(Dictionary<string, bool> sortList)
         {
+            string log = "C:\\Users\\Joel Nelson\\Desktop\\TS_LOG.txt";
             // Convert sort list to ISort collection to be used in sorting method
             Dictionary<string, ISort> columnsToSortOn = new Dictionary<string, ISort>(4);
             int i = 0;
@@ -480,12 +481,13 @@ namespace RccAppDataModels
         /// </summary>
         /// <param name="ids">int IDs of the selected RCCs</param>
         /// <returns>Collection of RlfTypes represented in the selected RCCs</returns>
-        public List<RlfType> GetRlfTypes(List<int> ids)
+        public List<string> GetRlfTypes(List<int> ids)
         {
             if (ids == null) return null;
             return Rccs.Where(x => ids.Contains(x.ID))
                        .Select(x => x.ThisRLF.ThisType)
                        .Distinct()
+                       .Select(y => y.ToString())
                        .ToList();
         }
     }

@@ -8,7 +8,10 @@ namespace MainViewWinForms.Views
 {
     public interface ISelectHKsView
     {
-        void UpdateChart(Tuple<double?, bool>[] input);
+        event EventHandler SettingsButtonClicked;
+        Tuple<string, bool> ErrorMessage { get; set; }
+        void UpdateChart(Tuple<string, double?, bool>[] input);
         void ShowForm();
+        void CloseForm();
     }
 }

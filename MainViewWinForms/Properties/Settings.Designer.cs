@@ -122,25 +122,49 @@ namespace MainViewWinForms.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int SelectHksMinCount {
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int GeNormPreFilterCountThreshold {
             get {
-                return ((int)(this["SelectHksMinCount"]));
+                return ((int)(this["GeNormPreFilterCountThreshold"]));
             }
             set {
-                this["SelectHksMinCount"] = value;
+                this["GeNormPreFilterCountThreshold"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public int SelectHksMinAvgCount {
+        public int GeNormPreFilterAvgCountThreshold {
             get {
-                return ((int)(this["SelectHksMinAvgCount"]));
+                return ((int)(this["GeNormPreFilterAvgCountThreshold"]));
             }
             set {
-                this["SelectHksMinAvgCount"] = value;
+                this["GeNormPreFilterAvgCountThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GeNormPreFilterUseCountThreshold {
+            get {
+                return ((bool)(this["GeNormPreFilterUseCountThreshold"]));
+            }
+            set {
+                this["GeNormPreFilterUseCountThreshold"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GeNormPreFilterUseAvgCountThreshold {
+            get {
+                return ((bool)(this["GeNormPreFilterUseAvgCountThreshold"]));
+            }
+            set {
+                this["GeNormPreFilterUseAvgCountThreshold"] = value;
             }
         }
     }
