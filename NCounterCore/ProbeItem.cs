@@ -10,6 +10,7 @@ namespace NCounterCore
     {
         public string ParsingErrorMessage { get; private set; }
         public RlfType ThisType { get; private set; }
+        public int ProbeMainKeyId { get; set; }
 
         // ********  Properties from RLF  *********
         /// <summary>
@@ -139,6 +140,37 @@ namespace NCounterCore
             Barcode = bits[2];
             Sequence = bits[1];
             Accession = bits[6];
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(this == null || obj == null)
+            {
+                return false;
+            }
+            if(obj.GetType() != typeof(ProbeItem))
+            {
+                return false;
+            }
+            if(ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            ProbeItem probe2 = (ProbeItem)obj;
+            if(this.ProbeID != null && probe2.ProbeID != null)
+            {
+                return this.ProbeID == probe2.ProbeID;
+            }
+            else
+            {
+                return this.TargetName == probe2.TargetName;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ProbeID != null ? Enumerable.Range(0, this.ProbeID.Length).Select(x => char.ConvertToUtf32(this.ProbeID, x)).Sum()
+                                        : Enumerable.Range(0, this.TargetName.Length).Select(x => char.ConvertToUtf32(this.TargetName, x)).Sum();
         }
 
         /// <summary>

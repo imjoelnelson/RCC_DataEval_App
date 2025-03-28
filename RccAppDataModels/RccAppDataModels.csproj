@@ -69,6 +69,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LockPic.resx</DependentUpon>
     </Compile>
+    <Compile Include="MainModel.cs" />
     <Compile Include="ModelPkcAddRemoveArgs.cs" />
     <Compile Include="ModelPkcSelectBoxArgs.cs" />
     <Compile Include="NormalizationGroup.cs" />

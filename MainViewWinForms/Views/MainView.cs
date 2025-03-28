@@ -1,4 +1,4 @@
-﻿using NCounterCore;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -179,6 +179,13 @@ namespace MainViewWinForms
                 }
             }
 
+            // Add invisible ID column
+            DataGridViewTextBoxColumn idCol = new DataGridViewTextBoxColumn();
+            idCol.Name = "id";
+            idCol.DataPropertyName = "ID";
+            idCol.Visible = false;
+            Dgv.Columns.Add(idCol);
+
             Dgv.Visible = false; // Keep hidden until Rccs loaded
             SetDgvWidth(Dgv.Columns);
             panel1.Controls.Add(Dgv);
@@ -203,9 +210,9 @@ namespace MainViewWinForms
         /// Collects thresholds from settings either on constructing the form or when ThresholdSet dialog is closed
         /// </summary>
         /// <returns></returns>
-        public QcThresholds CollectThresholds() // Too much connection with Model here; need to make more generic
+        public NCounterCore.QcThresholds CollectThresholds() // Too much connection with Model here; need to make more generic
         {
-            QcThresholds retVal = new QcThresholds();
+            NCounterCore.QcThresholds retVal = new NCounterCore.QcThresholds();
             retVal.ImagingThreshold = Properties.Settings.Default.ImagingThreshold;
             retVal.SprintDensityThreshold = Properties.Settings.Default.SprintDensityThreshold;
             retVal.DaDensityThreshold = Properties.Settings.Default.DaDensityThreshold;
@@ -359,7 +366,7 @@ namespace MainViewWinForms
                     }
                 }
 
-                Util.OpenFileAfterSaved(path, 5000);
+                Views.ViewUtils.OpenFileAfterSaved(path, 5000);
             }
         }
 
@@ -387,23 +394,10 @@ namespace MainViewWinForms
         private List<int> GetSelectedRows()
         {
             var selectedRows = Dgv.SelectedCells.Cast<DataGridViewCell>().Select(x => x.RowIndex).ToList();
-            List<int> selectedIDs;
-            if(selectedRows.Count > 0)
+            List<int> selectedIDs = new List<int>(selectedRows.Count);
+            for (int i = 0; i < selectedRows.Count; i++)
             {
-                selectedIDs = new List<int>(selectedRows.Count);
-                for (int i = 0; i < selectedRows.Count; i++)
-                {
-                    var temp = (NCounterCore.Rcc)Dgv.Rows[selectedRows[i]].DataBoundItem;
-                    selectedIDs.Add(temp.ID);
-                }
-            }
-            else
-            {
-                selectedIDs = new List<int>(Dgv.Rows.Count);
-                for (int i = 0; i < Dgv.Rows.Count; i++)
-                {
-                    var temp = (NCounterCore.Rcc)Dgv.Rows[i].DataBoundItem;
-                }
+                selectedIDs.Add((int)Dgv.Rows[i].Cells["ID"].Value);
             }
             return selectedIDs;
         }

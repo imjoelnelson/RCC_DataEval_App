@@ -17,9 +17,13 @@ namespace RccAppDataModels
         /// </summary>
         public List<Rcc> Rccs { get; set; }
         /// <summary>
-        /// List containing norm counts for each gene in each sample in the dataset; Item1 = SampleID, Item2 = GeneID, Item3 = norm count
+        /// Dictionary for translating between int probeID and the probe object
         /// </summary>
-        public List<Tuple<string, int, double>> NormTable { get; set; }
+        public Dictionary<int, ProbeItem> ProbeList { get; set; }
+        /// <summary>
+        /// List containing norm counts for each gene in each sample in the dataset; Item1 = GeneID, Item2 = SampleID, Item3 = norm count
+        /// </summary>
+        public List<NormDataItem> NormTable { get; set; }
         /// <summary>
         /// List containing norm factors for each sample; item1 = sampleID, item2 = normFactor
         /// </summary>
@@ -32,6 +36,19 @@ namespace RccAppDataModels
         /// The name of the norm method used
         /// </summary>
         public string Method { get; set; }
+        /// <summary>
+        /// Indicates object had an error/handled exception requiring it to close
+        /// </summary>
+        public bool ErrorState { get; set; }
+        /// <summary>
+        /// Message if object had an error/handled exception occur
+        /// </summary>
+        public string ErrorMessage { get; set; }
+
+        /// <summary>
+        /// Indicates whether user should be prompted to identify RCCs that should be used for calibrating overlapping probes in cross-codeset analysis
+        /// </summary>
+        private bool PromptForCalibration { get; set; }
 
         /// <summary>
         /// List of norm methods available for generating normalization factors
@@ -52,11 +69,67 @@ namespace RccAppDataModels
         /// <summary>
         /// Default constructor for norm groups
         /// </summary>
-        /// <param name="rccs">List of RCCs representing the samp-.les to be normalized; Rcc.ID used in Item1 field of NormTable</param>
+        /// <param name="rccs">List of RCCs representing the samples to be normalized; Rcc.ID used in Item2 field of NormTable</param>
         /// <param name="probeNames">List of probes included, called out here instead of in RCC.ThisRlf in case data is from cross-codeset</param>
-        public NormalizationGroup(List<Rcc> rccs, List<string> probeNames, string method)
+        public NormalizationGroup(List<Rcc> rccs, List<string> probes, string method)
         {
             Rccs = rccs;
+            List<Rlf> rlfs = Rccs.Select(x => x.ThisRLF).Distinct().ToList();
+            if(rlfs.Count < 1) { throw new Exception("Normalization Error: No RLF object detected for selected RCCs"); }
+            if(rlfs.Count > 1)
+            {
+                // Logic to see if RLF files loaded
+                if(rlfs.All(x => x.FromRlfFile))
+                {
+                    PromptForCalibration = true;
+                }
+                else
+                {
+                    PromptForCalibration = false;
+                    ErrorState = true;
+                    ErrorMessage = $"Selected RCCs included multiple RLFs however one or more of these RLFs were not loaded and thus there is insufficient information to merge the data from these codesets. Please load RLF files for {string.Join(", ", rlfs.Where(x => !x.FromRlfFile).Select(x => x.Name))} and try again.";
+                    return;
+                }
+            }
+            else
+            {
+                PromptForCalibration = false;
+            }
+
+            ProbeList = new Dictionary<int, ProbeItem>();
+
+            // Fill probe list; if PromptForCalibration, check if probe has already been added (for probes that occur in both RLFs)
+            if (PromptForCalibration)
+            {
+                HashSet<string> probeNamesAdded = new HashSet<string>(rlfs.SelectMany(x => x.Probes).Count());
+                for(int j = 0; j < rlfs.Count; j++)
+                {
+                    List<string> keys = rlfs[j].Probes.Select(x => x.Key).ToList();
+                    for (int i = 0; i < keys.Count; i++)
+                    {
+                        if (!probeNamesAdded.Contains(keys[i]))
+                        {
+                            // Check probeID
+                            ProbeItem probe1 = ProbeList.Where(x => x.Value.TargetName.Equals(keys[i])).Select(x => x.Value).First();
+                            ProbeItem probe2 = rlfs[j].Probes[keys[i]];
+                            if(probe1.ProbeID != probe2.ProbeID)
+                            {
+                                ProbeList.Add(i, rlfs[j].Probes[keys[i]]);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                List<string> keys = rlfs[0].Probes.Select(x => x.Key).ToList();
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    ProbeList.Add(i, rlfs[0].Probes[keys[i]]);
+                }
+            }
+
+            // Set the method for normalization
             NormMethod normMethod = NormMethods.Where(x => x.Item1 == method).Select(x => x.Item2).FirstOrDefault();
             if(normMethod == null)
             {
@@ -66,17 +139,27 @@ namespace RccAppDataModels
                 return;
             }
             Method = method;
-            var normResults = normMethod(rccs, probeNames);
+
+            // Get norm factors and probes used for normalization
+            var normResults = normMethod(rccs, probes);
             NormFactors = normResults.Item1;
             RefGenesUsed = normResults.Item2;
-            NormTable = new List<Tuple<string, int, double>>(probeNames.Count * rccs.Count);
-            for(int i = 0; i < rccs.Count; i++)
+
+            // Get normalized count items (properties = sampleID, probeID, normalized count, raw count)
+            NormTable = new List<NormDataItem>(probes.Count * rccs.Count);
+            for(int i = 0; i < rlfs.Count; i++)
             {
-                for(int j = 0; j < probeNames.Count; j++)
+                List<Rcc> tempRccs = rccs.Where(x => x.RlfName == rlfs[i].Name).ToList();
+                for(int j = 0; j < tempRccs.Count; j++)
                 {
-                    NormTable.Add(new Tuple<string, int, double>(probeNames[j],
-                                                                 rccs[i].ID,
-                                                                 rccs[i].ProbeCounts[probeNames[j]] * NormFactors[rccs[i].ID]));
+                    int sampID = tempRccs[i].ID;
+                    foreach(KeyValuePair<string, int> count in tempRccs[i].ProbeCounts)
+                    {
+                        int probeID = rlfs[i].Probes.Where(x => x.Value.TargetName == count.Key)
+                                                    .Select(x => x.Value.ProbeMainKeyId)
+                                                    .First();
+                        NormTable.Add(new NormDataItem(sampID, probeID, count.Value * NormFactors[sampID], (double)count.Value));
+                    }
                 }
             }
         }

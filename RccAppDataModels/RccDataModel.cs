@@ -24,7 +24,8 @@ namespace RccAppDataModels
         public event EventHandler RccListChanged;
         public event EventHandler AppFolderCreationFailed;
         public event EventHandler DspRccsLoaded;
-
+        
+        
         public RccDataModel()
         {
             Rccs = new BindingList<Rcc>();

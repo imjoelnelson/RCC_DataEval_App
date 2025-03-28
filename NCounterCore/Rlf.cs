@@ -90,7 +90,7 @@ namespace NCounterCore
         /// <summary>
         /// Constructor for RLF when DSP RLF or RCC loaded
         /// </summary>
-        /// <param name="readers"></param>
+        /// <param name="fromFile">For overloading constructor only</param>
         public Rlf(bool fromFile)
         {
             Name = "DSP_v1.0";
@@ -98,6 +98,33 @@ namespace NCounterCore
             FromRlfFile = fromFile;
         }
 
+        /// <summary>
+        /// Override for the default equality comparer
+        /// </summary>
+        /// <param name="obj">The object to compare 'this' to</param>
+        /// <returns>bool indicating if this and obj are RLFs that are equal</returns>
+        public override bool Equals(object obj)
+        {
+            if (this == null || obj == null)
+            {
+                return false;
+            }
+            if (obj.GetType() != typeof(Rlf))
+            {
+                return false;
+            }
+            if(ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            var rlf2 = (Rlf)obj;
+            return this.Name == rlf2.Name && this.Probes.Count == rlf2.Probes.Count;
+        }
+
+        public override int GetHashCode()
+        {
+            return Enumerable.Range(0, this.Name.Length).Select(x => char.ConvertToUtf32(this.Name, x)).Sum() + this.Probes.Count;
+        }
 
         /// <summary>
         /// Gets the assay type to determine how to process the data
@@ -179,7 +206,7 @@ namespace NCounterCore
         }
 
         /// <summary>
-        /// Gets ProbeItems from the content rowss of the RLF file
+        /// Gets ProbeItems from the content rows of the RLF file
         /// </summary>
         /// <param name="lines">Content rows from the RLF file</param>
         /// <param name="translator">Dictionary translating codeclass key to codeclass name</param>
@@ -248,6 +275,15 @@ namespace NCounterCore
         {
             Name = name;
             Probes = translator;
+        }
+
+        public void SetProbeMainKeyIds(int start)
+        {
+            foreach(KeyValuePair<string, ProbeItem> p in Probes)
+            {
+                p.Value.ProbeMainKeyId = start;
+                start++;
+            }
         }
     }
 }

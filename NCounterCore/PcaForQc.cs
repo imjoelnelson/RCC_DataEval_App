@@ -17,7 +17,7 @@ namespace NCounterCore
         public double[] EigenVals { get; set; }
         public double[][] EigenVects { get; set; }
         
-        public PcaForQc(Tuple<string, int, double>[] normalizedData, List<Rcc> rccs)
+        public PcaForQc(Tuple<int, int, double>[] normalizedData, List<Rcc> rccs)
         {
             // Convert NormData to a data matrix; rows = samples, columns = targets
             int[] sampleIDs;
@@ -52,7 +52,7 @@ namespace NCounterCore
         /// <param name="sampleIDs">The sampleID row names of the new matrix</param>
         /// <param name="geneNames">The target name column </param>
         /// <returns>A double[][] of normalized counts with rows being samples and columns being targets/genes</returns>
-        private double[][] GetMatrix(Tuple<string, int, double>[] normalizedData, out int[] sampleIDs, out string[] geneNames)
+        private double[][] GetMatrix(Tuple<int, int, double>[] normalizedData, out int[] sampleIDs, out string[] geneNames)
         {
             // Convert NormData to a data matrix; rows = samples, columns = targets; each row ordered by gene names
             int[] _sampleIDs = normalizedData.Select(x => x.Item2).Distinct().ToArray();

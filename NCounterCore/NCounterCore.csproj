@@ -56,17 +56,22 @@
   <ItemGroup>
     <Compile Include="GenNormCalculation.cs" />
     <Compile Include="IPkcReader.cs" />
+    <Compile Include="IProbeInfo.cs" />
+    <Compile Include="ISampleData.cs" />
+    <Compile Include="NormDataItem.cs" />
     <Compile Include="PcaForQc.cs" />
     <Compile Include="PkcCollector.cs" />
     <Compile Include="PkcReader.cs" />
+    <Compile Include="ProbeCountItem.cs" />
     <Compile Include="ProbeItem.cs" />
-    <Compile Include="ProbeItemEqualityComparer.cs" />
+    <Compile Include="ProbeItem2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QcThresholds.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Rcc.cs" />
+    <Compile Include="RccItem.cs" />
     <Compile Include="Rlf.cs" />
-    <Compile Include="RlfEqualityComparer.cs" />
+    <Compile Include="RlfItem.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
