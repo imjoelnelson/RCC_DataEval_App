@@ -48,7 +48,7 @@ namespace NCounterCore
         /// <summary>
         /// Creates a matrix from collection of normalized data tuples
         /// </summary>
-        /// <param name="normalizedData">List of tuples containing normalized data; item1 = target name, item2 = sampleID, item3 = normalizzed count</param>
+        /// <param name="normalizedData">List of tuples containing normalized data; item1 = probeitem primarykey, item2 = sampleID, item3 = normalizzed count</param>
         /// <param name="sampleIDs">The sampleID row names of the new matrix</param>
         /// <param name="geneNames">The target name column </param>
         /// <returns>A double[][] of normalized counts with rows being samples and columns being targets/genes</returns>
@@ -56,7 +56,7 @@ namespace NCounterCore
         {
             // Convert NormData to a data matrix; rows = samples, columns = targets; each row ordered by gene names
             int[] _sampleIDs = normalizedData.Select(x => x.Item2).Distinct().ToArray();
-            IEnumerable<string> _geneNames = normalizedData.Select(x => x.Item1).Distinct();
+            IEnumerable<int> _geneNames = normalizedData.Select(x => x.Item1).Distinct();
 
             double[][] retVal = new double[_sampleIDs.Length][];
             for (int i = 0; i < _sampleIDs.Length; i++)
@@ -70,7 +70,7 @@ namespace NCounterCore
 
             // 
             sampleIDs = _sampleIDs;
-            geneNames = _geneNames.OrderBy(x => x).ToArray();
+            geneNames = _geneNames.OrderBy(x => x).ToArray(); // Need to translate from primarykey to target name here
 
             return retVal;
         }

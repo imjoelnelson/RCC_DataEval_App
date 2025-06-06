@@ -1,0 +1,88 @@
+﻿Operations that would require updating the database
+	- Loading new RCCs (would need to create at least entries in RCC table and ProbeCount table, plus possibly RLF and Probe tables)
+	- Loading new RLFs
+	- Loading new PKCs
+
+	- Need to create an "analysis object" that allows saving of analysis configurations and results
+		- Save procedures and options selected, HKs selected, etc.
+		- Save normalization results or results of other transformations (maybe have a more generic dataset object rather than norm object for
+		  other transformations?)
+		- Save visualizations or parameters for recreating visualizations? Or both?
+
+Reading operations
+	- Reading RCCs into RCC table on program start
+	- Readding RLF names into RLF table
+		- Reading RLF probe info into probes when RCCs including the RLF are selected and a procedure run
+	- Reading PKC names info PKC table
+		- Reading PKC probe info into ProbeData items when RCCs including the PKC are selected.
+
+
+Defining columns of object tables:
+
+	Rcc -
+		ID - (primary key)
+		Filename - String (x char length) - filename w/o extension 
+		IsSprint - Boolean (is from a Sprint instrument?)
+		
+		SampleName - String (x char length) - sample name
+		Owner - String (x char length) - data owner
+		Comments - String (256 char length) - user entered comments
+		Rlf - int - foreign key for the associated RLF from RLF table
+		Date - string (8 char length) - by default should be date in yyyyMMdd format; can be edited by user if they use a ctf
+		
+		LaneID - int (1-12)
+		FovCount - int (0-555)
+		FovCounted - int (0-555)
+		Instrument - string (9 char)
+		StagePosition - string or char (1 char)
+		BindingDensity - double (0-9; Can round to hundredths place for storage)
+		CartridgeID - String (x char)
+		CartridgeBarcode - String (20 char or less)
+
+		<MOVE CODE SUMMARY SECTION INTO RAW COUNTS TABLE (3 columns, 1 - sampleID, 2 - probeID, 3 - raw count)>
+
+		PctFovCounted - double (0-1 rounded to 2 decimal places)
+		PctFovPass - boolean
+		BindingDensityPass - boolean
+		PosLinearity - double (0-1; two decimal places)
+		PosLinearityPass - boolean
+		Lod - double (0-999)
+		LodPass - boolean
+		PctAboveThresh - double (0-100)
+
+		GeoMeanOfPos - double (0-99999)
+
+
+	Probe -
+		PrimaryKey - int
+		RlfId - int (foreign key to Rlf table)
+		ThisType - int (relates to an enum via dictionary)
+		ProbeID - string (x char)
+		TargetName - string (x char)
+		Barcode - string (6 char)
+		Sequence - string (up to 256 char)
+		CodeClass - string (20 char or less)
+		Accession - string (50 char or less)
+		CorrectionCoefficient - double
+		PlexRow - int (0-7)
+
+
+	ProbeCount - 
+		PrimaryKey - int
+		SampleKey - int (foreign key to Rcc table)
+		ProbeKey - int (foregin key to Probe table)
+		Count - int (raw count)
+
+
+	Rlf - 
+		ID (primary key)
+		Name - string (x char)
+		ThisType - int (relates to an enum via dictionary)
+		CodeClasses - string (delimiter separated list)
+		FromRlfFile - boolean (indicator if RLF has been loaded)
+
+
+	Pkc - 
+		
+
+		

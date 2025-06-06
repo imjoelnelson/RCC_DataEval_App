@@ -50,7 +50,7 @@ namespace NCounterCore
         /// </summary>
         public bool RlfImported { get; private set; }
         /// <summary>
-        /// Filename without .RCC extension; If not altered should have format: yyyyMMdd_[CartridgeID]_[SampleID]_[LaneID]
+        /// Filename without .RCC extension; If not altered should have format: ~\yyyyMMdd_[CartridgeID]_[SampleID]_[LaneID]
         /// </summary>
         public string FileName
         {
@@ -491,7 +491,7 @@ namespace NCounterCore
         #endregion
 
         /// <summary>
-        /// CONSTRUCTOR for all RCCs
+        /// CONSTRUCTOR for Rccs from file
         /// </summary>
         /// <param name="filePath">Path to the RCC file</param>
         /// <param name="rlfs">List of already loaded RLFs in the Model being loaded into</param>
@@ -744,7 +744,6 @@ namespace NCounterCore
             }
             else if (type == RlfType.DSP)
             {
-                var test0 = this.FileName;
                 for (int i = 0; i < lines.Count; i++)
                 {
                     string[] bits = lines[i].Split(',');

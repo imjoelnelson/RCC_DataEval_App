@@ -156,7 +156,7 @@ namespace RccAppDataModels
                     foreach(KeyValuePair<string, int> count in tempRccs[i].ProbeCounts)
                     {
                         int probeID = rlfs[i].Probes.Where(x => x.Value.TargetName == count.Key)
-                                                    .Select(x => x.Value.ProbeMainKeyId)
+                                                    .Select(x => x.Value.PrimaryKey)
                                                     .First();
                         NormTable.Add(new NormDataItem(sampID, probeID, count.Value * NormFactors[sampID], (double)count.Value));
                     }

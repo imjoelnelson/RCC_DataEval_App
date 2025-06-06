@@ -10,39 +10,45 @@ namespace NCounterCore
     {
         public string ParsingErrorMessage { get; private set; }
         public RlfType ThisType { get; private set; }
-        public int ProbeMainKeyId { get; set; }
+        public int PrimaryKey { get; set; }
 
         // ********  Properties from RLF  *********
         /// <summary>
-        /// Primary key for probes if RLF loaded; otherwise name is primary key
+        /// Unique name for probes if RLF loaded; otherwise TargetName holds unique name info; Importantly, between codesets TargetName is not unique which is why multiRLF requires RLFs to be loaded to obtain ProbeID
         /// </summary>
         public string ProbeID { get; set; }
+        /// <summary>
+        /// The Nanostring optical barcode for the probe (6 fluorescent spots where each spot can be red (R), blue (B), green (G), or Yellow (Y)
+        /// </summary>
         public string Barcode { get; private set; }
+        /// <summary>
+        /// The nucleotide sequence of the probe
+        /// </summary>
         public string Sequence { get; private set; }
 
         // ********  Properties from RLF or RCC  *********
         /// <summary>
-        /// Primary key if RLF NOT loaded; otherwise ProbeID is primary key
+        /// Name for the probe within the codeset, taken from the Name field of the probe in either RCC or RLF
         /// </summary>
         public string TargetName { get; private set; }
         /// <summary>
-        /// Indicator or analyte or how probe will be used; dependent on context of codeset (i.e. associated RLF)
+        /// Indicator of how probe will be used (i.e. positive control, endogenous gene, etc.); dependent on context of codeset (i.e. associated RLF); taken from the CodeClass field of the RCC or RLF
         /// </summary>
         public string CodeClass { get; private set; }
         /// <summary>
-        /// Acession number from relevant database
+        /// Acession number from relevant database, taken from the Acession field of the probe in either RCC or RLF
         /// </summary>
         public string Accession { get; private set; }
 
         // ********  Properties from RCC  *********
         /// <summary>
-        /// miRNA-specific; Pulled from data line after '|'; multiplied by ERCC POS_A count gives ligation background correction factor
+        /// miRNA-specific; Pulled from the probe's row in the RCC after the '|' symbol; intended to be multiplied by ERCC POS_A count to give ligation background correction factor
         /// </summary>
         public double CorrectionCoefficient { get; set; }
 
         // ********  GeoMx or PlexSet-specific  *********
         /// <summary>
-        /// Index of the row on hybridization plate where the sample would have been hybridized
+        /// Zero based index of the row on hybridization plate where the sample would have been hybridized
         /// </summary>
         public int PlexRow { get; set; }
 
@@ -133,7 +139,7 @@ namespace NCounterCore
             }
             string tempClass;
             bool parsed = codeClassTranslator.TryGetValue(classBits[1], out tempClass);
-            ParsingErrorMessage = $"Codeclass could not be parsed from \"{dataLine}\"";
+            ParsingErrorMessage = parsed ? null : $"Codeclass could not be parsed from \"{dataLine}\"";
             CodeClass = parsed ? tempClass : "Unparsed";
             ProbeID = bits[4];
             TargetName = bits[3];

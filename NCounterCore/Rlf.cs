@@ -14,6 +14,10 @@ namespace NCounterCore
     {
         public string ErrorMessage { get; private set; }
         /// <summary>
+        /// The primary key for the RLF's entry in the RLF table of the database
+        /// </summary>
+        public int ID { get; set; }
+        /// <summary>
         /// Usually follows the format {a-zA-Z0-9}_C\d\d\d\d or {a-zA-Z0-9}_PS\d\d\d\d) unless a special internal (to Nanostring) RLF
         /// </summary>
         public string Name { get; private set; }
@@ -29,6 +33,9 @@ namespace NCounterCore
         /// Collection of ProbeItems in the codeset, searchable by TargetName
         /// </summary>
         public Dictionary<string, ProbeItem> Probes { get; private set; }
+
+        public Dictionary<string, int> ProbeTranslator { get; set; }
+
         /// <summary>
         /// Bool indicating if RLF was initiated from rlf file (vs. from RCC)
         /// </summary>
@@ -281,7 +288,7 @@ namespace NCounterCore
         {
             foreach(KeyValuePair<string, ProbeItem> p in Probes)
             {
-                p.Value.ProbeMainKeyId = start;
+                p.Value.PrimaryKey = start;
                 start++;
             }
         }
